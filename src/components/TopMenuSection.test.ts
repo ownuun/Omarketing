@@ -210,16 +210,17 @@ describe('TopMenuSection', () => {
       return createWrapper({ pinia })
     }
 
+    // CR-1 auth-presence exception: Omarketing Phase 1 renders no Comfy auth
+    // entry point, so these two presence assertions are inverted to match the
+    // new non-render behavior. Every other assertion in this file is unchanged.
     describe('when user is logged in', () => {
       beforeEach(() => {
         mockData.isLoggedIn = true
       })
 
-      it('should display CurrentUserButton and not display LoginButton', () => {
+      it('renders no auth entry point even while logged in', () => {
         const { container } = createLegacyTabBarWrapper()
-        expect(
-          container.querySelector('current-user-button-stub')
-        ).not.toBeNull()
+        expect(container.querySelector('current-user-button-stub')).toBeNull()
         expect(container.querySelector('login-button-stub')).toBeNull()
       })
     })
@@ -229,9 +230,9 @@ describe('TopMenuSection', () => {
         mockData.isLoggedIn = false
       })
 
-      it('should display LoginButton and not display CurrentUserButton', () => {
+      it('renders no auth entry point while logged out', () => {
         const { container } = createLegacyTabBarWrapper()
-        expect(container.querySelector('login-button-stub')).not.toBeNull()
+        expect(container.querySelector('login-button-stub')).toBeNull()
         expect(container.querySelector('current-user-button-stub')).toBeNull()
       })
     })

@@ -145,6 +145,7 @@ export default defineConfig([
         ...commonParserOptions,
         projectService: {
           allowDefaultProject: [
+            '.hermes/phase0/tools/generate-contracts.ts',
             'packages/object-info-parser/vitest.config.ts',
             'vite.electron.config.mts',
             'vite.types.config.mts',

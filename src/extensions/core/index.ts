@@ -21,6 +21,9 @@ if (!isCloud) {
   await import('./nodeTemplates')
 }
 import './noteNode'
+// Omarketing built-in extension. Unconditional and side-effect only; it adds no
+// distribution branch and does not reorder any existing import.
+import './omarketing'
 import './painter'
 import './previewAny'
 import './saveText'

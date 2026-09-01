@@ -61,11 +61,26 @@
                 :queue-overlay-expanded="isQueueOverlayExpanded"
                 @update:progress-target="updateProgressTarget"
               />
+              <!--
+                Omarketing Phase 1 does not render a Comfy sign-in or account
+                entry point. The upstream components and their source are kept
+                intact so a later gateway can attach; only rendering is
+                suppressed here. Contract: core-file-allowlist.md, "Supported
+                Phase 1 auth surface (CR-1)".
+              -->
               <CurrentUserButton
-                v-if="isLoggedIn && !isIntegratedTabBar"
+                v-if="
+                  !OMARKETING_AUTH_ENTRY_SUPPRESSED &&
+                  isLoggedIn &&
+                  !isIntegratedTabBar
+                "
                 class="shrink-0"
               />
-              <LoginButton v-else-if="!isIntegratedTabBar" />
+              <LoginButton
+                v-else-if="
+                  !OMARKETING_AUTH_ENTRY_SUPPRESSED && !isIntegratedTabBar
+                "
+              />
               <Button
                 v-if="isCloud && flags.workflowSharingEnabled"
                 v-tooltip.bottom="shareTooltipConfig"
@@ -142,6 +157,19 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * Omarketing Phase 1 does not render a Comfy sign-in or account entry point.
+ *
+ * The upstream auth components and their source stay intact so a later gateway
+ * can attach; only rendering is suppressed. Declared locally in each of the
+ * five approved auth sources because a shared module would be a seventh
+ * allowlisted path, and core files may not import the Omarketing extension.
+ *
+ * Contract: `.hermes/phase0/contracts/core-file-allowlist.md`,
+ * "Supported Phase 1 auth surface (CR-1)".
+ */
+const OMARKETING_AUTH_ENTRY_SUPPRESSED = true
+
 import { useLocalStorage, useMutationObserver } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'

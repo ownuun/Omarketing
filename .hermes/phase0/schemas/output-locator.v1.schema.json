@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Omarketing OutputLocator v1",
+  "description": "Server-validated locator for one existing ComfyUI output.",
+  "$comment": "All locator primitives are persisted independently. Implementations must not construct, parse, or trust a frontend synthetic AssetItem.id. The server recomputes sha256, size_bytes, and mime_type from the contained output file before accepting the locator.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "job_id",
+    "node_id",
+    "directory_type",
+    "subfolder",
+    "filename",
+    "media_type",
+    "sha256",
+    "size_bytes",
+    "mime_type"
+  ],
+  "properties": {
+    "job_id": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "$comment": "The backend job/prompt identifier is stored directly, never recovered from a frontend asset identifier."
+    },
+    "node_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[^\\u0000-\\u001F\\u007F]+$",
+      "$comment": "ComfyUI node identifiers are serialized as strings, including when their lexical value contains only digits."
+    },
+    "directory_type": {
+      "const": "output"
+    },
+    "subfolder": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*\\\\)[^/\\u0000-\\u001F\\u007F]+(?:/[^/\\u0000-\\u001F\\u007F]+)*$",
+      "$comment": "Relative to the configured ComfyUI output root. Absolute paths, backslashes, empty segments, dot segments, parent traversal, and control characters are forbidden; the server must additionally resolve the path and enforce output-root containment."
+    },
+    "filename": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 255,
+      "pattern": "^(?!\\.{1,2}$)[^/\\\\\\u0000-\\u001F\\u007F]+$",
+      "$comment": "A basename only. Directory separators, dot entries, and control characters are forbidden."
+    },
+    "media_type": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-z][a-z0-9_-]*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "$comment": "Lowercase SHA-256 recomputed by the server from the selected output bytes."
+    },
+    "size_bytes": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991,
+      "$comment": "Nonnegative byte length recomputed by the server."
+    },
+    "mime_type": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 127,
+      "pattern": "^[a-z0-9][a-z0-9!#$&^_.+-]*/[a-z0-9][a-z0-9!#$&^_.+-]*$",
+      "$comment": "Canonical lowercase media type without parameters, determined by the server from the output."
+    },
+    "asset_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:@-]{0,255}$",
+      "$comment": "Optional backend-issued enrichment only. It is not a frontend synthetic AssetItem.id and is never required to resolve the output."
+    }
+  }
+}

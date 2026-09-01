@@ -2,10 +2,10 @@
   "name": "@comfyorg/comfyui-frontend",
   "version": "1.53.1",
   "private": true,
-  "description": "Official front-end implementation of ComfyUI",
-  "homepage": "https://comfy.org",
+  "description": "Omarketing front end, a modified ComfyUI Frontend distribution for marketing workflows",
+  "homepage": "https://github.com/ownuun/Omarketing",
   "license": "GPL-3.0-only",
-  "repository": "https://github.com/Comfy-Org/ComfyUI_frontend",
+  "repository": "https://github.com/ownuun/Omarketing",
   "type": "module",
   "scripts": {
     "build:cloud": "cross-env DISTRIBUTION=cloud vite build --config vite.config.mts",

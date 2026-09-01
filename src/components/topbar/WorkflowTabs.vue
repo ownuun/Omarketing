@@ -95,14 +95,32 @@
       >
         <i class="icon-[lucide--message-square-text]" />
       </Button>
-      <CurrentUserButton v-if="showCurrentUser" compact class="shrink-0 p-1" />
-      <LoginButton v-else class="p-1" />
+      <!-- Phase 1 renders no auth entry point in the integrated tab bar. -->
+      <CurrentUserButton
+        v-if="!OMARKETING_AUTH_ENTRY_SUPPRESSED && showCurrentUser"
+        compact
+        class="shrink-0 p-1"
+      />
+      <LoginButton v-else-if="!OMARKETING_AUTH_ENTRY_SUPPRESSED" class="p-1" />
     </div>
     <div v-if="isDesktop" class="window-actions-spacer app-drag shrink-0" />
   </div>
 </template>
 
 <script setup lang="ts">
+/**
+ * Omarketing Phase 1 does not render a Comfy sign-in or account entry point.
+ *
+ * The upstream auth components and their source stay intact so a later gateway
+ * can attach; only rendering is suppressed. Declared locally in each of the
+ * five approved auth sources because a shared module would be a seventh
+ * allowlisted path, and core files may not import the Omarketing extension.
+ *
+ * Contract: `.hermes/phase0/contracts/core-file-allowlist.md`,
+ * "Supported Phase 1 auth surface (CR-1)".
+ */
+const OMARKETING_AUTH_ENTRY_SUPPRESSED = true
+
 import { useScroll } from '@vueuse/core'
 import ScrollPanel from 'primevue/scrollpanel'
 import SelectButton from 'primevue/selectbutton'

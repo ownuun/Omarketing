@@ -1,4 +1,17 @@
 <script setup lang="ts">
+/**
+ * Omarketing Phase 1 does not render a Comfy sign-in or account entry point.
+ *
+ * The upstream auth components and their source stay intact so a later gateway
+ * can attach; only rendering is suppressed. Declared locally in each of the
+ * five approved auth sources because a shared module would be a seventh
+ * allowlisted path, and core files may not import the Omarketing extension.
+ *
+ * Contract: `.hermes/phase0/contracts/core-file-allowlist.md`,
+ * "Supported Phase 1 auth surface (CR-1)".
+ */
+const OMARKETING_AUTH_ENTRY_SUPPRESSED = true
+
 import type { MenuItem } from 'primevue/menuitem'
 import { useFullscreen, usePointerSwipe } from '@vueuse/core'
 import { computed, ref, useTemplateRef } from 'vue'
@@ -192,7 +205,11 @@ const menuEntries = computed<MenuItem[]>(() => [
           </div>
         </template>
       </DropdownMenu>
-      <CurrentUserButton v-if="isLoggedIn" :show-arrow="false" />
+      <!-- Phase 1 renders no auth entry point in responsive linear mobile. -->
+      <CurrentUserButton
+        v-if="!OMARKETING_AUTH_ENTRY_SUPPRESSED && isLoggedIn"
+        :show-arrow="false"
+      />
     </header>
     <div class="size-full rounded-b-4xl contain-content">
       <div

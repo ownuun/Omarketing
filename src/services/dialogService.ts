@@ -200,12 +200,33 @@ export const useDialogService = () => {
   }
 
   /**
+   * Omarketing Phase 1 keeps every Comfy sign-in dialog fail-closed.
+   *
+   * `showSignInDialog` and `showApiNodesSignInDialog` return `false` without
+   * loading their lazy auth components and without calling
+   * `dialogStore.showDialog`. The upstream components and this service's other
+   * dialogs are untouched, so a later gateway can re-enable the flow.
+   *
+   * This also neutralizes the `Comfy.User.OpenSignInDialog` command, which
+   * stays registered because `src/composables/useCoreCommands.ts` is immutable.
+   * Invoking it opens zero dialogs. That residue is a recorded Phase 1 known
+   * limitation carried to the v1 release gate.
+   *
+   * Contract: `.hermes/phase0/contracts/core-file-allowlist.md`,
+   * "Supported Phase 1 auth surface (CR-1)".
+   */
+  const OMARKETING_SIGN_IN_DIALOG_FAIL_CLOSED = true
+
+  /**
    * Shows a dialog requiring sign in for API nodes
    * @returns Promise that resolves to true if user clicks login, false if cancelled
    */
   async function showApiNodesSignInDialog(
     apiNodeNames: string[]
   ): Promise<boolean> {
+    // Fail closed before the lazy auth component is fetched.
+    if (OMARKETING_SIGN_IN_DIALOG_FAIL_CLOSED) return false
+
     const [{ default: ApiNodesSignInContent }, { default: ComfyOrgHeader }] =
       await Promise.all([lazyApiNodesSignInContent(), lazyComfyOrgHeader()])
 
@@ -233,6 +254,9 @@ export const useDialogService = () => {
   }
 
   async function showSignInDialog(): Promise<boolean> {
+    // Fail closed before the lazy auth component is fetched.
+    if (OMARKETING_SIGN_IN_DIALOG_FAIL_CLOSED) return false
+
     const [{ default: SignInContent }, { default: ComfyOrgHeader }] =
       await Promise.all([lazySignInContent(), lazyComfyOrgHeader()])
 

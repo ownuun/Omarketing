@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Omarketing SelectionManifest v1",
+  "description": "One atomically replaced selection sidecar for a single Omarketing run.",
+  "$comment": "The backend owns this manifest, validates every OutputLocator against the authenticated owner and workflow, and writes each revision with temp-write, fsync, and atomic replace semantics.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "revision",
+    "project_key",
+    "workflow_locator",
+    "run_key",
+    "selections"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991,
+      "$comment": "A positive server-controlled optimistic-concurrency revision."
+    },
+    "project_key": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "not": {
+        "const": "00000000-0000-0000-0000-000000000000"
+      }
+    },
+    "workflow_locator": {
+      "type": "string",
+      "minLength": 16,
+      "maxLength": 1024,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*\\\\)workflows/(?:[^/\\u0000-\\u001F\\u007F]+/)*[^/\\u0000-\\u001F\\u007F]+\\.json$",
+      "$comment": "Repository-relative workflow path rooted at workflows/. Absolute paths, backslashes, empty segments, dot segments, parent traversal, control characters, and non-JSON targets are forbidden; authorization and resolved-path containment remain server checks."
+    },
+    "run_key": {
+      "type": "string",
+      "format": "uuid",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+      "not": {
+        "const": "00000000-0000-0000-0000-000000000000"
+      }
+    },
+    "selections": {
+      "type": "object",
+      "minProperties": 1,
+      "$comment": "Each property name is the opaque reference_id. Object keys make reference_id uniqueness structural within this run-level sidecar.",
+      "propertyNames": {
+        "minLength": 1,
+        "maxLength": 128,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9._:@-]*$"
+      },
+      "patternProperties": {
+        "^[A-Za-z0-9][A-Za-z0-9._:@-]{0,127}$": {
+          "$ref": "#/$defs/selection"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "output",
+        "selected_at",
+        "updated_at",
+        "owner_user_id"
+      ],
+      "properties": {
+        "state": {
+          "enum": ["selected", "stale"]
+        },
+        "output": {
+          "$ref": "output-locator.v1.schema.json"
+        },
+        "selected_at": {
+          "type": "string",
+          "format": "date-time",
+          "$comment": "Time at which the owner originally confirmed this output."
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "$comment": "Time at which the server last changed or revalidated this selection state."
+        },
+        "owner_user_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[^\\u0000-\\u001F\\u007F]+$",
+          "$comment": "Internal owner identity derived by the server from the authenticated session; request payload owner fields are never trusted."
+        },
+        "stale_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "stale_reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512,
+          "pattern": "^\\S(?:.*\\S)?$"
+        },
+        "observed_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$",
+          "$comment": "Server-observed current checksum when the output remains readable. It is omitted when no checksum can be obtained, such as when the file is missing."
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "stale"
+              }
+            },
+            "required": ["state"]
+          },
+          "then": {
+            "required": ["stale_at", "stale_reason"]
+          },
+          "else": {
+            "not": {
+              "anyOf": [
+                {
+                  "required": ["stale_at"]
+                },
+                {
+                  "required": ["stale_reason"]
+                },
+                {
+                  "required": ["observed_sha256"]
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

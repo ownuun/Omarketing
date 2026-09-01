@@ -62,6 +62,10 @@ const config: KnipConfig = {
     // Auto generated API types
     'src/workbench/extensions/manager/types/generatedManagerTypes.ts',
     'packages/ingest-types/src/zod.gen.ts',
+    // Generated contract parsers are exercised only by the Node/tsx generator
+    // suite under .hermes; Knip cannot trace those dynamic imports.
+    'src/extensions/core/omarketing/selectionManifestV1.generated.ts',
+    'src/platform/assets/presentation/outputLocatorV1.generated.ts',
     // Workflow files contain license names that knip misinterprets as binaries
     '.github/workflows/ci-oss-assets-validation.yaml',
     // Pending integration in stacked PR

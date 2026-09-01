@@ -1,0 +1,1802 @@
+{
+  "schema_version": 1,
+  "contract": "auth-gateway.md",
+  "canonical_origin": "https://omarketing.example.invalid",
+  "deployment_profiles": [
+    {
+      "id": "auth-gateway-staging-v1",
+      "environment": "TEST/staging",
+      "profile_version": 1,
+      "strategy": "S2_sequential_same_hostname_different_port",
+      "production_origin": "https://omarketing.example.invalid",
+      "staging_origin": "https://omarketing.example.invalid:8443",
+      "production_effective_port": 443,
+      "staging_effective_port": 8443,
+      "concurrent_activation": false,
+      "session_non_interference_claim": false,
+      "host_cookie_port_isolation": false,
+      "tailscale_only": true,
+      "shared_listener": false,
+      "origin_wildcard": false,
+      "staging_port_omission": false,
+      "redirect_or_cookie_fallback": false,
+      "browser_credential_storage": false,
+      "separate_staging_roots": {
+        "directory": "staging-v1",
+        "config": "staging-v1/config",
+        "auth_database": "staging-v1/auth.sqlite",
+        "data": "staging-v1/data",
+        "output": "staging-v1/output",
+        "quarantine": "staging-v1/quarantine"
+      },
+      "active_state_copy": {
+        "sessions": false,
+        "credentials": false,
+        "provider_secrets": false
+      },
+      "credential_action_authorized_now": false,
+      "implementation_proven": false,
+      "production_ready": false
+    }
+  ],
+  "staging_profile_cases": [
+    {
+      "id": "staging-profile-v1-happy-sequential-window",
+      "profile": "auth-gateway-staging-v1",
+      "kind": "sequential_maintenance_window",
+      "preflight": {
+        "active_production_sessions": 0,
+        "bound_production_websockets": 0,
+        "production_queue_or_running_prompts": 0,
+        "external_provider_work": 0,
+        "unknown_or_unavailable_counts_fail_closed": true
+      },
+      "steps": [
+        "production_logout_revoke_and_socket_closure",
+        "stop_and_fence_production_profile",
+        "snapshot_readback_prior_production_directory_config_origin",
+        "switch_to_separate_staging_directory_config_auth_db_origin_and_roots",
+        "staging_login_test_logout",
+        "verify_staging_sessions_zero_and_websockets_zero",
+        "stop_and_fence_staging_profile",
+        "restore_exact_prior_production_directory_config_origin_after_verification",
+        "production_reauthentication"
+      ],
+      "expected": {
+        "promotion_allowed": true,
+        "production_and_staging_concurrent": false,
+        "final_active_profile": "production",
+        "production_reauthenticated": true,
+        "implementation_proven": false,
+        "production_ready": false
+      }
+    },
+    {
+      "id": "staging-profile-v1-hostile-active-production-precondition",
+      "profile": "auth-gateway-staging-v1",
+      "kind": "preflight_rejection",
+      "preflight": {
+        "active_production_sessions": 1,
+        "bound_production_websockets": 0,
+        "production_queue_or_running_prompts": 0,
+        "external_provider_work": 0
+      },
+      "expected": {
+        "promotion_allowed": false,
+        "production_logout_started": false,
+        "profile_switch_started": false,
+        "listeners_closed": false,
+        "implementation_proven": false,
+        "production_ready": false
+      }
+    },
+    {
+      "id": "staging-profile-v1-hostile-unknown-provider-precondition",
+      "profile": "auth-gateway-staging-v1",
+      "kind": "preflight_rejection",
+      "preflight": {
+        "active_production_sessions": 0,
+        "bound_production_websockets": 0,
+        "production_queue_or_running_prompts": 0,
+        "external_provider_work": "unknown"
+      },
+      "expected": {
+        "promotion_allowed": false,
+        "production_logout_started": false,
+        "profile_switch_started": false,
+        "listeners_closed": false,
+        "implementation_proven": false,
+        "production_ready": false
+      }
+    },
+    {
+      "id": "staging-profile-v1-cross-origin-rejection",
+      "profile": "auth-gateway-staging-v1",
+      "kind": "exact_origin_boundary",
+      "checks": [
+        {
+          "active_profile": "production",
+          "request_origin": "https://omarketing.example.invalid:8443",
+          "expected": {
+            "accepted": false,
+            "reason": "origin_mismatch"
+          }
+        },
+        {
+          "active_profile": "staging",
+          "request_origin": "https://omarketing.example.invalid",
+          "expected": {
+            "accepted": false,
+            "reason": "origin_mismatch"
+          }
+        },
+        {
+          "active_profile": "staging",
+          "request_origin": "https://omarketing.example.invalid:8443",
+          "expected": {
+            "accepted": true
+          }
+        }
+      ],
+      "expected": {
+        "wildcard_accepted": false,
+        "port_omission_accepted": false,
+        "redirect_or_cookie_fallback": false,
+        "implementation_proven": false,
+        "production_ready": false
+      }
+    },
+    {
+      "id": "staging-profile-v1-failure-restores-only-after-verification",
+      "profile": "auth-gateway-staging-v1",
+      "kind": "failure_or_unknown_restoration",
+      "failure": {
+        "step": "staging_test",
+        "outcomes_blocking_promotion": [
+          "failure",
+          "interruption",
+          "outcome_unknown"
+        ],
+        "outcome": "outcome_unknown"
+      },
+      "expected": {
+        "promotion_allowed": false,
+        "automatic_retry": false,
+        "listeners_closed_while_uncertain": true,
+        "prior_production_restore_requires_verification": true,
+        "prior_production_directory_restored": true,
+        "prior_production_origin_restored": true,
+        "production_reauthentication_required": true,
+        "implementation_proven": false,
+        "production_ready": false
+      }
+    }
+  ],
+  "durable_store_cases": [
+    {
+      "id": "topology-one-process-one-sqlite",
+      "kind": "durable_store_topology",
+      "expected": {
+        "gateway_process_count": 1,
+        "configured_sqlite_database_count": 1,
+        "runtime_database_owner": "omarketing-auth-gateway",
+        "running_gateway_operator_cli": {
+          "transport": "restrictive_local_operator_ipc_control_channel",
+          "gateway_performs_transaction": true,
+          "direct_sqlite_open": false,
+          "requires_console_or_ssh": true,
+          "channel": {
+            "family": "AF_UNIX",
+            "socket_type": "SOCK_STREAM",
+            "local_only": true,
+            "tcp": false,
+            "loopback_http": false,
+            "inherited_anonymous_pipe": false,
+            "network_fallback": false,
+            "socket_directory_mode": "0700",
+            "socket_mode": "0600",
+            "socket_owner": "gateway_os_account",
+            "peer_credentials": {
+              "macos": "getpeereid",
+              "linux": "SO_PEERCRED",
+              "requires_exact_configured_operator_uid": true,
+              "requires_gateway_owned_socket": true,
+              "unavailable_or_mismatch": "live_ipc_disabled_offline_maintenance_only"
+            },
+            "http_origin_routes_reach_socket": false
+          },
+          "message_protocol": {
+            "schema_version": 1,
+            "request_fields": {
+              "common": [
+                "schema_version",
+                "request_id",
+                "correlation_id",
+                "command"
+              ],
+              "password_replace_additional": ["password"],
+              "revoke_all_additional": [],
+              "status_additional": []
+            },
+            "response_fields": {
+              "common": [
+                "schema_version",
+                "request_id",
+                "correlation_id",
+                "command",
+                "outcome"
+              ],
+              "password_replace_committed_additional": ["credential_version"],
+              "revoke_all_committed_additional": ["revoked_session_count"]
+            },
+            "commands": ["password_replace", "revoke_all", "status"],
+            "frame_max_bytes": 16384,
+            "framing": {
+              "length_prefix_bytes": 4,
+              "length_prefix_encoding": "big_endian",
+              "payload_encoding": "UTF-8_JSON_object",
+              "prefix_plus_payload_max_bytes": 16384
+            },
+            "duplicate_fields_rejected": true,
+            "unknown_fields_rejected": true,
+            "unsupported_versions_rejected": true,
+            "arbitrary_paths_allowed": false,
+            "sql_allowed": false,
+            "urls_allowed": false,
+            "request_id": {
+              "required": true,
+              "fresh_cryptographic_random": true,
+              "encoding": "base64url_without_padding",
+              "random_bytes": 32,
+              "length_characters": 43,
+              "replay": "rejected_before_transaction"
+            }
+          },
+          "password_input": {
+            "source": ["cli_stdin", "cli_tty"],
+            "sent_once": true,
+            "echoed": false,
+            "logged": false,
+            "persisted_in_ipc_traces": false,
+            "returned_in_response": false,
+            "zeroized_as_runtime_permits": true,
+            "length_bounded": true,
+            "recovery_input_uses_same_rules": true
+          },
+          "response_semantics": {
+            "success_requires": [
+              "delivered_response",
+              "schema_valid",
+              "committed"
+            ],
+            "response_loss_state": "operator_outcome_unknown",
+            "false_success_sources": [
+              "socket_closure",
+              "timeout",
+              "malformed_response",
+              "unknown_response"
+            ],
+            "status_query": "read_only_new_request_id_same_correlation_id",
+            "retry_requires": "newly_confirmed_operator_command"
+          }
+        },
+        "offline_database_access": [
+          "offline_emergency_recovery",
+          "migration_tool",
+          "backup_restore_tool"
+        ],
+        "offline_access_requires": [
+          "gateway_stopped",
+          "exclusive_maintenance_fence"
+        ],
+        "zero_database_access": [
+          "custom_node",
+          "provider_adapter",
+          "comfy_bridge"
+        ],
+        "prohibited": [
+          "postgresql",
+          "redis",
+          "alternate_database",
+          "alternate_cache",
+          "in_memory_session_fallback",
+          "in_memory_limiter_fallback"
+        ],
+        "database_scope": [
+          "owner_credential_metadata",
+          "credential_version",
+          "sessions",
+          "rate_limit_windows",
+          "rate_limit_counters",
+          "revocation_facts",
+          "restore_epoch"
+        ],
+        "excluded_scope": [
+          "project_context",
+          "selection_sidecar",
+          "external_job_journal",
+          "Run",
+          "Asset",
+          "Workflow",
+          "provider_payloads",
+          "signed_urls",
+          "credentials",
+          "secrets"
+        ],
+        "awaiting_approval_next_action_owner": "Odesign",
+        "omarketing_approval_mutation": false,
+        "implementation_proven": false,
+        "production_ready": false
+      }
+    },
+    {
+      "id": "sqlite-operational-defaults-v1",
+      "kind": "sqlite_policy",
+      "expected": {
+        "foreign_keys": true,
+        "journal_mode": "WAL",
+        "synchronous": "FULL",
+        "application_id_check": true,
+        "schema_id_check": true,
+        "write_transaction": "BEGIN IMMEDIATE",
+        "write_lock_order": [
+          "owner_credential",
+          "sessions_and_revocations",
+          "rate_limit_windows",
+          "restore_epoch"
+        ],
+        "busy_timeout_ms": 1000,
+        "busy_behavior": "503_SERVICE_UNAVAILABLE_no_unbounded_retry",
+        "wal_autocheckpoint_pages": 1000,
+        "wal_checkpoint": {
+          "mode": "PASSIVE",
+          "maximum_interval_seconds": 300,
+          "requires_no_write_transaction": true,
+          "blocking_modes_reserved_for_maintenance": [
+            "FULL",
+            "RESTART",
+            "TRUNCATE"
+          ]
+        },
+        "terminal_record_retention_seconds": 7776000,
+        "backup_cadence_seconds": 86400,
+        "backup_retained_count": 14,
+        "backup_api": "sqlite_backup",
+        "integrity_failure": "fail_closed_no_empty_replacement",
+        "implementation_proven": false,
+        "production_ready": false
+      }
+    }
+  ],
+  "maintenance_restore_cases": [
+    {
+      "id": "restore-fence-epoch-credential-limiter-and-reopen",
+      "kind": "maintenance_restore",
+      "steps": [
+        {
+          "action": "stop_gateway_and_drain",
+          "expected": {
+            "gateway_stopped": true,
+            "connected_clients": 0
+          }
+        },
+        {
+          "action": "acquire_exclusive_lock",
+          "expected": { "database_and_wal_shm_locked": true }
+        },
+        {
+          "action": "verify_backup_receipt",
+          "expected": {
+            "consistent_sqlite_backup_api": true,
+            "checksum_verified": true,
+            "application_id_verified": true,
+            "schema_id_verified": true,
+            "restore_epoch_verified": true,
+            "integrity_verified": true,
+            "rollback_copy_written": true
+          }
+        },
+        {
+          "action": "restore_and_advance_epoch",
+          "expected": {
+            "restore_epoch_advanced": true,
+            "all_restored_sessions_invalidated": true,
+            "current_credential": "preserved_and_credential_version_advanced",
+            "credential_version_advanced": true,
+            "limiter_policy": "full_window_cooldown"
+          }
+        },
+        {
+          "action": "recheck_and_reopen",
+          "expected": {
+            "application_id_verified": true,
+            "schema_id_verified": true,
+            "integrity_verified": true,
+            "receipt_recorded": true,
+            "gateway_reopened": true
+          }
+        }
+      ],
+      "expected": {
+        "implementation_proven": false,
+        "production_ready": false,
+        "limiter_cooldown_seconds": {
+          "login": 900,
+          "failed_login": 900,
+          "logout_revoke_all": 60,
+          "websocket_upgrade": 300,
+          "other_protected_http": 300
+        }
+      }
+    },
+    {
+      "id": "restore-integrity-failure-stays-closed",
+      "kind": "maintenance_restore",
+      "input": {
+        "integrity_check": "failed"
+      },
+      "expected": {
+        "gateway_reopened": false,
+        "empty_replacement_created": false,
+        "rollback_copy_retained": true,
+        "operator_replacement_required": true,
+        "implementation_proven": false,
+        "production_ready": false
+      }
+    }
+  ],
+  "websocket_sla_cases": [
+    {
+      "id": "websocket-explicit-revoke-sla-starts-at-commit",
+      "kind": "websocket_revocation_sla",
+      "trigger": ["logout", "revoke_all", "password_replacement"],
+      "events": [
+        {
+          "at": "committed_unusable_marker",
+          "expected": {
+            "frames_dropped_immediately": true,
+            "sla_clock_started": true
+          }
+        },
+        {
+          "at": "within_5_seconds",
+          "expected": {
+            "upstream_direction_force_closed": true,
+            "downstream_direction_force_closed": true,
+            "websockets_closed_within_seconds": 5
+          }
+        }
+      ],
+      "expected": {
+        "sla_start": "committed_unusable_marker",
+        "explicit_triggers": ["logout", "revoke_all", "password_replacement"],
+        "implementation_proven": false,
+        "production_ready": false
+      }
+    },
+    {
+      "id": "websocket-natural-expiry-sla-starts-at-detection",
+      "kind": "websocket_expiry_sla",
+      "trigger": "idle_or_absolute_expiry",
+      "events": [
+        {
+          "at": "expiry_detection",
+          "expected": {
+            "frames_dropped_immediately": true,
+            "sla_clock_started": true
+          }
+        },
+        {
+          "at": "within_5_seconds",
+          "expected": {
+            "upstream_direction_force_closed": true,
+            "downstream_direction_force_closed": true,
+            "websockets_closed_within_seconds": 5
+          }
+        }
+      ],
+      "expected": {
+        "sla_start": "expiry_detection",
+        "natural_expiry_recheck_max_interval_seconds": 60,
+        "implementation_proven": false,
+        "production_ready": false
+      }
+    }
+  ],
+  "first_release_auth_policy_cases": [
+    {
+      "id": "h2-first-release-auth-policy",
+      "policy": {
+        "contract_only": true,
+        "single_owner": true,
+        "signup": false,
+        "public_registration": false,
+        "accounts": false,
+        "user_account_ui": false,
+        "roles": false,
+        "teams": false,
+        "invites": false,
+        "multi_user_ui": false,
+        "comfy_signin_ui": false,
+        "comfy_api_key_ui": false,
+        "comfy_api_key_solicited": false,
+        "comfy_api_key_created": false,
+        "comfy_api_key_used": false,
+        "comfy_org_identity_authority": false,
+        "upstream_auth_source_retained": true,
+        "upstream_auth_supported_entry_point": false,
+        "gateway_boundary_server_owned": true,
+        "gateway_password_server_verified": true,
+        "gateway_password_rate_limited": true,
+        "gateway_session_server_issued": true,
+        "gateway_session_http_only_cookie": true,
+        "gateway_password_browser_storage": false,
+        "gateway_password_workflow_project_data": false,
+        "gateway_password_prompt_bodies": false,
+        "gateway_password_urls": false,
+        "gateway_password_logs": false,
+        "gateway_password_telemetry": false,
+        "gateway_password_comfy_requests": false,
+        "gateway_password_provider_requests": false,
+        "local_core_surfaces_preserved": true,
+        "local_core_surfaces": [
+          "Workflows",
+          "Templates",
+          "Nodes",
+          "Assets",
+          "Queue",
+          "History",
+          "Omarketing"
+        ],
+        "implementation_proven": false,
+        "production_ready": false
+      }
+    }
+  ],
+  "cases": [
+    {
+      "id": "public-login-document",
+      "method": "GET",
+      "path": "/auth/login",
+      "session": "absent",
+      "expected": {
+        "status": 200,
+        "content": "self-contained-login",
+        "cache": "no-store"
+      }
+    },
+    {
+      "id": "login-cross-site-post-rejected",
+      "method": "POST",
+      "path": "/auth/login",
+      "session": "absent",
+      "origin": "https://attacker.example.invalid",
+      "sec_fetch_site": "cross-site",
+      "expected": {
+        "status": 403,
+        "code": "CSRF_REJECTED",
+        "password_hash_invoked": false
+      }
+    },
+    {
+      "id": "root-navigation-auth-required",
+      "method": "GET",
+      "path": "/",
+      "session": "absent",
+      "sec_fetch_mode": "navigate",
+      "accept": "text/html",
+      "expected": { "status": 303, "location": "/auth/login?return_to=%2F" }
+    },
+    {
+      "id": "api-auth-required-json",
+      "method": "GET",
+      "path": "/api/object_info",
+      "session": "absent",
+      "expected": {
+        "status": 401,
+        "code": "AUTH_REQUIRED",
+        "html_redirect": false
+      }
+    },
+    {
+      "id": "unsafe-core-api-same-origin",
+      "method": "POST",
+      "path": "/api/prompt",
+      "session": "valid",
+      "origin": "https://omarketing.example.invalid",
+      "sec_fetch_site": "same-origin",
+      "expected": { "proxy": true, "custom_csrf_header_required": false }
+    },
+    {
+      "id": "unsafe-core-api-missing-origin",
+      "method": "POST",
+      "path": "/api/prompt",
+      "session": "valid",
+      "origin": null,
+      "sec_fetch_site": "same-origin",
+      "expected": { "status": 403, "code": "CSRF_REJECTED", "proxy": false }
+    },
+    {
+      "id": "websocket-valid",
+      "method": "GET",
+      "path": "/ws?clientId=123e4567-e89b-12d3-a456-426614174000",
+      "upgrade": "websocket",
+      "session": "valid",
+      "origin": "https://omarketing.example.invalid",
+      "sec_fetch_site": "same-origin",
+      "expected": { "upgrade_accepted": true, "bound_to_session": true }
+    },
+    {
+      "id": "websocket-cross-site-rejected",
+      "method": "GET",
+      "path": "/ws",
+      "upgrade": "websocket",
+      "session": "valid",
+      "origin": "https://attacker.example.invalid",
+      "sec_fetch_site": "cross-site",
+      "expected": { "status": 403, "upgrade_accepted": false }
+    },
+    {
+      "id": "websocket-token-query-rejected",
+      "method": "GET",
+      "path": "/ws?token=reusable-secret",
+      "upgrade": "websocket",
+      "session": "valid",
+      "origin": "https://omarketing.example.invalid",
+      "sec_fetch_site": "same-origin",
+      "expected": {
+        "status": 400,
+        "upgrade_accepted": false,
+        "secret_logged": false
+      }
+    },
+    {
+      "id": "extension-static-auth-required",
+      "method": "GET",
+      "path": "/extensions/comfyui-omarketing/index.js",
+      "session": "absent",
+      "expected": { "status": 401, "html_redirect": false }
+    },
+    {
+      "id": "template-static-auth-required",
+      "method": "GET",
+      "path": "/templates/index.json",
+      "session": "absent",
+      "expected": { "status": 401, "html_redirect": false }
+    },
+    {
+      "id": "output-view-auth-required",
+      "method": "GET",
+      "path": "/view?filename=x.png&type=output",
+      "session": "absent",
+      "expected": { "status": 401, "html_redirect": false }
+    },
+    {
+      "id": "logout-closes-live-sockets",
+      "method": "POST",
+      "path": "/auth/logout",
+      "session": "valid-with-two-live-websockets",
+      "origin": "https://omarketing.example.invalid",
+      "sec_fetch_site": "same-origin",
+      "expected": {
+        "status": 200,
+        "revoked": true,
+        "websockets_closed_within_seconds": 5,
+        "cookie_cleared": true
+      }
+    },
+    {
+      "id": "logout-repeat-without-live-session",
+      "method": "POST",
+      "path": "/auth/logout",
+      "session": "absent-or-already-revoked",
+      "origin": "https://omarketing.example.invalid",
+      "sec_fetch_site": "same-origin",
+      "expected": {
+        "status": 200,
+        "revoked": true,
+        "cookie_cleared": true,
+        "prior_session_disclosed": false
+      }
+    },
+    {
+      "id": "expired-session-api-is-json",
+      "method": "GET",
+      "path": "/auth/session",
+      "session": "expired",
+      "expected": {
+        "status": 401,
+        "code": "AUTH_REQUIRED",
+        "html_redirect": false
+      }
+    },
+    {
+      "id": "revoke-all-closes-owner-sockets",
+      "method": "POST",
+      "path": "/auth/revoke-all",
+      "session": "valid-owner-with-multiple-sessions",
+      "origin": "https://omarketing.example.invalid",
+      "sec_fetch_site": "same-origin",
+      "expected": {
+        "status": 200,
+        "all_owner_sessions_revoked": true,
+        "all_owner_websockets_closed_within_seconds": 5
+      }
+    },
+    {
+      "id": "spoofed-identity-headers-stripped",
+      "method": "POST",
+      "path": "/api/prompt",
+      "session": "valid",
+      "origin": "https://omarketing.example.invalid",
+      "sec_fetch_site": "same-origin",
+      "request_headers": {
+        "X-Omarketing-Owner": "attacker",
+        "X-Forwarded-User": "attacker",
+        "Forwarded": "for=203.0.113.7",
+        "Comfy-User": "attacker"
+      },
+      "expected": {
+        "proxy": true,
+        "client_identity_headers_stripped": true,
+        "owner_identity_source": "validated-session"
+      }
+    },
+    {
+      "id": "gateway-cookie-consumed-before-proxy",
+      "method": "GET",
+      "path": "/api/object_info",
+      "session": "valid",
+      "request_cookie_names": ["__Host-omarketing_session"],
+      "expected": {
+        "proxy": true,
+        "gateway_session_cookie_forwarded": false
+      }
+    },
+    {
+      "id": "unknown-application-route-default-denied",
+      "method": "GET",
+      "path": "/unreviewed-custom-route",
+      "session": "valid",
+      "expected": { "status": 404, "proxy": false }
+    }
+  ],
+  "schema_cases": [
+    {
+      "id": "schema-login-request-valid",
+      "schema": "auth-login-request.v1.schema.json",
+      "valid": true,
+      "document": {
+        "schema_version": 1,
+        "username": "owner",
+        "password": "correct horse battery staple"
+      }
+    },
+    {
+      "id": "schema-session-response-valid",
+      "schema": "auth-session-response.v1.schema.json",
+      "valid": true,
+      "document": {
+        "schema_version": 1,
+        "owner_user_id": "owner_01J6A3M2Z8R4T5V7",
+        "idle_expires_at": "2026-09-26T00:00:00Z",
+        "absolute_expires_at": "2026-11-25T00:00:00Z"
+      }
+    },
+    {
+      "id": "schema-logout-response-valid",
+      "schema": "auth-logout-response.v1.schema.json",
+      "valid": true,
+      "document": {
+        "schema_version": 1,
+        "revoked": true
+      }
+    },
+    {
+      "id": "schema-revoke-all-response-valid",
+      "schema": "auth-revoke-all-response.v1.schema.json",
+      "valid": true,
+      "document": {
+        "schema_version": 1,
+        "revoked": true,
+        "revoked_session_count": 3
+      }
+    },
+    {
+      "id": "schema-auth-required-error-valid",
+      "schema": "auth-error-response.v1.schema.json",
+      "valid": true,
+      "document": {
+        "schema_version": 1,
+        "error": {
+          "code": "AUTH_REQUIRED",
+          "message": "Authentication is required."
+        }
+      }
+    },
+    {
+      "id": "schema-rate-limited-error-valid",
+      "schema": "auth-error-response.v1.schema.json",
+      "valid": true,
+      "document": {
+        "schema_version": 1,
+        "error": {
+          "code": "RATE_LIMITED",
+          "message": "Too many requests.",
+          "retry_after_seconds": 30
+        }
+      }
+    },
+    {
+      "id": "schema-login-unknown-credential-rejected",
+      "schema": "auth-login-request.v1.schema.json",
+      "valid": false,
+      "document": {
+        "schema_version": 1,
+        "username": "owner",
+        "password": "secret",
+        "api_key": "reusable-secret"
+      }
+    },
+    {
+      "id": "schema-login-unknown-url-rejected",
+      "schema": "auth-login-request.v1.schema.json",
+      "valid": false,
+      "document": {
+        "schema_version": 1,
+        "username": "owner",
+        "password": "secret",
+        "callback_url": "https://attacker.example.invalid/collect"
+      }
+    },
+    {
+      "id": "schema-login-extra-role-rejected",
+      "schema": "auth-login-request.v1.schema.json",
+      "valid": false,
+      "document": {
+        "schema_version": 1,
+        "username": "owner",
+        "password": "secret",
+        "role": "administrator"
+      }
+    },
+    {
+      "id": "schema-login-version-drift-rejected",
+      "schema": "auth-login-request.v1.schema.json",
+      "valid": false,
+      "document": {
+        "schema_version": 2,
+        "username": "owner",
+        "password": "secret"
+      }
+    },
+    {
+      "id": "schema-login-overlength-username-rejected",
+      "schema": "auth-login-request.v1.schema.json",
+      "valid": false,
+      "document": {
+        "schema_version": 1,
+        "username": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "password": "secret"
+      }
+    },
+    {
+      "id": "schema-session-malformed-timestamp-rejected",
+      "schema": "auth-session-response.v1.schema.json",
+      "valid": false,
+      "document": {
+        "schema_version": 1,
+        "owner_user_id": "owner_01J6A3M2Z8R4T5V7",
+        "idle_expires_at": "not-a-timestamp",
+        "absolute_expires_at": "2026-11-25T00:00:00Z"
+      }
+    },
+    {
+      "id": "schema-session-non-utc-timestamp-rejected",
+      "schema": "auth-session-response.v1.schema.json",
+      "valid": false,
+      "document": {
+        "schema_version": 1,
+        "owner_user_id": "owner_01J6A3M2Z8R4T5V7",
+        "idle_expires_at": "2026-08-27T09:30:00+09:00",
+        "absolute_expires_at": "2026-08-27T21:00:00+09:00"
+      }
+    },
+    {
+      "id": "schema-session-credential-metadata-rejected",
+      "schema": "auth-session-response.v1.schema.json",
+      "valid": false,
+      "document": {
+        "schema_version": 1,
+        "owner_user_id": "owner_01J6A3M2Z8R4T5V7",
+        "idle_expires_at": "2026-09-26T00:00:00Z",
+        "absolute_expires_at": "2026-11-25T00:00:00Z",
+        "credential_version": 4
+      }
+    },
+    {
+      "id": "schema-session-short-owner-id-rejected",
+      "schema": "auth-session-response.v1.schema.json",
+      "valid": false,
+      "document": {
+        "schema_version": 1,
+        "owner_user_id": "owner",
+        "idle_expires_at": "2026-09-26T00:00:00Z",
+        "absolute_expires_at": "2026-11-25T00:00:00Z"
+      }
+    },
+    {
+      "id": "schema-logout-false-rejected",
+      "schema": "auth-logout-response.v1.schema.json",
+      "valid": false,
+      "document": {
+        "schema_version": 1,
+        "revoked": false
+      }
+    },
+    {
+      "id": "schema-logout-count-extra-rejected",
+      "schema": "auth-logout-response.v1.schema.json",
+      "valid": false,
+      "document": {
+        "schema_version": 1,
+        "revoked": true,
+        "revoked_session_count": 1
+      }
+    },
+    {
+      "id": "schema-revoke-all-zero-count-rejected",
+      "schema": "auth-revoke-all-response.v1.schema.json",
+      "valid": false,
+      "document": {
+        "schema_version": 1,
+        "revoked": true,
+        "revoked_session_count": 0
+      }
+    },
+    {
+      "id": "schema-revoke-all-sessions-url-rejected",
+      "schema": "auth-revoke-all-response.v1.schema.json",
+      "valid": false,
+      "document": {
+        "schema_version": 1,
+        "revoked": true,
+        "revoked_session_count": 2,
+        "sessions_url": "https://private.example.invalid/auth/sessions"
+      }
+    },
+    {
+      "id": "schema-error-unknown-code-rejected",
+      "schema": "auth-error-response.v1.schema.json",
+      "valid": false,
+      "document": {
+        "schema_version": 1,
+        "error": {
+          "code": "SESSION_MISSING",
+          "message": "Authentication is required."
+        }
+      }
+    },
+    {
+      "id": "schema-error-message-mismatch-rejected",
+      "schema": "auth-error-response.v1.schema.json",
+      "valid": false,
+      "document": {
+        "schema_version": 1,
+        "error": {
+          "code": "AUTH_REQUIRED",
+          "message": "Invalid username or password."
+        }
+      }
+    },
+    {
+      "id": "schema-error-rate-limit-without-retry-rejected",
+      "schema": "auth-error-response.v1.schema.json",
+      "valid": false,
+      "document": {
+        "schema_version": 1,
+        "error": {
+          "code": "RATE_LIMITED",
+          "message": "Too many requests."
+        }
+      }
+    },
+    {
+      "id": "schema-error-credential-extra-rejected",
+      "schema": "auth-error-response.v1.schema.json",
+      "valid": false,
+      "document": {
+        "schema_version": 1,
+        "error": {
+          "code": "AUTH_REQUIRED",
+          "message": "Authentication is required.",
+          "token": "reusable-secret"
+        }
+      }
+    }
+  ],
+  "raw_json_cases": [
+    {
+      "id": "raw-json-login-request-valid",
+      "schema": "auth-login-request.v1.schema.json",
+      "valid": true,
+      "document_json": "{\"schema_version\":1,\"username\":\"owner\",\"password\":\"secret\"}"
+    },
+    {
+      "id": "raw-json-duplicate-username-rejected",
+      "schema": "auth-login-request.v1.schema.json",
+      "valid": false,
+      "error": "DUPLICATE_PROPERTY",
+      "document_json": "{\"schema_version\":1,\"username\":\"owner\",\"username\":\"shadow\",\"password\":\"secret\"}"
+    },
+    {
+      "id": "raw-json-escaped-duplicate-username-rejected",
+      "schema": "auth-login-request.v1.schema.json",
+      "valid": false,
+      "error": "DUPLICATE_PROPERTY",
+      "document_json": "{\"schema_version\":1,\"username\":\"owner\",\"user\\u006eame\":\"shadow\",\"password\":\"secret\"}"
+    }
+  ],
+  "activity_policy": {
+    "idle_lifetime_seconds": 2592000,
+    "absolute_lifetime_seconds": 7776000,
+    "refreshing_routes": [
+      {
+        "path_match": "/",
+        "methods": ["GET", "HEAD"]
+      },
+      {
+        "path_match": "/api/**",
+        "methods": "upstream-defined"
+      },
+      {
+        "path_match": "/internal/**",
+        "methods": "upstream-defined"
+      },
+      {
+        "path_match": "/view*",
+        "methods": ["GET", "HEAD"]
+      }
+    ],
+    "non_touch_events": [
+      "auth_session_observation",
+      "other_auth_request",
+      "websocket_upgrade",
+      "websocket_frame",
+      "websocket_expiry_check",
+      "extension_static",
+      "template_static",
+      "public_build_asset",
+      "rejected_request",
+      "cross_origin_preflight",
+      "policy_rejected_request"
+    ]
+  },
+  "session_clock_cases": [
+    {
+      "id": "clock-session-observation-does-not-refresh-idle",
+      "initial": {
+        "created_at": "2026-08-27T00:00:00Z",
+        "last_seen_at": "2026-08-27T00:00:00Z",
+        "idle_expires_at": "2026-09-26T00:00:00Z",
+        "absolute_expires_at": "2026-11-25T00:00:00Z"
+      },
+      "events": [
+        {
+          "at": "2026-08-27T00:01:00Z",
+          "kind": "auth_session_observation",
+          "expected": {
+            "authentication_status": 200,
+            "activity_refreshed": false,
+            "last_seen_at": "2026-08-27T00:00:00Z",
+            "idle_expires_at": "2026-09-26T00:00:00Z",
+            "absolute_expires_at": "2026-11-25T00:00:00Z"
+          }
+        },
+        {
+          "at": "2026-09-25T23:59:59Z",
+          "kind": "auth_session_observation",
+          "expected": {
+            "authentication_status": 200,
+            "activity_refreshed": false,
+            "last_seen_at": "2026-08-27T00:00:00Z",
+            "idle_expires_at": "2026-09-26T00:00:00Z",
+            "absolute_expires_at": "2026-11-25T00:00:00Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00Z",
+          "kind": "auth_session_observation",
+          "expected": {
+            "authentication_status": 401,
+            "activity_refreshed": false,
+            "last_seen_at": "2026-08-27T00:00:00Z",
+            "idle_expires_at": "2026-09-26T00:00:00Z",
+            "absolute_expires_at": "2026-11-25T00:00:00Z"
+          }
+        }
+      ]
+    },
+    {
+      "id": "clock-allowlisted-application-request-refreshes-idle",
+      "initial": {
+        "created_at": "2026-08-27T00:00:00Z",
+        "last_seen_at": "2026-08-27T00:00:00Z",
+        "idle_expires_at": "2026-09-26T00:00:00Z",
+        "absolute_expires_at": "2026-11-25T00:00:00Z"
+      },
+      "events": [
+        {
+          "at": "2026-09-25T23:00:00Z",
+          "kind": "http_request",
+          "method": "POST",
+          "path": "/api/prompt",
+          "accepted": true,
+          "expected": {
+            "authentication_status": 200,
+            "activity_refreshed": true,
+            "last_seen_at": "2026-09-25T23:00:00Z",
+            "idle_expires_at": "2026-10-25T23:00:00Z",
+            "absolute_expires_at": "2026-11-25T00:00:00Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00Z",
+          "kind": "auth_session_observation",
+          "expected": {
+            "authentication_status": 200,
+            "activity_refreshed": false,
+            "last_seen_at": "2026-09-25T23:00:00Z",
+            "idle_expires_at": "2026-10-25T23:00:00Z",
+            "absolute_expires_at": "2026-11-25T00:00:00Z"
+          }
+        },
+        {
+          "at": "2026-10-25T23:00:00Z",
+          "kind": "auth_session_observation",
+          "expected": {
+            "authentication_status": 401,
+            "activity_refreshed": false,
+            "last_seen_at": "2026-09-25T23:00:00Z",
+            "idle_expires_at": "2026-10-25T23:00:00Z",
+            "absolute_expires_at": "2026-11-25T00:00:00Z"
+          }
+        }
+      ]
+    },
+    {
+      "id": "clock-websocket-upgrade-and-frame-do-not-refresh-idle",
+      "initial": {
+        "created_at": "2026-08-27T00:00:00Z",
+        "last_seen_at": "2026-08-27T00:00:00Z",
+        "idle_expires_at": "2026-09-26T00:00:00Z",
+        "absolute_expires_at": "2026-11-25T00:00:00Z"
+      },
+      "events": [
+        {
+          "at": "2026-08-27T00:10:00Z",
+          "kind": "websocket_upgrade",
+          "expected": {
+            "authentication_status": 200,
+            "activity_refreshed": false,
+            "last_seen_at": "2026-08-27T00:00:00Z",
+            "idle_expires_at": "2026-09-26T00:00:00Z",
+            "absolute_expires_at": "2026-11-25T00:00:00Z"
+          }
+        },
+        {
+          "at": "2026-09-25T23:59:59Z",
+          "kind": "websocket_frame",
+          "expected": {
+            "authentication_status": 200,
+            "activity_refreshed": false,
+            "last_seen_at": "2026-08-27T00:00:00Z",
+            "idle_expires_at": "2026-09-26T00:00:00Z",
+            "absolute_expires_at": "2026-11-25T00:00:00Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00Z",
+          "kind": "websocket_expiry_check",
+          "expected": {
+            "authentication_status": 401,
+            "activity_refreshed": false,
+            "last_seen_at": "2026-08-27T00:00:00Z",
+            "idle_expires_at": "2026-09-26T00:00:00Z",
+            "absolute_expires_at": "2026-11-25T00:00:00Z",
+            "websocket_closed_within_seconds": 5,
+            "late_upstream_frame_dropped": true,
+            "reconnect_status": 401
+          }
+        }
+      ]
+    },
+    {
+      "id": "clock-absolute-expiry-remains-immutable",
+      "initial": {
+        "created_at": "2026-08-27T00:00:00Z",
+        "last_seen_at": "2026-11-24T23:30:00Z",
+        "idle_expires_at": "2026-11-25T00:00:00Z",
+        "absolute_expires_at": "2026-11-25T00:00:00Z"
+      },
+      "events": [
+        {
+          "at": "2026-11-24T23:45:00Z",
+          "kind": "websocket_upgrade",
+          "expected": {
+            "authentication_status": 200,
+            "activity_refreshed": false,
+            "last_seen_at": "2026-11-24T23:30:00Z",
+            "idle_expires_at": "2026-11-25T00:00:00Z",
+            "absolute_expires_at": "2026-11-25T00:00:00Z"
+          }
+        },
+        {
+          "at": "2026-11-24T23:59:59Z",
+          "kind": "http_request",
+          "method": "GET",
+          "path": "/view?filename=last-frame.png&type=output",
+          "accepted": true,
+          "expected": {
+            "authentication_status": 200,
+            "activity_refreshed": true,
+            "last_seen_at": "2026-11-24T23:59:59Z",
+            "idle_expires_at": "2026-11-25T00:00:00Z",
+            "absolute_expires_at": "2026-11-25T00:00:00Z"
+          }
+        },
+        {
+          "at": "2026-11-25T00:00:00Z",
+          "kind": "websocket_expiry_check",
+          "expected": {
+            "authentication_status": 401,
+            "activity_refreshed": false,
+            "last_seen_at": "2026-11-24T23:59:59Z",
+            "idle_expires_at": "2026-11-25T00:00:00Z",
+            "absolute_expires_at": "2026-11-25T00:00:00Z",
+            "websocket_closed_within_seconds": 5,
+            "late_upstream_frame_dropped": true,
+            "reconnect_status": 401
+          }
+        }
+      ]
+    },
+    {
+      "id": "clock-other-auth-request-does-not-refresh-idle",
+      "initial": {
+        "created_at": "2026-08-27T00:00:00Z",
+        "last_seen_at": "2026-08-27T00:00:00Z",
+        "idle_expires_at": "2026-09-26T00:00:00Z",
+        "absolute_expires_at": "2026-11-25T00:00:00Z"
+      },
+      "events": [
+        {
+          "at": "2026-09-25T23:59:59Z",
+          "kind": "other_auth_request",
+          "method": "POST",
+          "path": "/auth/login",
+          "accepted": false,
+          "expected": {
+            "authentication_status": 200,
+            "activity_refreshed": false,
+            "last_seen_at": "2026-08-27T00:00:00Z",
+            "idle_expires_at": "2026-09-26T00:00:00Z",
+            "absolute_expires_at": "2026-11-25T00:00:00Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00Z",
+          "kind": "auth_session_observation",
+          "expected": {
+            "authentication_status": 401,
+            "activity_refreshed": false,
+            "last_seen_at": "2026-08-27T00:00:00Z",
+            "idle_expires_at": "2026-09-26T00:00:00Z",
+            "absolute_expires_at": "2026-11-25T00:00:00Z"
+          }
+        }
+      ]
+    },
+    {
+      "id": "clock-preflight-and-policy-failure-do-not-refresh-idle",
+      "initial": {
+        "created_at": "2026-08-27T00:00:00Z",
+        "last_seen_at": "2026-08-27T00:00:00Z",
+        "idle_expires_at": "2026-09-26T00:00:00Z",
+        "absolute_expires_at": "2026-11-25T00:00:00Z"
+      },
+      "events": [
+        {
+          "at": "2026-09-25T23:59:58Z",
+          "kind": "cross_origin_preflight",
+          "method": "OPTIONS",
+          "path": "/api/prompt",
+          "accepted": false,
+          "expected": {
+            "authentication_status": 200,
+            "activity_refreshed": false,
+            "last_seen_at": "2026-08-27T00:00:00Z",
+            "idle_expires_at": "2026-09-26T00:00:00Z",
+            "absolute_expires_at": "2026-11-25T00:00:00Z"
+          }
+        },
+        {
+          "at": "2026-09-25T23:59:59Z",
+          "kind": "policy_rejected_request",
+          "method": "POST",
+          "path": "/api/prompt",
+          "accepted": false,
+          "expected": {
+            "authentication_status": 200,
+            "activity_refreshed": false,
+            "last_seen_at": "2026-08-27T00:00:00Z",
+            "idle_expires_at": "2026-09-26T00:00:00Z",
+            "absolute_expires_at": "2026-11-25T00:00:00Z"
+          }
+        },
+        {
+          "at": "2026-09-26T00:00:00Z",
+          "kind": "auth_session_observation",
+          "expected": {
+            "authentication_status": 401,
+            "activity_refreshed": false,
+            "last_seen_at": "2026-08-27T00:00:00Z",
+            "idle_expires_at": "2026-09-26T00:00:00Z",
+            "absolute_expires_at": "2026-11-25T00:00:00Z"
+          }
+        }
+      ]
+    }
+  ],
+  "revoke_all_convergence_cases": [
+    {
+      "id": "revoke-before-commit-request-drop-converges",
+      "steps": [
+        {
+          "kind": "revoke_request",
+          "transport": "request_dropped_before_commit",
+          "server_commit": "not_committed",
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "close_local_ephemeral",
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "reauthenticate",
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "revoke_request",
+          "transport": "response_delivered",
+          "server_commit": "committed",
+          "status": 200,
+          "body": {
+            "schema_version": 1,
+            "revoked": true,
+            "revoked_session_count": 3
+          },
+          "expected_client_state": "confirmed"
+        }
+      ],
+      "expected": {
+        "client_state": "confirmed",
+        "local_ephemeral_closed": true,
+        "reauthenticated": true,
+        "final_caller_session_revoked": true,
+        "confirmation_status": 200,
+        "waited_seconds": 0
+      }
+    },
+    {
+      "id": "revoke-after-commit-response-loss-converges",
+      "steps": [
+        {
+          "kind": "revoke_request",
+          "transport": "response_lost_after_commit",
+          "server_commit": "committed",
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "close_local_ephemeral",
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "reauthenticate",
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "revoke_request",
+          "transport": "response_delivered",
+          "server_commit": "committed",
+          "status": 200,
+          "body": {
+            "schema_version": 1,
+            "revoked": true,
+            "revoked_session_count": 1
+          },
+          "expected_client_state": "confirmed"
+        }
+      ],
+      "expected": {
+        "client_state": "confirmed",
+        "local_ephemeral_closed": true,
+        "reauthenticated": true,
+        "final_caller_session_revoked": true,
+        "confirmation_status": 200,
+        "waited_seconds": 0
+      }
+    },
+    {
+      "id": "revoke-5xx-outcome-remains-unknown-until-convergence",
+      "steps": [
+        {
+          "kind": "revoke_request",
+          "transport": "response_delivered",
+          "server_commit": "unknown",
+          "status": 503,
+          "body": {
+            "schema_version": 1,
+            "error": {
+              "code": "SERVICE_UNAVAILABLE",
+              "message": "The authentication service is unavailable."
+            }
+          },
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "close_local_ephemeral",
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "reauthenticate",
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "revoke_request",
+          "transport": "response_delivered",
+          "server_commit": "committed",
+          "status": 200,
+          "body": {
+            "schema_version": 1,
+            "revoked": true,
+            "revoked_session_count": 2
+          },
+          "expected_client_state": "confirmed"
+        }
+      ],
+      "expected": {
+        "client_state": "confirmed",
+        "local_ephemeral_closed": true,
+        "reauthenticated": true,
+        "final_caller_session_revoked": true,
+        "confirmation_status": 200,
+        "waited_seconds": 0
+      }
+    },
+    {
+      "id": "revoke-401-does-not-confirm-prior-commit",
+      "steps": [
+        {
+          "kind": "revoke_request",
+          "transport": "response_delivered",
+          "server_commit": "not_committed",
+          "status": 401,
+          "body": {
+            "schema_version": 1,
+            "error": {
+              "code": "AUTH_REQUIRED",
+              "message": "Authentication is required."
+            }
+          },
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "close_local_ephemeral",
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "reauthenticate",
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "revoke_request",
+          "transport": "response_delivered",
+          "server_commit": "committed",
+          "status": 200,
+          "body": {
+            "schema_version": 1,
+            "revoked": true,
+            "revoked_session_count": 2
+          },
+          "expected_client_state": "confirmed"
+        }
+      ],
+      "expected": {
+        "client_state": "confirmed",
+        "local_ephemeral_closed": true,
+        "reauthenticated": true,
+        "final_caller_session_revoked": true,
+        "confirmation_status": 200,
+        "waited_seconds": 0
+      }
+    },
+    {
+      "id": "revoke-429-waits-without-confirming",
+      "steps": [
+        {
+          "kind": "revoke_request",
+          "transport": "response_delivered",
+          "server_commit": "not_committed",
+          "status": 429,
+          "retry_after_seconds": 30,
+          "body": {
+            "schema_version": 1,
+            "error": {
+              "code": "RATE_LIMITED",
+              "message": "Too many requests.",
+              "retry_after_seconds": 30
+            }
+          },
+          "expected_client_state": "not_confirmed_rate_limited"
+        },
+        {
+          "kind": "close_local_ephemeral",
+          "expected_client_state": "not_confirmed_rate_limited"
+        },
+        {
+          "kind": "wait_retry_after",
+          "seconds": 30,
+          "expected_client_state": "not_confirmed_rate_limited"
+        },
+        {
+          "kind": "revoke_request",
+          "transport": "response_delivered",
+          "server_commit": "committed",
+          "status": 200,
+          "body": {
+            "schema_version": 1,
+            "revoked": true,
+            "revoked_session_count": 2
+          },
+          "expected_client_state": "confirmed"
+        }
+      ],
+      "expected": {
+        "client_state": "confirmed",
+        "local_ephemeral_closed": true,
+        "reauthenticated": false,
+        "final_caller_session_revoked": true,
+        "confirmation_status": 200,
+        "waited_seconds": 30
+      }
+    },
+    {
+      "id": "revoke-duplicate-after-lost-response-stays-unknown",
+      "steps": [
+        {
+          "kind": "revoke_request",
+          "transport": "response_lost_after_commit",
+          "server_commit": "committed",
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "revoke_request",
+          "transport": "response_delivered",
+          "server_commit": "not_committed",
+          "duplicate": true,
+          "status": 401,
+          "body": {
+            "schema_version": 1,
+            "error": {
+              "code": "AUTH_REQUIRED",
+              "message": "Authentication is required."
+            }
+          },
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "close_local_ephemeral",
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "reauthenticate",
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "revoke_request",
+          "transport": "response_delivered",
+          "server_commit": "committed",
+          "status": 200,
+          "body": {
+            "schema_version": 1,
+            "revoked": true,
+            "revoked_session_count": 1
+          },
+          "expected_client_state": "confirmed"
+        }
+      ],
+      "expected": {
+        "client_state": "confirmed",
+        "local_ephemeral_closed": true,
+        "reauthenticated": true,
+        "final_caller_session_revoked": true,
+        "confirmation_status": 200,
+        "waited_seconds": 0
+      }
+    },
+    {
+      "id": "revoke-malformed-200-remains-unknown-until-convergence",
+      "steps": [
+        {
+          "kind": "revoke_request",
+          "transport": "response_delivered",
+          "server_commit": "committed",
+          "status": 200,
+          "body": {
+            "schema_version": 1,
+            "revoked": true,
+            "revoked_session_count": 0
+          },
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "close_local_ephemeral",
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "reauthenticate",
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "revoke_request",
+          "transport": "response_delivered",
+          "server_commit": "committed",
+          "status": 200,
+          "body": {
+            "schema_version": 1,
+            "revoked": true,
+            "revoked_session_count": 1
+          },
+          "expected_client_state": "confirmed"
+        }
+      ],
+      "expected": {
+        "client_state": "confirmed",
+        "local_ephemeral_closed": true,
+        "reauthenticated": true,
+        "final_caller_session_revoked": true,
+        "confirmation_status": 200,
+        "waited_seconds": 0
+      }
+    },
+    {
+      "id": "revoke-lost-429-response-converges-after-reauth",
+      "steps": [
+        {
+          "kind": "revoke_request",
+          "transport": "response_lost_after_rate_limit_rejection",
+          "server_commit": "not_committed",
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "close_local_ephemeral",
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "reauthenticate",
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "revoke_request",
+          "transport": "response_delivered",
+          "server_commit": "not_committed",
+          "status": 429,
+          "retry_after_seconds": 30,
+          "body": {
+            "schema_version": 1,
+            "error": {
+              "code": "RATE_LIMITED",
+              "message": "Too many requests.",
+              "retry_after_seconds": 30
+            }
+          },
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "wait_retry_after",
+          "seconds": 30,
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "revoke_request",
+          "transport": "response_delivered",
+          "server_commit": "committed",
+          "status": 200,
+          "body": {
+            "schema_version": 1,
+            "revoked": true,
+            "revoked_session_count": 1
+          },
+          "expected_client_state": "confirmed"
+        }
+      ],
+      "expected": {
+        "client_state": "confirmed",
+        "local_ephemeral_closed": true,
+        "reauthenticated": true,
+        "final_caller_session_revoked": true,
+        "confirmation_status": 200,
+        "waited_seconds": 30
+      }
+    },
+    {
+      "id": "revoke-429-then-401-requires-reauth-convergence",
+      "steps": [
+        {
+          "kind": "revoke_request",
+          "transport": "response_delivered",
+          "server_commit": "not_committed",
+          "status": 429,
+          "retry_after_seconds": 30,
+          "body": {
+            "schema_version": 1,
+            "error": {
+              "code": "RATE_LIMITED",
+              "message": "Too many requests.",
+              "retry_after_seconds": 30
+            }
+          },
+          "expected_client_state": "not_confirmed_rate_limited"
+        },
+        {
+          "kind": "wait_retry_after",
+          "seconds": 30,
+          "expected_client_state": "not_confirmed_rate_limited"
+        },
+        {
+          "kind": "revoke_request",
+          "transport": "response_delivered",
+          "server_commit": "not_committed",
+          "status": 401,
+          "body": {
+            "schema_version": 1,
+            "error": {
+              "code": "AUTH_REQUIRED",
+              "message": "Authentication is required."
+            }
+          },
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "close_local_ephemeral",
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "reauthenticate",
+          "expected_client_state": "revoke_outcome_unknown"
+        },
+        {
+          "kind": "revoke_request",
+          "transport": "response_delivered",
+          "server_commit": "committed",
+          "status": 200,
+          "body": {
+            "schema_version": 1,
+            "revoked": true,
+            "revoked_session_count": 1
+          },
+          "expected_client_state": "confirmed"
+        }
+      ],
+      "expected": {
+        "client_state": "confirmed",
+        "local_ephemeral_closed": true,
+        "reauthenticated": true,
+        "final_caller_session_revoked": true,
+        "confirmation_status": 200,
+        "waited_seconds": 30
+      }
+    }
+  ]
+}
