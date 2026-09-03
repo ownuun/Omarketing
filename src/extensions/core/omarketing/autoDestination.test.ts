@@ -46,6 +46,30 @@ describe('resolveAutoDestination', () => {
     ).toEqual({ state: 'blocked', reason: 'login_required' })
   })
 
+  it.each([
+    ['ready', false, 'unverified'],
+    ['unverified', true, 'unverified'],
+    ['blocked', true, 'blocked']
+  ] as const)(
+    'blocks readiness=%s and verified=%s with reason=%s',
+    (readiness, verified, reason) => {
+      expect(
+        resolveAutoDestination(
+          [
+            {
+              platform: 'threads',
+              accountAlias: 'acct-010',
+              targetAlias: null,
+              readiness,
+              verified
+            }
+          ],
+          { platform: 'threads', accountAlias: 'acct-010', targetAlias: null }
+        )
+      ).toEqual({ state: 'blocked', reason })
+    }
+  )
+
   it('fails closed for missing or duplicate registrations', () => {
     expect(
       resolveAutoDestination(registrations, {
