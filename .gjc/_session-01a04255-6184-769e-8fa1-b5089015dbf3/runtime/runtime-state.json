@@ -1,1 +1,38 @@
-{"schema_version":1,"session_id":"01a04255-6184-769e-8fa1-b5089015dbf3","state":"completed","ready_for_input":false,"updated_at":"2026-08-27T08:43:55.112Z","current_turn_id":null,"last_turn_id":null,"live":false,"reason":null,"source":"agent_session_event","event":"agent_end","cwd":"/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing","workdir":"/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing","branch":null,"session_file":"/Users/ownuun/.gjc/agent/sessions/v2-hoqwkh2wefxmyiuhsl66vkg4mo6rrxbqemo47psscgetgo2tx3oa/2026-08-27T08-28-06-916Z_01a04255-6184-769e-8fa1-b5089015dbf3.jsonl","activity":{"seq":150,"last_activity_at":"2026-08-27T08:43:21.723Z","tool":"todo_write","phase":"finished","outcome":"success","elapsed_ms":1,"active_tool_count":0,"active_tools":[],"in_flight":[]},"execution_state":"terminal_ok","receipt_state":"present","ended_at":"2026-08-27T08:43:55.112Z","final_response":{"text":"세 독립 audit 결과는 모두 이미 gap matrix와 Tool Evaluation에 반영했습니다. 세 lane 모두 `BLOCKED`로 일치하며 최종 판정은 변함없습니다.\n\n`mt result omarketing-release-compliance-audit` 기록과 재조회도 완료됐습니다.","format":"markdown","source":"agent_end","artifact_path":null,"truncated":false}}
+{
+  "schema_version": 1,
+  "session_id": "01a04255-6184-769e-8fa1-b5089015dbf3",
+  "state": "completed",
+  "ready_for_input": false,
+  "updated_at": "2026-08-27T08:43:55.112Z",
+  "current_turn_id": null,
+  "last_turn_id": null,
+  "live": false,
+  "reason": null,
+  "source": "agent_session_event",
+  "event": "agent_end",
+  "cwd": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+  "workdir": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+  "branch": null,
+  "session_file": "/Users/ownuun/.gjc/agent/sessions/v2-hoqwkh2wefxmyiuhsl66vkg4mo6rrxbqemo47psscgetgo2tx3oa/2026-08-27T08-28-06-916Z_01a04255-6184-769e-8fa1-b5089015dbf3.jsonl",
+  "activity": {
+    "seq": 150,
+    "last_activity_at": "2026-08-27T08:43:21.723Z",
+    "tool": "todo_write",
+    "phase": "finished",
+    "outcome": "success",
+    "elapsed_ms": 1,
+    "active_tool_count": 0,
+    "active_tools": [],
+    "in_flight": []
+  },
+  "execution_state": "terminal_ok",
+  "receipt_state": "present",
+  "ended_at": "2026-08-27T08:43:55.112Z",
+  "final_response": {
+    "text": "세 독립 audit 결과는 모두 이미 gap matrix와 Tool Evaluation에 반영했습니다. 세 lane 모두 `BLOCKED`로 일치하며 최종 판정은 변함없습니다.\n\n`mt result omarketing-release-compliance-audit` 기록과 재조회도 완료됐습니다.",
+    "format": "markdown",
+    "source": "agent_end",
+    "artifact_path": null,
+    "truncated": false
+  }
+}

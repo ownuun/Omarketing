@@ -76,14 +76,14 @@
 
 모든 요구사항은 아래 6가지로만 판정한다.
 
-| 판정 | 의미 | 구현 원칙 |
-|---|---|---|
-| 기존 그대로 사용 | 기존 동작·API·용어를 유지 | core 수정 없음 |
-| UI 확장 | 기존 화면 안에 Omarketing 필터·상세·액션만 추가 | 범용 extension hook 최소 사용 |
-| 노드 추가 | backend custom node와 기존 Node Library 등록 | `/object_info`·기존 prompt 실행 사용 |
-| 템플릿 추가 | 기존 갤러리에 공식 Omarketing workflow 추가 | 기존 템플릿과 사용자 템플릿 유지 |
-| adapter 추가 | 외부 팀·Hermes 호출을 backend node 뒤에 격리 | 프론트가 외부 credential·상태를 소유하지 않음 |
-| 후속 | MVP 구현에서 제외 | 기존 기능은 숨기거나 제거하지 않음 |
+| 판정             | 의미                                            | 구현 원칙                                     |
+| ---------------- | ----------------------------------------------- | --------------------------------------------- |
+| 기존 그대로 사용 | 기존 동작·API·용어를 유지                       | core 수정 없음                                |
+| UI 확장          | 기존 화면 안에 Omarketing 필터·상세·액션만 추가 | 범용 extension hook 최소 사용                 |
+| 노드 추가        | backend custom node와 기존 Node Library 등록    | `/object_info`·기존 prompt 실행 사용          |
+| 템플릿 추가      | 기존 갤러리에 공식 Omarketing workflow 추가     | 기존 템플릿과 사용자 템플릿 유지              |
+| adapter 추가     | 외부 팀·Hermes 호출을 backend node 뒤에 격리    | 프론트가 외부 credential·상태를 소유하지 않음 |
+| 후속             | MVP 구현에서 제외                               | 기존 기능은 숨기거나 제거하지 않음            |
 
 공통 상태는 모든 표면에서 다음을 빠짐없이 처리한다.
 
@@ -105,44 +105,44 @@
 
 ### 3.1 애플리케이션 셸·라우팅·시작 상태
 
-| 현재 | 판정 | 새 기능/라벨 | 클릭/진입 결과 | API | 상태/예외 |
-|---|---|---|---|---|---|
-| `/` Graph workspace | 기존 그대로 사용 | Omarketing workflow도 같은 workspace에서 열기 | 기존 마지막 workflow 복구 | 기존 Workflow API | 기존 복구·오류 동작 |
-| Graph/App 모드 | 기존 그대로 사용 | 추가 없음 | 기존 동작 유지 | 기존 Workflow 동작 | 기존 상태 유지 |
-| user-select | 기존 그대로 사용 | Omarketing owner identity는 backend 로그인 세션에서 파생 | 기존 UI 동작 유지 | Omarketing 인증 경계 | 인증 만료·재로그인 |
-| Comfy Cloud 로그인·결제·크레딧 경로 | 기존 그대로 사용 | Omarketing 외부 연동 credential과 분리 | 기존 동작 유지 | 기존 API | 기존 상태 유지 |
-| 공유 workflow 경로 | 후속 | Omarketing 전용 공유 기능을 MVP에서 추가하지 않음 | 기존 동작 유지 | 기존 API | 기존 상태 유지 |
-| 전역 BlockUI | 유지 | 초기화 중 | 전체 화면 초기화 표시 | bootstrap | 단계별 실패 및 재시도 |
-| WorkspaceAuthGate | 기존 그대로 사용 | Omarketing 서버 로그인은 reverse proxy/backend session으로 보호 | 기존 gate 수정 없음 | Omarketing session | 인증 실패·만료 |
+| 현재                                | 판정             | 새 기능/라벨                                                    | 클릭/진입 결과            | API                  | 상태/예외             |
+| ----------------------------------- | ---------------- | --------------------------------------------------------------- | ------------------------- | -------------------- | --------------------- |
+| `/` Graph workspace                 | 기존 그대로 사용 | Omarketing workflow도 같은 workspace에서 열기                   | 기존 마지막 workflow 복구 | 기존 Workflow API    | 기존 복구·오류 동작   |
+| Graph/App 모드                      | 기존 그대로 사용 | 추가 없음                                                       | 기존 동작 유지            | 기존 Workflow 동작   | 기존 상태 유지        |
+| user-select                         | 기존 그대로 사용 | Omarketing owner identity는 backend 로그인 세션에서 파생        | 기존 UI 동작 유지         | Omarketing 인증 경계 | 인증 만료·재로그인    |
+| Comfy Cloud 로그인·결제·크레딧 경로 | 기존 그대로 사용 | Omarketing 외부 연동 credential과 분리                          | 기존 동작 유지            | 기존 API             | 기존 상태 유지        |
+| 공유 workflow 경로                  | 후속             | Omarketing 전용 공유 기능을 MVP에서 추가하지 않음               | 기존 동작 유지            | 기존 API             | 기존 상태 유지        |
+| 전역 BlockUI                        | 유지             | 초기화 중                                                       | 전체 화면 초기화 표시     | bootstrap            | 단계별 실패 및 재시도 |
+| WorkspaceAuthGate                   | 기존 그대로 사용 | Omarketing 서버 로그인은 reverse proxy/backend session으로 보호 | 기존 gate 수정 없음       | Omarketing session   | 인증 실패·만료        |
 
 ### 3.2 브랜딩·메타데이터
 
-| 현재 | 판정 | 새 값 | 클릭 결과 |
-|---|---|---|---|
-| ComfyUI 로고·favicon | 정적 branding | Omarketing 로고·favicon | 기존 진입 동작 유지 |
-| 문서 title | 정적 branding | `Omarketing` | 없음 |
-| package description/homepage/repository | 정적 branding+GPL 유지 | Omarketing 정보와 원본 attribution | About에서 양쪽 링크 표시 |
-| Comfy 색상 토큰 | 유지 | 1차에는 색감 유지 | 테마 토글 유지 |
-| About | UI 확장 | Omarketing 수정 고지, 버전, 원본 ComfyUI 링크 추가 | 외부 링크 새 창 |
-| Release/What's New | 기존 그대로 사용 | Omarketing 변경 내역은 별도 문서 링크로만 추가 | 기존 동작 유지 |
+| 현재                                    | 판정                   | 새 값                                              | 클릭 결과                |
+| --------------------------------------- | ---------------------- | -------------------------------------------------- | ------------------------ |
+| ComfyUI 로고·favicon                    | 정적 branding          | Omarketing 로고·favicon                            | 기존 진입 동작 유지      |
+| 문서 title                              | 정적 branding          | `Omarketing`                                       | 없음                     |
+| package description/homepage/repository | 정적 branding+GPL 유지 | Omarketing 정보와 원본 attribution                 | About에서 양쪽 링크 표시 |
+| Comfy 색상 토큰                         | 유지                   | 1차에는 색감 유지                                  | 테마 토글 유지           |
+| About                                   | UI 확장                | Omarketing 수정 고지, 버전, 원본 ComfyUI 링크 추가 | 외부 링크 새 창          |
+| Release/What's New                      | 기존 그대로 사용       | Omarketing 변경 내역은 별도 문서 링크로만 추가     | 기존 동작 유지           |
 
 ### 3.3 좌측 아이콘 레일
 
 기존 아이콘 레일의 순서·탭·용어를 유지한다. Omarketing 전용 메뉴·레퍼런스 탭·결과물 탭·실행 기록 탭을 새로 만들지 않는다.
 
-| 현재 탭 | 판정 | 새 라벨 | 클릭 결과 | API |
-|---|---|---|---|---|
-| Workflows | 기존 그대로+항목 추가 | 프로젝트/마케팅 워크플로 | 기존 폴더·즐겨찾기·최근 트리 안에 프로젝트 폴더와 마케팅 워크플로 저장 | 기존 Workflow API |
-| Node Library | 기존 그대로+카테고리 추가 | Omarketing 마케팅 노드 | 기존 검색·즐겨찾기·drag 동작으로 추가 | extension node catalog |
-| Model Library | 기존 그대로 | 기존 ComfyUI 모델 | 변경 없음 | 기존 모델 API |
-| Assets | 기존 그대로+필터·메타데이터 추가 | 레퍼런스·후보·최종본 | 기존 카드·선택·미리보기 안에서 Omarketing asset 유형 필터 제공 | 기존 Assets + adapter metadata |
-| Job History | 기존 그대로 | 기존 Queue/History | Omarketing job도 동일한 카드·상태·취소·실패 동작 사용 | 기존 Jobs API |
-| Apps | 기존 그대로 | 기존 Apps | 변경 없음 | 기존 API |
-| Templates | 기존 그대로+공식 카테고리 추가 | Omarketing 공식 파이프라인 | 기존 갤러리 안에 공식 템플릿 5개 추가 | template extension catalog |
-| Help Center | 기존 그대로+링크 추가 | Omarketing 도움말 | 필요 시 Omarketing 문서 링크만 추가 | Docs |
-| Console | 기존 그대로 | 실행 로그 | Omarketing node 로그도 기존 출력 경로 사용 | 기존 Logs |
-| Shortcuts | 기존 그대로 | 기존 단축키 | 변경 없음 | local settings |
-| Settings | 기존 그대로+항목 추가 | 기존 설정 | Omarketing 연동 상태 항목만 extension setting으로 추가 | 기존 Settings API/local |
+| 현재 탭       | 판정                             | 새 라벨                    | 클릭 결과                                                              | API                            |
+| ------------- | -------------------------------- | -------------------------- | ---------------------------------------------------------------------- | ------------------------------ |
+| Workflows     | 기존 그대로+항목 추가            | 프로젝트/마케팅 워크플로   | 기존 폴더·즐겨찾기·최근 트리 안에 프로젝트 폴더와 마케팅 워크플로 저장 | 기존 Workflow API              |
+| Node Library  | 기존 그대로+카테고리 추가        | Omarketing 마케팅 노드     | 기존 검색·즐겨찾기·drag 동작으로 추가                                  | extension node catalog         |
+| Model Library | 기존 그대로                      | 기존 ComfyUI 모델          | 변경 없음                                                              | 기존 모델 API                  |
+| Assets        | 기존 그대로+필터·메타데이터 추가 | 레퍼런스·후보·최종본       | 기존 카드·선택·미리보기 안에서 Omarketing asset 유형 필터 제공         | 기존 Assets + adapter metadata |
+| Job History   | 기존 그대로                      | 기존 Queue/History         | Omarketing job도 동일한 카드·상태·취소·실패 동작 사용                  | 기존 Jobs API                  |
+| Apps          | 기존 그대로                      | 기존 Apps                  | 변경 없음                                                              | 기존 API                       |
+| Templates     | 기존 그대로+공식 카테고리 추가   | Omarketing 공식 파이프라인 | 기존 갤러리 안에 공식 템플릿 5개 추가                                  | template extension catalog     |
+| Help Center   | 기존 그대로+링크 추가            | Omarketing 도움말          | 필요 시 Omarketing 문서 링크만 추가                                    | Docs                           |
+| Console       | 기존 그대로                      | 실행 로그                  | Omarketing node 로그도 기존 출력 경로 사용                             | 기존 Logs                      |
+| Shortcuts     | 기존 그대로                      | 기존 단축키                | 변경 없음                                                              | local settings                 |
+| Settings      | 기존 그대로+항목 추가            | 기존 설정                  | Omarketing 연동 상태 항목만 extension setting으로 추가                 | 기존 Settings API/local        |
 
 레일 옵션과 기존 기본값을 유지한다: 좌/우 위치, normal/small, floating/connected, overflow scroll.
 
@@ -150,15 +150,15 @@
 
 #### 파일
 
-| 현재 옵션 | 새 옵션 | 판정 | 클릭 결과 |
-|---|---|---|---|
-| New Blank Workflow | New Blank Workflow | 기존 그대로 사용 | 기존 빈 캔버스 생성 |
-| Open Workflow | Workflow 불러오기 | 기존 그대로 사용 | 기존 동작 유지 |
-| Save | 저장 | 유지 | 현재 draft 저장 |
-| Save As | 다른 이름으로 저장 | 유지 | 이름·폴더·충돌 확인 |
-| Export | Workflow 내보내기 | 기존 그대로 사용 | 기존 JSON export 유지 |
-| Export API | API 형식 내보내기 | 기존 그대로 사용 | 기존 동작 유지 |
-| Load Default Workflow | 기본 Workflow 불러오기 | 기존 그대로 사용 | 기존 동작 유지 |
+| 현재 옵션             | 새 옵션                | 판정             | 클릭 결과             |
+| --------------------- | ---------------------- | ---------------- | --------------------- |
+| New Blank Workflow    | New Blank Workflow     | 기존 그대로 사용 | 기존 빈 캔버스 생성   |
+| Open Workflow         | Workflow 불러오기      | 기존 그대로 사용 | 기존 동작 유지        |
+| Save                  | 저장                   | 유지             | 현재 draft 저장       |
+| Save As               | 다른 이름으로 저장     | 유지             | 이름·폴더·충돌 확인   |
+| Export                | Workflow 내보내기      | 기존 그대로 사용 | 기존 JSON export 유지 |
+| Export API            | API 형식 내보내기      | 기존 그대로 사용 | 기존 동작 유지        |
+| Load Default Workflow | 기본 Workflow 불러오기 | 기존 그대로 사용 | 기존 동작 유지        |
 
 #### 편집
 
@@ -181,13 +181,13 @@
 
 ### 3.5 상단 탭·파이프라인 액션
 
-| 현재 | 새 기능 | 클릭 옵션 |
-|---|---|---|
-| Workflow tab | Workflow tab | 활성화, drag 순서 변경, overflow 이동, 닫기 |
-| dirty marker | 미저장 표시 | 저장 후 제거 |
-| tab popover | 기존 Workflow 메뉴 | 기존 옵션 유지 |
-| Blueprint publish | 기존 그대로 사용 | 사용자 custom template 동작 유지; Omarketing 공식 배지는 부여하지 않음 |
-| App Builder | 기존 그대로 사용 | 기존 동작 유지 |
+| 현재              | 새 기능            | 클릭 옵션                                                              |
+| ----------------- | ------------------ | ---------------------------------------------------------------------- |
+| Workflow tab      | Workflow tab       | 활성화, drag 순서 변경, overflow 이동, 닫기                            |
+| dirty marker      | 미저장 표시        | 저장 후 제거                                                           |
+| tab popover       | 기존 Workflow 메뉴 | 기존 옵션 유지                                                         |
+| Blueprint publish | 기존 그대로 사용   | 사용자 custom template 동작 유지; Omarketing 공식 배지는 부여하지 않음 |
+| App Builder       | 기존 그대로 사용   | 기존 동작 유지                                                         |
 
 닫기 시 미저장 확인은 `저장 후 닫기 / 저장하지 않고 닫기 / 취소` 3개 선택지를 유지한다. 삭제·덮어쓰기·비우기는 각각 별도 확인 모달을 사용한다.
 
@@ -217,29 +217,29 @@
 
 #### 공통 옵션
 
-| 옵션 | 대상 | 동작 |
-|---|---|---|
-| 이름 변경 | 노드/그룹 | 표시명만 변경, type 불변 |
-| 복사 | 선택 | 노드와 내부 링크 복사; 비밀 값 제외 |
-| 복제 | 선택 | 새 node_id 발급, 외부 링크 미연결 |
-| 삭제 | 선택 | 영향받는 downstream 경고 후 삭제 |
-| 고정/해제 | 노드 | drag 방지 |
-| 비활성/활성 | 노드 | 기존 ComfyUI prompt 직렬화·실행 의미에 따라 제외/복귀 |
-| 우회/우회 해제 | 호환 입력·출력 노드 | 입력을 출력으로 전달 가능한 경우에만 |
-| 이 브랜치 실행 | 결과 도달 경로 | 해당 output까지 부분 실행 |
-| 이 노드까지 실행 | 노드 | upstream 포함 실행 |
-| 이 노드부터 실행 | 노드 | 검증 가능한 downstream 범위 실행 |
-| 새로고침 | 외부 데이터 노드 | 원격 상태 재조회 |
-| 정보 | 노드 | 설명, 버전, owner team, 입출력 schema |
-| 최소화/확장 | 노드 | 위젯 숨김/표시 |
-| 모양/색상 | 노드/그룹 | 시각 속성만 변경 |
-| 정렬 | 다중 선택 | 좌/중앙/우/상/중앙/하 정렬 |
-| 분배 | 다중 선택 | 수평/수직 균등 분배 |
-| 프레임 | 다중 선택 | 설명 가능한 프레임 생성 |
-| 서브그래프로 변환 | 다중 선택 | 재사용 블록; 후속 단계 |
-| 그룹에 맞춤 | 그룹 | 포함 노드에 맞춰 resize |
-| 로그 열기 | 실행된 노드 | 최신 node attempt 로그 |
-| 입력/출력 검사 | 노드 | 실제 payload schema 및 sample |
+| 옵션              | 대상                | 동작                                                  |
+| ----------------- | ------------------- | ----------------------------------------------------- |
+| 이름 변경         | 노드/그룹           | 표시명만 변경, type 불변                              |
+| 복사              | 선택                | 노드와 내부 링크 복사; 비밀 값 제외                   |
+| 복제              | 선택                | 새 node_id 발급, 외부 링크 미연결                     |
+| 삭제              | 선택                | 영향받는 downstream 경고 후 삭제                      |
+| 고정/해제         | 노드                | drag 방지                                             |
+| 비활성/활성       | 노드                | 기존 ComfyUI prompt 직렬화·실행 의미에 따라 제외/복귀 |
+| 우회/우회 해제    | 호환 입력·출력 노드 | 입력을 출력으로 전달 가능한 경우에만                  |
+| 이 브랜치 실행    | 결과 도달 경로      | 해당 output까지 부분 실행                             |
+| 이 노드까지 실행  | 노드                | upstream 포함 실행                                    |
+| 이 노드부터 실행  | 노드                | 검증 가능한 downstream 범위 실행                      |
+| 새로고침          | 외부 데이터 노드    | 원격 상태 재조회                                      |
+| 정보              | 노드                | 설명, 버전, owner team, 입출력 schema                 |
+| 최소화/확장       | 노드                | 위젯 숨김/표시                                        |
+| 모양/색상         | 노드/그룹           | 시각 속성만 변경                                      |
+| 정렬              | 다중 선택           | 좌/중앙/우/상/중앙/하 정렬                            |
+| 분배              | 다중 선택           | 수평/수직 균등 분배                                   |
+| 프레임            | 다중 선택           | 설명 가능한 프레임 생성                               |
+| 서브그래프로 변환 | 다중 선택           | 재사용 블록; 후속 단계                                |
+| 그룹에 맞춤       | 그룹                | 포함 노드에 맞춰 resize                               |
+| 로그 열기         | 실행된 노드         | 최신 node attempt 로그                                |
+| 입력/출력 검사    | 노드                | 실제 payload schema 및 sample                         |
 
 #### 이미지 전용 옵션
 
@@ -356,23 +356,25 @@ fan-out session은 최소 `fanout_active, fanout_request_id, ordered_reference_i
   "project_key": "uuid",
   "workflow_locator": "workflows/project/workflow.json",
   "run_key": "uuid",
-  "selections": [{
-    "reference_id": "opaque-id",
-    "job_id": "prompt-uuid",
-    "output": {
-      "node_id": "42",
-      "type": "output",
-      "subfolder": "omarketing/.../candidates",
-      "filename": "candidate-03.png",
-      "media_type": "images",
-      "asset_id": null
-    },
-    "sha256": "...",
-    "size_bytes": 1234,
-    "mime": "image/png",
-    "selected_at": "...",
-    "selected_by": "server-derived-owner"
-  }]
+  "selections": [
+    {
+      "reference_id": "opaque-id",
+      "job_id": "prompt-uuid",
+      "output": {
+        "node_id": "42",
+        "type": "output",
+        "subfolder": "omarketing/.../candidates",
+        "filename": "candidate-03.png",
+        "media_type": "images",
+        "asset_id": null
+      },
+      "sha256": "...",
+      "size_bytes": 1234,
+      "mime": "image/png",
+      "selected_at": "...",
+      "selected_by": "server-derived-owner"
+    }
+  ]
 }
 ```
 
@@ -470,22 +472,22 @@ model/cache, Model Library, API node, Comfy Cloud, image preview, custom node ex
 
 아래 타입은 Omarketing backend custom node 사이에 전달되는 versioned JSON payload다. 별도 프론트 domain store, workflow schema, run 상태 머신 또는 권위 데이터베이스를 뜻하지 않는다. Queue에 제출될 때 기존 ComfyUI prompt snapshot 안에 필요한 값이 직렬화된다.
 
-| 타입 | 핵심 필드 |
-|---|---|
-| ProductFacts | fact_id, claim, evidence, validity, prohibited_claims |
-| StrategySpec | objective, persona, message, channel/content plan |
-| ReferenceSearchPlan | platform별 query_mode·locale, content_type, queries, request budget, page/time/cost limits, safety, rights policy |
-| ReferenceCandidate | source id, metadata snapshot, score, visual/access/acquisition/rights 상태, provenance, refreshable locator |
-| ReferenceSelection | selected/rejected ids, reasons, selection version |
-| AssetCollection | immutable asset refs, versions, checksums, mime, provenance |
-| ProductionEligibility | file acquired, visual capability, rights, production handoff allowed, reasons |
-| DecompositionReport | scenes/slides/layers/text/audio/motion/marketing roles |
-| ReferencePattern | hook, narrative, layout, pacing, visual/audio/copy rules |
-| ProductionBrief | actual reference asset refs, message mapping, preserve/change rules |
-| DeliverableSpec | content type, channel, dimensions, duration/pages, locale, variants |
-| CreativeDeliverable | asset versions, preview, producer job, lineage |
-| QAReport | checks, scores, thresholds, failures, evidence frames |
-| SelectionManifest | selected output id, source job id, checksum, selected_at |
+| 타입                  | 핵심 필드                                                                                                         |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| ProductFacts          | fact_id, claim, evidence, validity, prohibited_claims                                                             |
+| StrategySpec          | objective, persona, message, channel/content plan                                                                 |
+| ReferenceSearchPlan   | platform별 query_mode·locale, content_type, queries, request budget, page/time/cost limits, safety, rights policy |
+| ReferenceCandidate    | source id, metadata snapshot, score, visual/access/acquisition/rights 상태, provenance, refreshable locator       |
+| ReferenceSelection    | selected/rejected ids, reasons, selection version                                                                 |
+| AssetCollection       | immutable asset refs, versions, checksums, mime, provenance                                                       |
+| ProductionEligibility | file acquired, visual capability, rights, production handoff allowed, reasons                                     |
+| DecompositionReport   | scenes/slides/layers/text/audio/motion/marketing roles                                                            |
+| ReferencePattern      | hook, narrative, layout, pacing, visual/audio/copy rules                                                          |
+| ProductionBrief       | actual reference asset refs, message mapping, preserve/change rules                                               |
+| DeliverableSpec       | content type, channel, dimensions, duration/pages, locale, variants                                               |
+| CreativeDeliverable   | asset versions, preview, producer job, lineage                                                                    |
+| QAReport              | checks, scores, thresholds, failures, evidence frames                                                             |
+| SelectionManifest     | selected output id, source job id, checksum, selected_at                                                          |
 
 Omarketing node는 payload의 `schema_version`과 required field를 실행 전에 검증한다. 기존 ComfyUI 노드 타입·연결 규칙은 제한하지 않는다. `rights_verified`와 `production_handoff_allowed`가 모두 참이 아닌 reference는 제작 adapter가 실행을 거부한다.
 
@@ -719,7 +721,6 @@ Omarketing node는 payload의 `schema_version`과 required field를 실행 전�
 
 - 자동화 팀 connection 미연결
 - 영상·사진 팀 connection 미연결
-
 
 ---
 

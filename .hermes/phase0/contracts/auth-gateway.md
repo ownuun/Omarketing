@@ -8,7 +8,6 @@ Existing session authority only; real listener and trusted History producer are 
 
 The authorized implementation adds an explicit aiohttp HTTP/WebSocket host around the existing `AuthService`, `GatewayCore`, and authenticated selection descriptors. Construction and import bind no listener, open no database, load no `.env`, and provision no credential. The host requires injected canonical HTTPS origin, one explicit loopback upstream, digest-pinned static allowlist, existing gateway, and optional complete selection capability set. Socket conversion rejects wrong/duplicate Host, Origin, Fetch Metadata, framing and security headers and bounded-body violations before dispatch. Cookies, authorization, forwarding and owner-like headers are consumed/stripped. Successful protected activity is applied once; session observation and WebSockets are non-touch. Selection descriptors mount through one staged immutable table or zero routes. Real downstream/upstream WebSockets are session-bound, suppress frames after revocation and close within five seconds. The live operator surface is restrictive peer-credential AF_UNIX IPC only; offline bootstrap consumes a one-shot TTY/stdin password and never argv/environment. This CR authorizes isolated synthetic credentials/TLS/temp DB tests, not production activation, real credential creation/readback, deployment, or changes to 8188/8288/5174.
 
-
 Status: Phase 0 contract; product implementation is out of scope.
 
 ## Revision record (2026-08-28)
@@ -310,15 +309,15 @@ There is exactly one owner identity.
 
 Matching is against the normalized URL pathname after one percent-decoding pass and dot-segment removal. Ambiguous encodings, encoded path separators, duplicate slashes that change routing, and invalid UTF-8 MUST be rejected before proxying.
 
-| Path match | Allowed methods | Authentication | Additional rule |
-| --- | --- | --- | --- |
-| `/` (exact) | `GET`, `HEAD` | Required | Unauthenticated top-level navigation redirects to login. |
-| `/api/**` | Upstream-defined | Required | Includes all Comfy core and custom-node API routes. Non-navigation auth failure is JSON. |
-| `/internal/**` | Upstream-defined | Required | Never exposed without the same owner session. |
-| `/ws` (exact) | `GET` Upgrade only | Required | Session and WebSocket Origin validation are required. |
-| `/extensions/**` | `GET`, `HEAD` | Required | Custom-node web assets do not bypass authentication. |
-| `/templates/**` | `GET`, `HEAD` | Required | Template assets do not bypass authentication. |
-| `/view*` (pathname begins with the literal string `/view`) | `GET`, `HEAD` | Required | Covers `/view`, `/view_metadata/...`, and any other upstream `/view...` resource. |
+| Path match                                                 | Allowed methods    | Authentication | Additional rule                                                                          |
+| ---------------------------------------------------------- | ------------------ | -------------- | ---------------------------------------------------------------------------------------- |
+| `/` (exact)                                                | `GET`, `HEAD`      | Required       | Unauthenticated top-level navigation redirects to login.                                 |
+| `/api/**`                                                  | Upstream-defined   | Required       | Includes all Comfy core and custom-node API routes. Non-navigation auth failure is JSON. |
+| `/internal/**`                                             | Upstream-defined   | Required       | Never exposed without the same owner session.                                            |
+| `/ws` (exact)                                              | `GET` Upgrade only | Required       | Session and WebSocket Origin validation are required.                                    |
+| `/extensions/**`                                           | `GET`, `HEAD`      | Required       | Custom-node web assets do not bypass authentication.                                     |
+| `/templates/**`                                            | `GET`, `HEAD`      | Required       | Template assets do not bypass authentication.                                            |
+| `/view*` (pathname begins with the literal string `/view`) | `GET`, `HEAD`      | Required       | Covers `/view`, `/view_metadata/...`, and any other upstream `/view...` resource.        |
 
 In this table, `/**` includes the named base path and all slash descendants. The gateway-owned public surface is limited to `GET /auth/login` and `POST /auth/login`. The login document MUST be self-contained. The only other public files are immutable frontend presentation files whose exact paths and digests appear in the deployed build manifest (JavaScript, CSS, fonts, static branding, and favicon); they MUST contain no user, workflow, provider, or credential data. `GET /auth/session`, `POST /auth/logout`, and `POST /auth/revoke-all` are gateway-owned but session-aware routes. Health endpoints, if required by infrastructure, MUST be bound to a private listener and MUST NOT proxy application data.
 
@@ -415,13 +414,13 @@ before schema validation. Unknown properties are rejected; a parser MUST NOT
 strip an unknown credential, URL, owner, or privilege field and then accept
 the remainder.
 
-| Document | Schema |
-| --- | --- |
-| Login request | `.hermes/phase0/schemas/auth-login-request.v1.schema.json` |
-| Login and session success response | `.hermes/phase0/schemas/auth-session-response.v1.schema.json` |
-| Logout success response | `.hermes/phase0/schemas/auth-logout-response.v1.schema.json` |
-| Revoke-all success response | `.hermes/phase0/schemas/auth-revoke-all-response.v1.schema.json` |
-| Any auth JSON error response | `.hermes/phase0/schemas/auth-error-response.v1.schema.json` |
+| Document                           | Schema                                                           |
+| ---------------------------------- | ---------------------------------------------------------------- |
+| Login request                      | `.hermes/phase0/schemas/auth-login-request.v1.schema.json`       |
+| Login and session success response | `.hermes/phase0/schemas/auth-session-response.v1.schema.json`    |
+| Logout success response            | `.hermes/phase0/schemas/auth-logout-response.v1.schema.json`     |
+| Revoke-all success response        | `.hermes/phase0/schemas/auth-revoke-all-response.v1.schema.json` |
+| Any auth JSON error response       | `.hermes/phase0/schemas/auth-error-response.v1.schema.json`      |
 
 Logout and revoke-all retain an exactly empty request body, so there is no JSON
 request document to validate for those two routes. A nonempty body, including
@@ -571,13 +570,13 @@ Limits use a shared server-side limiter and return `429` JSON with integer
 `RATE_LIMITED` error body contains integer `retry_after_seconds` equal to that
 header.
 
-| Scope | Limit | Key | Required behavior |
-| --- | --- | --- | --- |
-| Login requests | 20 per 15 minutes | normalized client IP | Reject before password hashing when exceeded. |
-| Failed logins | 5 per 15 minutes | owner id plus normalized client IP | Lock that pair for the remainder of the window; success clears its failure counter. |
-| Logout/revoke-all | 10 per minute | owner id plus normalized client IP when authenticated; normalized client IP for unauthenticated logout | Limiter admission or rejection occurs before a revocation transaction. A `429` commits no revocation and returns integer `Retry-After`; response loss after commit is client-unknown. |
-| WebSocket upgrades | 20 per 5 minutes | session and client IP | Maximum 5 simultaneously open sockets per session; reject excess upgrades. |
-| Other protected HTTP | 1,200 per 5 minutes | session | Burst capacity MUST be at least 100 so normal Queue/Assets loading is not throttled. |
+| Scope                | Limit               | Key                                                                                                    | Required behavior                                                                                                                                                                     |
+| -------------------- | ------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Login requests       | 20 per 15 minutes   | normalized client IP                                                                                   | Reject before password hashing when exceeded.                                                                                                                                         |
+| Failed logins        | 5 per 15 minutes    | owner id plus normalized client IP                                                                     | Lock that pair for the remainder of the window; success clears its failure counter.                                                                                                   |
+| Logout/revoke-all    | 10 per minute       | owner id plus normalized client IP when authenticated; normalized client IP for unauthenticated logout | Limiter admission or rejection occurs before a revocation transaction. A `429` commits no revocation and returns integer `Retry-After`; response loss after commit is client-unknown. |
+| WebSocket upgrades   | 20 per 5 minutes    | session and client IP                                                                                  | Maximum 5 simultaneously open sockets per session; reject excess upgrades.                                                                                                            |
+| Other protected HTTP | 1,200 per 5 minutes | session                                                                                                | Burst capacity MUST be at least 100 so normal Queue/Assets loading is not throttled.                                                                                                  |
 
 Authentication failures MUST NOT reset or bypass limits. This direct Tailscale
 deployment has no trusted forwarding-header sender, so proxy-aware IP
@@ -626,18 +625,18 @@ Electron client enforces these controls.
 - [ ] Unsafe requests reject missing/mismatched `Origin`, every non-`same-origin` `Sec-Fetch-Site`, `Origin: null`, and cross-origin preflight.
 - [ ] Cookie attributes, 30-day idle expiry, 90-day absolute expiry, `Max-Age` at or below 90 days, rotation, no-Domain rule, server-side revocation, and no session resurrection are verified.
 - [ ] Topology proves exactly one gateway process and one SQLite file, the
-  database scope excludes project/selection/lifecycle/provider data and all
-  secrets, and custom node/adapter/bridge code has no database path or driver.
+      database scope excludes project/selection/lifecycle/provider data and all
+      secrets, and custom node/adapter/bridge code has no database path or driver.
 - [ ] SQLite startup and runtime checks prove foreign keys, WAL, synchronous
-  FULL, application/schema IDs, ordered `BEGIN IMMEDIATE` writes, the
-  1,000-ms busy bound, 1,000-page/5-minute checkpoint policy, 90-day terminal
-  retention, and 24-hour/14-snapshot backups; corruption never creates an
-  empty replacement.
+      FULL, application/schema IDs, ordered `BEGIN IMMEDIATE` writes, the
+      1,000-ms busy bound, 1,000-page/5-minute checkpoint policy, 90-day terminal
+      retention, and 24-hour/14-snapshot backups; corruption never creates an
+      empty replacement.
 - [ ] Restore proves a stopped gateway, exclusive fence, zero clients,
-  consistent backup API, checksum/epoch/schema/integrity receipts, rollback
-  copy, epoch-based session invalidation, credential preservation/version
-  advance or mandatory replacement, full-window limiter cooldown, and
-  check-gated reopen.
+      consistent backup API, checksum/epoch/schema/integrity receipts, rollback
+      copy, epoch-based session invalidation, credential preservation/version
+      advance or mandatory replacement, full-window limiter cooldown, and
+      check-gated reopen.
 - [ ] Fake-clock polling proves `/auth/session`, `/ws` upgrades, and WebSocket frames never refresh idle; only the section 4 activity allowlist can do so, the 30-day idle boundary is enforced, and the 90-day absolute expiry never moves.
 - [ ] Logout, revoke-all, password replacement, and expiry terminate every bound live WebSocket within 5 seconds and block reconnect.
 - [ ] Revoke-all fault injection covers before-commit request loss, after-commit response loss, `5xx`, `401`, `429`, and duplicate delivery; no unknown outcome is displayed as success, and reauthentication plus a delivered `200` converges.

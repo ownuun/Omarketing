@@ -5,10 +5,7 @@
   "description": "The fixed idempotent response for owner logout, including when no live session remains.",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "schema_version",
-    "revoked"
-  ],
+  "required": ["schema_version", "revoked"],
   "properties": {
     "schema_version": {
       "type": "integer",

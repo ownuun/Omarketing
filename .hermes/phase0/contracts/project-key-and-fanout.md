@@ -192,16 +192,16 @@ owner directory.
 
 ### Copy, Save As, import, and rebind matrix
 
-| Operation | Key rule | Context rule |
-|---|---|---|
-| Duplicate or Save As inside the same top-level folder | Retain the existing key. | Both workflows read the same latest context for future submissions. |
-| Rename a workflow inside the same top-level folder | Retain the existing key. | No rebind. Existing queued snapshots remain pinned. |
-| Save As into another top-level folder | The copied node is treated as mismatched and cannot run. | User must invoke `rebind_as_new_project`; a new key and blank draft are issued. No context copy. |
-| Official template copied to a new top-level folder | Issue a new key through `official_template_copy`. | Create a blank draft, then use the existing first-workflow save path. |
-| External JSON loaded without a persisted workflow locator | Treat every embedded key as untrusted/unbound for this import session. | User must explicitly initialize/rebind after choosing the target path; no automatic context copy. |
-| Existing persisted workflow reopened | Resolve its key against owner and top-level binding. | Recover the current revision; do not issue a key. |
-| Node key accidentally removed in an existing bound top-level folder | Explicit `recover` may return the unique owner-scoped binding. | Recovery writes the recovered key only after user confirmation. Ambiguity never guesses. |
-| Key belongs to another owner or record is absent | Do not attach it. | Offer initialization of a new blank project; reveal no foreign context. |
+| Operation                                                           | Key rule                                                               | Context rule                                                                                      |
+| ------------------------------------------------------------------- | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Duplicate or Save As inside the same top-level folder               | Retain the existing key.                                               | Both workflows read the same latest context for future submissions.                               |
+| Rename a workflow inside the same top-level folder                  | Retain the existing key.                                               | No rebind. Existing queued snapshots remain pinned.                                               |
+| Save As into another top-level folder                               | The copied node is treated as mismatched and cannot run.               | User must invoke `rebind_as_new_project`; a new key and blank draft are issued. No context copy.  |
+| Official template copied to a new top-level folder                  | Issue a new key through `official_template_copy`.                      | Create a blank draft, then use the existing first-workflow save path.                             |
+| External JSON loaded without a persisted workflow locator           | Treat every embedded key as untrusted/unbound for this import session. | User must explicitly initialize/rebind after choosing the target path; no automatic context copy. |
+| Existing persisted workflow reopened                                | Resolve its key against owner and top-level binding.                   | Recover the current revision; do not issue a key.                                                 |
+| Node key accidentally removed in an existing bound top-level folder | Explicit `recover` may return the unique owner-scoped binding.         | Recovery writes the recovered key only after user confirmation. Ambiguity never guesses.          |
+| Key belongs to another owner or record is absent                    | Do not attach it.                                                      | Offer initialization of a new blank project; reveal no foreign context.                           |
 
 The extension may mark an imported/unpersisted graph as requiring explicit binding through widget-owned ephemeral state during existing extension load hooks. It does not modify Workflow management and does not intercept the later save. Backend owner/top-level validation remains the final gate.
 
@@ -399,10 +399,10 @@ A job later failing, being cancelled, or being interrupted does not roll back `c
 
 The existing API maps `number === -1` to repeated front insertion. Repeatedly inserting A, then B, then C at the front produces C, B, A. Therefore the fan-out submission order is reversed only for front insertion:
 
-| User/logical order | Queue position | `ordered_reference_ids` submitted | Final relative Queue order |
-|---|---:|---|---|
-| A, B, C | `0` (back) | A, B, C | A, B, C |
-| A, B, C | `-1` (front) | C, B, A | A, B, C, ahead of the prior queue |
+| User/logical order | Queue position | `ordered_reference_ids` submitted | Final relative Queue order        |
+| ------------------ | -------------: | --------------------------------- | --------------------------------- |
+| A, B, C            |     `0` (back) | A, B, C                           | A, B, C                           |
+| A, B, C            |   `-1` (front) | C, B, A                           | A, B, C, ahead of the prior queue |
 
 User-facing M/N receipts and retry lists are always returned to logical order, regardless of submission order.
 
@@ -488,22 +488,22 @@ The backend validates the tuple before writing. Cache keys may reuse upstream co
 
 No test, build, lint, formatter, migration, server, commit, or push is run for this Phase 0 contract task. The caller validates all Phase 0 artifacts together. Later implementation evidence must cover:
 
-| Case | Pass | Fail |
-|---|---|---|
-| Issuance | Template/init/rebind action yields a server-generated canonical UUID and retry with the same issuance ID returns it. | Save completion or client input creates/changes the key. |
-| Owner scope | Foreign/missing keys disclose no context and cannot run. | Body-supplied owner or key possession alone grants access. |
-| Same-project copy | Duplicate/Save As inside one top-level folder retains the key and reads shared future revisions. | A new key is silently issued or context is duplicated. |
-| Cross-project/import | Different top-level or unpersisted import is blocked until explicit blank rebind. | Old context is auto-copied or path change silently rebinds. |
-| Recovery | Unique same-owner binding is recoverable explicitly; missing/ambiguous states do not guess. | Load/save silently inserts a guessed key. |
-| Snapshot | Context/selection edited after prompt acceptance does not change the accepted job; a later prompt sees the new revision. | Worker reads mutable latest context at execution time. |
-| Normal Run no-op | Run, Shift+Run, Auto Queue, partial execution, and Batch Count invoke callbacks with `fanout_active: false` and mutate no fan-out field. | Node presence or selected count activates fan-out. |
-| Single host call | N references produce one `queuePrompt(number, N)` call and N accepted prompt IDs. | N calls are made or Batch Count multiplies N. |
-| Per-iteration snapshot | N accepted prompts contain N distinct reference/run pairs in logical execution order. | Two prompts share a reference/run snapshot or contain a list batch. |
-| Success-only advance | A rejected kth submission leaves cursor/accepted count at k-1. | `beforeQueued` or final boolean advances the failed item. |
-| Post-accept callback failure | Server reconciliation includes a prompt accepted before another widget's `afterQueued` throw; retry excludes it. | Callback count is trusted and the accepted prompt is duplicated. |
-| M/N receipt | Failure after M accepts reports M/N and exact logical-order remainder; accepted jobs remain. | It claims N, cancels accepted jobs, or automatically duplicates them. |
-| Queue back | A,B,C submitted at back execute A,B,C relative to each other. | Relative order changes. |
-| Queue front | C,B,A are submitted at front and final Queue order is A,B,C ahead of prior items. | A,B,C are submitted directly and final Queue reverses. |
-| Cleanup | Success/error/switch/removal leaves `fanout_active: false`, original widget values restored, no lease/listener leak. | Session survives reload or contaminates the next normal Run. |
-| Output tuples | N jobs × five branches yield unique tuple/locator combinations and no overwrite. | Cache/path/filename collapses references, runs, or candidate indices. |
-| Existing semantics | Queue/History failure/cancel/interrupt/cache and global Run source files have no diff and behave unchanged. | A custom frontend state machine or core semantic change appears. |
+| Case                         | Pass                                                                                                                                     | Fail                                                                  |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Issuance                     | Template/init/rebind action yields a server-generated canonical UUID and retry with the same issuance ID returns it.                     | Save completion or client input creates/changes the key.              |
+| Owner scope                  | Foreign/missing keys disclose no context and cannot run.                                                                                 | Body-supplied owner or key possession alone grants access.            |
+| Same-project copy            | Duplicate/Save As inside one top-level folder retains the key and reads shared future revisions.                                         | A new key is silently issued or context is duplicated.                |
+| Cross-project/import         | Different top-level or unpersisted import is blocked until explicit blank rebind.                                                        | Old context is auto-copied or path change silently rebinds.           |
+| Recovery                     | Unique same-owner binding is recoverable explicitly; missing/ambiguous states do not guess.                                              | Load/save silently inserts a guessed key.                             |
+| Snapshot                     | Context/selection edited after prompt acceptance does not change the accepted job; a later prompt sees the new revision.                 | Worker reads mutable latest context at execution time.                |
+| Normal Run no-op             | Run, Shift+Run, Auto Queue, partial execution, and Batch Count invoke callbacks with `fanout_active: false` and mutate no fan-out field. | Node presence or selected count activates fan-out.                    |
+| Single host call             | N references produce one `queuePrompt(number, N)` call and N accepted prompt IDs.                                                        | N calls are made or Batch Count multiplies N.                         |
+| Per-iteration snapshot       | N accepted prompts contain N distinct reference/run pairs in logical execution order.                                                    | Two prompts share a reference/run snapshot or contain a list batch.   |
+| Success-only advance         | A rejected kth submission leaves cursor/accepted count at k-1.                                                                           | `beforeQueued` or final boolean advances the failed item.             |
+| Post-accept callback failure | Server reconciliation includes a prompt accepted before another widget's `afterQueued` throw; retry excludes it.                         | Callback count is trusted and the accepted prompt is duplicated.      |
+| M/N receipt                  | Failure after M accepts reports M/N and exact logical-order remainder; accepted jobs remain.                                             | It claims N, cancels accepted jobs, or automatically duplicates them. |
+| Queue back                   | A,B,C submitted at back execute A,B,C relative to each other.                                                                            | Relative order changes.                                               |
+| Queue front                  | C,B,A are submitted at front and final Queue order is A,B,C ahead of prior items.                                                        | A,B,C are submitted directly and final Queue reverses.                |
+| Cleanup                      | Success/error/switch/removal leaves `fanout_active: false`, original widget values restored, no lease/listener leak.                     | Session survives reload or contaminates the next normal Run.          |
+| Output tuples                | N jobs × five branches yield unique tuple/locator combinations and no overwrite.                                                         | Cache/path/filename collapses references, runs, or candidate indices. |
+| Existing semantics           | Queue/History failure/cancel/interrupt/cache and global Run source files have no diff and behave unchanged.                              | A custom frontend state machine or core semantic change appears.      |

@@ -1,1 +1,38 @@
-{"schema_version":1,"session_id":"01a042a5-6acb-7121-b3a4-fd56a45435c0","state":"completed","ready_for_input":false,"updated_at":"2026-08-27T10:05:31.618Z","current_turn_id":null,"last_turn_id":null,"live":false,"reason":null,"source":"agent_session_event","event":"agent_end","cwd":"/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing","workdir":"/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing","branch":null,"session_file":"/private/tmp/gjc-sessions/omarketing-brand-browser-test-allowlist-revision/2026-08-27T09-55-32-171Z_01a042a5-6acb-7121-b3a4-fd56a45435c0.jsonl","activity":{"seq":106,"last_activity_at":"2026-08-27T10:05:17.193Z","tool":"read","phase":"finished","outcome":"success","elapsed_ms":2,"active_tool_count":0,"active_tools":[],"in_flight":[]},"execution_state":"terminal_ok","receipt_state":"present","ended_at":"2026-08-27T10:05:31.618Z","final_response":{"text":"RESULT-RECORDED: omarketing-brand-browser-title-expectations-v1  \nLEDGER: /Users/ownuun/MonkeyTower/.monkeytower-local/worker-results.md  \n━━━━━━━━━━ TASK-ID: omarketing-brand-browser-title-expectations-v1 ━━━━━━━━━━","format":"markdown","source":"agent_end","artifact_path":null,"truncated":false}}
+{
+  "schema_version": 1,
+  "session_id": "01a042a5-6acb-7121-b3a4-fd56a45435c0",
+  "state": "completed",
+  "ready_for_input": false,
+  "updated_at": "2026-08-27T10:05:31.618Z",
+  "current_turn_id": null,
+  "last_turn_id": null,
+  "live": false,
+  "reason": null,
+  "source": "agent_session_event",
+  "event": "agent_end",
+  "cwd": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+  "workdir": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+  "branch": null,
+  "session_file": "/private/tmp/gjc-sessions/omarketing-brand-browser-test-allowlist-revision/2026-08-27T09-55-32-171Z_01a042a5-6acb-7121-b3a4-fd56a45435c0.jsonl",
+  "activity": {
+    "seq": 106,
+    "last_activity_at": "2026-08-27T10:05:17.193Z",
+    "tool": "read",
+    "phase": "finished",
+    "outcome": "success",
+    "elapsed_ms": 2,
+    "active_tool_count": 0,
+    "active_tools": [],
+    "in_flight": []
+  },
+  "execution_state": "terminal_ok",
+  "receipt_state": "present",
+  "ended_at": "2026-08-27T10:05:31.618Z",
+  "final_response": {
+    "text": "RESULT-RECORDED: omarketing-brand-browser-title-expectations-v1  \nLEDGER: /Users/ownuun/MonkeyTower/.monkeytower-local/worker-results.md  \n━━━━━━━━━━ TASK-ID: omarketing-brand-browser-title-expectations-v1 ━━━━━━━━━━",
+    "format": "markdown",
+    "source": "agent_end",
+    "artifact_path": null,
+    "truncated": false
+  }
+}

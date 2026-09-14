@@ -6,11 +6,7 @@
   "$comment": "The positive count includes the authenticated caller. A lost response, 401, 429, or 5xx is never substituted for this document.",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "schema_version",
-    "revoked",
-    "revoked_session_count"
-  ],
+  "required": ["schema_version", "revoked", "revoked_session_count"],
   "properties": {
     "schema_version": {
       "type": "integer",

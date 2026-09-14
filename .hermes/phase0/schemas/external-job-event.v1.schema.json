@@ -46,10 +46,7 @@
       "enum": ["accepted", "running", "succeeded", "failed", "canceled"]
     },
     "progress": {
-      "oneOf": [
-        {"type": "null"},
-        {"$ref": "#/$defs/progress"}
-      ]
+      "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/progress" }]
     },
     "emitted_at": {
       "type": "string",

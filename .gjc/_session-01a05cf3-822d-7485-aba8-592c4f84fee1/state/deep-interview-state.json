@@ -108,57 +108,32 @@
             {
               "name": "Design result",
               "type": "external fixture",
-              "fields": [
-                "status",
-                "asset reference",
-                "hash"
-              ],
-              "relationships": [
-                "is reviewed before selection"
-              ]
+              "fields": ["status", "asset reference", "hash"],
+              "relationships": ["is reviewed before selection"]
             },
             {
               "name": "QA review",
               "type": "core domain",
-              "fields": [
-                "required",
-                "result"
-              ],
-              "relationships": [
-                "reviews Design result"
-              ]
+              "fields": ["required", "result"],
+              "relationships": ["reviews Design result"]
             },
             {
               "name": "Selection handoff",
               "type": "core domain",
-              "fields": [
-                "selected output",
-                "manifest hash"
-              ],
-              "relationships": [
-                "follows QA review and precedes Auto handoff"
-              ]
+              "fields": ["selected output", "manifest hash"],
+              "relationships": ["follows QA review and precedes Auto handoff"]
             },
             {
               "name": "Auto read-back receipt",
               "type": "external fixture",
-              "fields": [
-                "handoff status",
-                "read-back status"
-              ],
-              "relationships": [
-                "reports after Selection handoff"
-              ]
+              "fields": ["handoff status", "read-back status"],
+              "relationships": ["reports after Selection handoff"]
             },
             {
               "name": "Queue/History link",
               "type": "supporting view",
-              "fields": [
-                "existing job reference"
-              ],
-              "relationships": [
-                "shows existing Comfy lifecycle"
-              ]
+              "fields": ["existing job reference"],
+              "relationships": ["shows existing Comfy lifecycle"]
             }
           ]
         },
@@ -244,36 +219,20 @@
             {
               "name": "Design result",
               "type": "external fixture",
-              "fields": [
-                "status",
-                "asset reference",
-                "hash"
-              ],
-              "relationships": [
-                "is reviewed before selection"
-              ]
+              "fields": ["status", "asset reference", "hash"],
+              "relationships": ["is reviewed before selection"]
             },
             {
               "name": "QA review",
               "type": "core domain",
-              "fields": [
-                "required",
-                "result"
-              ],
-              "relationships": [
-                "reviews Design result"
-              ]
+              "fields": ["required", "result"],
+              "relationships": ["reviews Design result"]
             },
             {
               "name": "Selection handoff",
               "type": "core domain",
-              "fields": [
-                "selected output",
-                "manifest hash"
-              ],
-              "relationships": [
-                "follows QA review and precedes Auto handoff"
-              ]
+              "fields": ["selected output", "manifest hash"],
+              "relationships": ["follows QA review and precedes Auto handoff"]
             },
             {
               "name": "Auto read-back receipt",
@@ -283,19 +242,13 @@
                 "read-back status",
                 "processing/completed/failed"
               ],
-              "relationships": [
-                "reports after Selection handoff"
-              ]
+              "relationships": ["reports after Selection handoff"]
             },
             {
               "name": "Queue/History link",
               "type": "supporting view",
-              "fields": [
-                "existing job reference"
-              ],
-              "relationships": [
-                "shows existing Comfy lifecycle"
-              ]
+              "fields": ["existing job reference"],
+              "relationships": ["shows existing Comfy lifecycle"]
             }
           ]
         },
@@ -381,36 +334,20 @@
             {
               "name": "Design result",
               "type": "external fixture",
-              "fields": [
-                "status",
-                "asset reference",
-                "hash"
-              ],
-              "relationships": [
-                "is reviewed before selection"
-              ]
+              "fields": ["status", "asset reference", "hash"],
+              "relationships": ["is reviewed before selection"]
             },
             {
               "name": "QA review",
               "type": "core domain",
-              "fields": [
-                "required",
-                "result"
-              ],
-              "relationships": [
-                "reviews Design result"
-              ]
+              "fields": ["required", "result"],
+              "relationships": ["reviews Design result"]
             },
             {
               "name": "Selection handoff",
               "type": "core domain",
-              "fields": [
-                "selected output",
-                "manifest hash"
-              ],
-              "relationships": [
-                "follows QA review and precedes Auto handoff"
-              ]
+              "fields": ["selected output", "manifest hash"],
+              "relationships": ["follows QA review and precedes Auto handoff"]
             },
             {
               "name": "Auto read-back receipt",
@@ -420,20 +357,13 @@
                 "read-back status",
                 "simulated fixture marker"
               ],
-              "relationships": [
-                "reports after Selection handoff"
-              ]
+              "relationships": ["reports after Selection handoff"]
             },
             {
               "name": "Queue/History link",
               "type": "supporting view",
-              "fields": [
-                "existing job reference",
-                "actual-status link"
-              ],
-              "relationships": [
-                "shows existing Comfy lifecycle"
-              ]
+              "fields": ["existing job reference", "actual-status link"],
+              "relationships": ["shows existing Comfy lifecycle"]
             }
           ]
         },
@@ -508,9 +438,7 @@
           "new_dimension_score": 0.8,
           "prior_ambiguity": 0.3025,
           "new_ambiguity": 0.2725,
-          "evidence": [
-            "User selected preview + copy + QA-required status."
-          ],
+          "evidence": ["User selected preview + copy + QA-required status."],
           "contradicted_established_fact": null,
           "disputed_unresolved_rationale": null
         },
@@ -526,31 +454,19 @@
                 "asset reference",
                 "hash"
               ],
-              "relationships": [
-                "is reviewed before selection"
-              ]
+              "relationships": ["is reviewed before selection"]
             },
             {
               "name": "QA review",
               "type": "core domain",
-              "fields": [
-                "required",
-                "result"
-              ],
-              "relationships": [
-                "reviews Design result"
-              ]
+              "fields": ["required", "result"],
+              "relationships": ["reviews Design result"]
             },
             {
               "name": "Selection handoff",
               "type": "core domain",
-              "fields": [
-                "selected output",
-                "manifest hash"
-              ],
-              "relationships": [
-                "follows QA review and precedes Auto handoff"
-              ]
+              "fields": ["selected output", "manifest hash"],
+              "relationships": ["follows QA review and precedes Auto handoff"]
             },
             {
               "name": "Auto read-back receipt",
@@ -560,20 +476,13 @@
                 "read-back status",
                 "simulated fixture marker"
               ],
-              "relationships": [
-                "reports after Selection handoff"
-              ]
+              "relationships": ["reports after Selection handoff"]
             },
             {
               "name": "Queue/History link",
               "type": "supporting view",
-              "fields": [
-                "existing job reference",
-                "actual-status link"
-              ],
-              "relationships": [
-                "shows existing Comfy lifecycle"
-              ]
+              "fields": ["existing job reference", "actual-status link"],
+              "relationships": ["shows existing Comfy lifecycle"]
             }
           ]
         },
@@ -640,9 +549,7 @@
           }
         },
         "structured_scorer_output": {
-          "triggers": [
-            "B internal inconsistency"
-          ],
+          "triggers": ["B internal inconsistency"],
           "trigger_status": "unresolved",
           "affected_component": "assets-qa-selection",
           "affected_dimension": "goal",
@@ -668,30 +575,19 @@
                 "asset reference",
                 "hash"
               ],
-              "relationships": [
-                "is reviewed before selection"
-              ]
+              "relationships": ["is reviewed before selection"]
             },
             {
               "name": "QA review",
               "type": "core domain",
-              "fields": [
-                "pass/delete"
-              ],
-              "relationships": [
-                "reviews Design result and may trigger handoff"
-              ]
+              "fields": ["pass/delete"],
+              "relationships": ["reviews Design result and may trigger handoff"]
             },
             {
               "name": "Selection handoff",
               "type": "core domain",
-              "fields": [
-                "selected output",
-                "manifest hash"
-              ],
-              "relationships": [
-                "must follow QA review before Auto handoff"
-              ]
+              "fields": ["selected output", "manifest hash"],
+              "relationships": ["must follow QA review before Auto handoff"]
             },
             {
               "name": "Auto read-back receipt",
@@ -701,20 +597,13 @@
                 "read-back status",
                 "simulated fixture marker"
               ],
-              "relationships": [
-                "reports after Selection handoff"
-              ]
+              "relationships": ["reports after Selection handoff"]
             },
             {
               "name": "Queue/History link",
               "type": "supporting view",
-              "fields": [
-                "existing job reference",
-                "actual-status link"
-              ],
-              "relationships": [
-                "shows existing Comfy lifecycle"
-              ]
+              "fields": ["existing job reference", "actual-status link"],
+              "relationships": ["shows existing Comfy lifecycle"]
             }
           ]
         },
@@ -807,27 +696,18 @@
                 "asset reference",
                 "hash"
               ],
-              "relationships": [
-                "is reviewed before selection"
-              ]
+              "relationships": ["is reviewed before selection"]
             },
             {
               "name": "QA review",
               "type": "core domain",
-              "fields": [
-                "pass/delete"
-              ],
-              "relationships": [
-                "reviews Design result"
-              ]
+              "fields": ["pass/delete"],
+              "relationships": ["reviews Design result"]
             },
             {
               "name": "Selection handoff",
               "type": "core domain",
-              "fields": [
-                "selected output",
-                "manifest hash"
-              ],
+              "fields": ["selected output", "manifest hash"],
               "relationships": [
                 "is created by one pass action and precedes Auto handoff"
               ]
@@ -840,20 +720,13 @@
                 "read-back status",
                 "simulated fixture marker"
               ],
-              "relationships": [
-                "reports after Selection handoff"
-              ]
+              "relationships": ["reports after Selection handoff"]
             },
             {
               "name": "Queue/History link",
               "type": "supporting view",
-              "fields": [
-                "existing job reference",
-                "actual-status link"
-              ],
-              "relationships": [
-                "shows existing Comfy lifecycle"
-              ]
+              "fields": ["existing job reference", "actual-status link"],
+              "relationships": ["shows existing Comfy lifecycle"]
             }
           ]
         },
@@ -938,27 +811,18 @@
                 "asset reference",
                 "hash"
               ],
-              "relationships": [
-                "is reviewed before selection"
-              ]
+              "relationships": ["is reviewed before selection"]
             },
             {
               "name": "QA review",
               "type": "core domain",
-              "fields": [
-                "pass/delete"
-              ],
-              "relationships": [
-                "reviews Design result"
-              ]
+              "fields": ["pass/delete"],
+              "relationships": ["reviews Design result"]
             },
             {
               "name": "Selection handoff",
               "type": "core domain",
-              "fields": [
-                "selected output",
-                "manifest hash"
-              ],
+              "fields": ["selected output", "manifest hash"],
               "relationships": [
                 "is created by one pass action and precedes Auto handoff"
               ]
@@ -971,9 +835,7 @@
                 "read-back status",
                 "simulated fixture marker"
               ],
-              "relationships": [
-                "reports after Selection handoff"
-              ]
+              "relationships": ["reports after Selection handoff"]
             },
             {
               "name": "Queue/History link",
@@ -982,9 +844,7 @@
                 "existing job reference",
                 "opens existing unfiltered job-history panel"
               ],
-              "relationships": [
-                "shows existing Comfy lifecycle"
-              ]
+              "relationships": ["shows existing Comfy lifecycle"]
             }
           ]
         },
@@ -1069,28 +929,18 @@
                 "asset reference",
                 "hash"
               ],
-              "relationships": [
-                "is reviewed before selection"
-              ]
+              "relationships": ["is reviewed before selection"]
             },
             {
               "name": "QA review",
               "type": "core domain",
-              "fields": [
-                "pass/delete",
-                "fixture marker"
-              ],
-              "relationships": [
-                "reviews Design result"
-              ]
+              "fields": ["pass/delete", "fixture marker"],
+              "relationships": ["reviews Design result"]
             },
             {
               "name": "Selection handoff",
               "type": "fixture state",
-              "fields": [
-                "selected output",
-                "fixture manifest hash"
-              ],
+              "fields": ["selected output", "fixture manifest hash"],
               "relationships": [
                 "is created by one pass action and precedes fixture Auto handoff"
               ]
@@ -1103,9 +953,7 @@
                 "read-back status",
                 "simulated fixture marker"
               ],
-              "relationships": [
-                "reports after Selection handoff"
-              ]
+              "relationships": ["reports after Selection handoff"]
             },
             {
               "name": "Queue/History link",
@@ -1114,9 +962,7 @@
                 "existing job reference",
                 "opens existing unfiltered job-history panel"
               ],
-              "relationships": [
-                "shows existing Comfy lifecycle"
-              ]
+              "relationships": ["shows existing Comfy lifecycle"]
             }
           ]
         },
@@ -1285,28 +1131,18 @@
               "asset reference",
               "hash"
             ],
-            "relationships": [
-              "is reviewed before selection"
-            ]
+            "relationships": ["is reviewed before selection"]
           },
           {
             "name": "QA review",
             "type": "core domain",
-            "fields": [
-              "pass/delete",
-              "fixture marker"
-            ],
-            "relationships": [
-              "reviews Design result"
-            ]
+            "fields": ["pass/delete", "fixture marker"],
+            "relationships": ["reviews Design result"]
           },
           {
             "name": "Selection handoff",
             "type": "fixture state",
-            "fields": [
-              "selected output",
-              "fixture manifest hash"
-            ],
+            "fields": ["selected output", "fixture manifest hash"],
             "relationships": [
               "is created by one pass action and precedes fixture Auto handoff"
             ]
@@ -1319,9 +1155,7 @@
               "read-back status",
               "simulated fixture marker"
             ],
-            "relationships": [
-              "reports after Selection handoff"
-            ]
+            "relationships": ["reports after Selection handoff"]
           },
           {
             "name": "Queue/History link",
@@ -1330,9 +1164,7 @@
               "existing job reference",
               "opens existing unfiltered job-history panel"
             ],
-            "relationships": [
-              "shows existing Comfy lifecycle"
-            ]
+            "relationships": ["shows existing Comfy lifecycle"]
           }
         ],
         "stability_ratio": 1,
@@ -1348,11 +1180,7 @@
       {
         "round": 7,
         "trigger": "ready milestone and closure audit",
-        "personas": [
-          "closure-audit",
-          "freshness-audit",
-          "spec-coverage"
-        ],
+        "personas": ["closure-audit", "freshness-audit", "spec-coverage"],
         "findings": "Closure blocker resolved: selection, queue, and read-back are explicitly simulated and non-authoritative. Audit flags only WATCH-level provenance/freshness follow-up; no source contradiction changes the first-slice scope.",
         "source_citations": [
           ".hermes/phase0/contracts/backend-package-and-templates.md:235-243",
@@ -1364,10 +1192,7 @@
     ],
     "lateral_panel_failures": 0,
     "auto_answer_streak": 0,
-    "refined_rounds": [
-      1,
-      5
-    ],
+    "refined_rounds": [1, 5],
     "closure_overrides": [
       {
         "round": 7,

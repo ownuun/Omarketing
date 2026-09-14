@@ -276,7 +276,11 @@ Each poll is normalized as:
   "status": "accepted | running | succeeded | failed | canceled",
   "progress": { "value": 3, "max": 10, "unit": "items" },
   "item_outcomes": [
-    { "item_id": "opaque item id", "status": "pending | running | succeeded | failed", "artifact_handle_ids": [] }
+    {
+      "item_id": "opaque item id",
+      "status": "pending | running | succeeded | failed",
+      "artifact_handle_ids": []
+    }
   ],
   "artifact_handles": [],
   "warnings": [],
@@ -316,12 +320,12 @@ Artifact handles are provisional until section 9 validation completes. A
 
 Every network operation MUST have explicit connect, read/inactivity, and overall deadlines; library defaults and unbounded waits are prohibited.
 
-| Operation | Connect timeout | Read/inactivity timeout | Overall bound |
-| --- | ---: | ---: | ---: |
-| Submit or idempotency lookup | 5 s | 30 s | 35 s per attempt |
-| Status poll | 5 s | 15 s | 20 s per poll |
-| Cancel request/status confirmation | 3 s | 7 s | 10 s per attempt |
-| Artifact stream | 5 s | 30 s between chunks | 10 min and never past `deadline_at` |
+| Operation                          | Connect timeout | Read/inactivity timeout |                       Overall bound |
+| ---------------------------------- | --------------: | ----------------------: | ----------------------------------: |
+| Submit or idempotency lookup       |             5 s |                    30 s |                    35 s per attempt |
+| Status poll                        |             5 s |                    15 s |                       20 s per poll |
+| Cancel request/status confirmation |             3 s |                     7 s |                    10 s per attempt |
+| Artifact stream                    |             5 s |     30 s between chunks | 10 min and never past `deadline_at` |
 
 - Poll delay MUST honor a valid provider hint but clamp it to 1–15 seconds. Missing/invalid hints use 2 seconds. Jitter is allowed only within the clamped bound.
 - The default whole-node external wait budget is 30 minutes. An operation profile MAY choose a shorter or longer budget, but MUST be explicit and MUST NOT exceed two hours without revising this contract.
@@ -333,15 +337,15 @@ Every network operation MUST have explicit connect, read/inactivity, and overall
 
 The adapter's internal statuses MUST NOT be surfaced as new frontend job states.
 
-| External/node condition | Existing Comfy meaning | Required behavior |
-| --- | --- | --- |
-| Prompt accepted but not executing | `pending` | Core Queue owns it. The adapter MUST NOT submit external work yet. |
-| Existing infrastructure reports machine startup | `initialization` where already supported | The adapter MUST NOT synthesize this frontend state for provider acceptance. |
-| `execution_start`; node connecting/submitting; external `accepted`/`running`; cancel requested but unconfirmed | `running` | Remain inside the current node and emit only existing progress mechanisms. |
-| Odesign `awaiting_approval` | `failed` | Close publication and terminate the current normal prompt through the fixed safe code `APPROVAL_REQUIRED_IN_ODDESIGN`; never keep the node open for human approval. |
-| External `succeeded`, every required artifact validated, node returns output, then core emits `execution_success` | `completed` | Completion is owned by Comfy core, not an adapter event. |
-| External `failed`, protocol conflict, timeout, unrecoverable orphan, artifact validation failure, or spontaneous provider cancel | `failed` | Raise a redacted node error; core emits `execution_error`. |
-| Existing Comfy Queue cancel/Interrupt is observed | Existing interruption behavior; `executionStore` records the workflow outcome as `failed` with `execution_interrupted` | Core emits `execution_interrupted`; do not add a durable `canceled` frontend state. |
+| External/node condition                                                                                                          | Existing Comfy meaning                                                                                                 | Required behavior                                                                                                                                                   |
+| -------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Prompt accepted but not executing                                                                                                | `pending`                                                                                                              | Core Queue owns it. The adapter MUST NOT submit external work yet.                                                                                                  |
+| Existing infrastructure reports machine startup                                                                                  | `initialization` where already supported                                                                               | The adapter MUST NOT synthesize this frontend state for provider acceptance.                                                                                        |
+| `execution_start`; node connecting/submitting; external `accepted`/`running`; cancel requested but unconfirmed                   | `running`                                                                                                              | Remain inside the current node and emit only existing progress mechanisms.                                                                                          |
+| Odesign `awaiting_approval`                                                                                                      | `failed`                                                                                                               | Close publication and terminate the current normal prompt through the fixed safe code `APPROVAL_REQUIRED_IN_ODDESIGN`; never keep the node open for human approval. |
+| External `succeeded`, every required artifact validated, node returns output, then core emits `execution_success`                | `completed`                                                                                                            | Completion is owned by Comfy core, not an adapter event.                                                                                                            |
+| External `failed`, protocol conflict, timeout, unrecoverable orphan, artifact validation failure, or spontaneous provider cancel | `failed`                                                                                                               | Raise a redacted node error; core emits `execution_error`.                                                                                                          |
+| Existing Comfy Queue cancel/Interrupt is observed                                                                                | Existing interruption behavior; `executionStore` records the workflow outcome as `failed` with `execution_interrupted` | Core emits `execution_interrupted`; do not add a durable `canceled` frontend state.                                                                                 |
 
 A five-branch candidate node completes only when every required branch succeeds. One branch failure fails the current Comfy job; already written successful files are not deleted, the next Queue job continues according to core behavior, and a later Run relies on existing Comfy cache. The adapter MUST NOT add automatic whole-job retry, rollback, or a retry-failed-items frontend action.
 
@@ -383,14 +387,14 @@ Unknown fields, labels, operations, projections, and guidance codes are
 rejected. `guidance_code` is null except for `APPROVE_IN_ODDESIGN` on
 `awaiting_approval`. The normative mapping is closed and exact:
 
-| Odesign provider label | Normalized projection | Receipt rule |
-| --- | --- | --- |
-| `accepted` | `accepted` | Publication remains open; `guidance_code` is null. |
-| `awaiting_approval` | `failed` | Publication is closed, `guidance_code` MUST be `APPROVE_IN_ODDESIGN`, and the current Comfy prompt terminates through the fixed safe code `APPROVAL_REQUIRED_IN_ODDESIGN`. |
-| `running` | `running` | Publication remains open; `guidance_code` is null. |
-| `outcome_unknown` | `running` | `publication` MUST be `closed`, `lookup_before_retry` MUST be `true`, and no resubmission is permitted. |
-| `succeeded` | `succeeded` | Projection is permitted only after a fresh authenticated poll and artifact checksum read-back; otherwise publication remains closed. |
-| `failed` | `failed` | Publication is closed and the existing Comfy failure path remains authoritative. |
+| Odesign provider label | Normalized projection | Receipt rule                                                                                                                                                               |
+| ---------------------- | --------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `accepted`             | `accepted`            | Publication remains open; `guidance_code` is null.                                                                                                                         |
+| `awaiting_approval`    | `failed`              | Publication is closed, `guidance_code` MUST be `APPROVE_IN_ODDESIGN`, and the current Comfy prompt terminates through the fixed safe code `APPROVAL_REQUIRED_IN_ODDESIGN`. |
+| `running`              | `running`             | Publication remains open; `guidance_code` is null.                                                                                                                         |
+| `outcome_unknown`      | `running`             | `publication` MUST be `closed`, `lookup_before_retry` MUST be `true`, and no resubmission is permitted.                                                                    |
+| `succeeded`            | `succeeded`           | Projection is permitted only after a fresh authenticated poll and artifact checksum read-back; otherwise publication remains closed.                                       |
+| `failed`               | `failed`              | Publication is closed and the existing Comfy failure path remains authoritative.                                                                                           |
 
 The generic normalized lifecycle enum and the Comfy terminal meanings remain
 unchanged. In particular, `awaiting_approval` and `outcome_unknown` never become generic
@@ -831,7 +835,7 @@ conflicting terminal document commonly violates those checks as well, and
 without this precedence the conflict would be masked as a generic provider
 protocol error. Publication is closed in every one of these branches, so the
 ordering changes only the emitted classification, never the fail-closed
-outcome. A repeat of the *same* confirmed terminal whose canonical digest
+outcome. A repeat of the _same_ confirmed terminal whose canonical digest
 changed is content mutation, not disagreement, and remains a provider protocol
 error.
 

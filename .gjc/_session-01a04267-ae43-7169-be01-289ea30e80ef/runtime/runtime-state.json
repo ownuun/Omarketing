@@ -1,1 +1,38 @@
-{"schema_version":1,"session_id":"01a04267-ae43-7169-be01-289ea30e80ef","state":"completed","ready_for_input":false,"updated_at":"2026-08-27T09:00:03.019Z","current_turn_id":null,"last_turn_id":null,"live":false,"reason":null,"source":"agent_session_event","event":"agent_end","cwd":"/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing","workdir":"/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing","branch":null,"session_file":"/private/tmp/gjc-sessions/omarketing-release-artifact-contents-fixture/2026-08-27T08-48-06-213Z_01a04267-ae43-7169-be01-289ea30e80ef.jsonl","activity":{"seq":90,"last_activity_at":"2026-08-27T08:59:47.692Z","tool":"todo_write","phase":"finished","outcome":"success","elapsed_ms":0,"active_tool_count":0,"active_tools":[],"in_flight":[]},"execution_state":"terminal_ok","receipt_state":"present","ended_at":"2026-08-27T09:00:03.019Z","final_response":{"text":"구현 완료했습니다.\n\n- 신규 파일 4개를 `.hermes/phase1/release/artifact-contents/**`에만 작성\n- LICENSE/notices/SBOM/source receipt/source directions/backend bridge 누락 각각 FAIL\n- component 필수 필드 및 unknown disposition 검증\n- complete SPDX fixture와 CycloneDX 대안 PASS\n- RED: 18/21 실패, exit `1`\n- GREEN: 21/21 통과, exit `0`\n- `oxfmt --check`: exit `0`\n- 직접 validator 실행: exit `0`\n\n`mt result omarketing-release-artifact-contents-fixture` 기록과 readback도 확인했습니다.\n\n실제 build·zip·SBOM 생성이나 package/release script는 변경하지 않았습니다. Fixture PASS는 구조 검증일 뿐 legal approval 또는 실제 license compliance 증거가 아닙니다. 검증 호스트 Node는 `v26.7.0`으로 선언된 release 범위 `>=25 <26` 밖이므로 release toolchain 증거로도 사용하지 않았습니다.","format":"markdown","source":"agent_end","artifact_path":null,"truncated":false}}
+{
+  "schema_version": 1,
+  "session_id": "01a04267-ae43-7169-be01-289ea30e80ef",
+  "state": "completed",
+  "ready_for_input": false,
+  "updated_at": "2026-08-27T09:00:03.019Z",
+  "current_turn_id": null,
+  "last_turn_id": null,
+  "live": false,
+  "reason": null,
+  "source": "agent_session_event",
+  "event": "agent_end",
+  "cwd": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+  "workdir": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+  "branch": null,
+  "session_file": "/private/tmp/gjc-sessions/omarketing-release-artifact-contents-fixture/2026-08-27T08-48-06-213Z_01a04267-ae43-7169-be01-289ea30e80ef.jsonl",
+  "activity": {
+    "seq": 90,
+    "last_activity_at": "2026-08-27T08:59:47.692Z",
+    "tool": "todo_write",
+    "phase": "finished",
+    "outcome": "success",
+    "elapsed_ms": 0,
+    "active_tool_count": 0,
+    "active_tools": [],
+    "in_flight": []
+  },
+  "execution_state": "terminal_ok",
+  "receipt_state": "present",
+  "ended_at": "2026-08-27T09:00:03.019Z",
+  "final_response": {
+    "text": "구현 완료했습니다.\n\n- 신규 파일 4개를 `.hermes/phase1/release/artifact-contents/**`에만 작성\n- LICENSE/notices/SBOM/source receipt/source directions/backend bridge 누락 각각 FAIL\n- component 필수 필드 및 unknown disposition 검증\n- complete SPDX fixture와 CycloneDX 대안 PASS\n- RED: 18/21 실패, exit `1`\n- GREEN: 21/21 통과, exit `0`\n- `oxfmt --check`: exit `0`\n- 직접 validator 실행: exit `0`\n\n`mt result omarketing-release-artifact-contents-fixture` 기록과 readback도 확인했습니다.\n\n실제 build·zip·SBOM 생성이나 package/release script는 변경하지 않았습니다. Fixture PASS는 구조 검증일 뿐 legal approval 또는 실제 license compliance 증거가 아닙니다. 검증 호스트 Node는 `v26.7.0`으로 선언된 release 범위 `>=25 <26` 밖이므로 release toolchain 증거로도 사용하지 않았습니다.",
+    "format": "markdown",
+    "source": "agent_end",
+    "artifact_path": null,
+    "truncated": false
+  }
+}

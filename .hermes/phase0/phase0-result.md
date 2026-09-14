@@ -26,26 +26,26 @@ Phase 0에서 제품 source는 수정하지 않았다. 기존 dirty 파일
 
 ## 제품 결정 확정표
 
-| 항목 | Phase 0 결정 |
-|---|---|
-| 배포 build | 이 release line은 Omarketing-only. stock build는 upstream source에서 얻고 runtime brand flag를 만들지 않음 |
-| Frontend extension | remote-only가 아니라 `src/extensions/core/index.ts`의 built-in import 1개 |
-| 실행 node | frontend-only node 금지; 별도 backend package가 `/object_info`에 등록 |
-| Fan-out entry | 전역 Run 자동 감지 금지; `레퍼런스 선택` node의 `선택 항목 실행`만 활성화 |
-| Project | 기존 `workflows/<top-level-project>/<workflow>.json` tree를 표시 source로 사용 |
-| Project identity | folder명과 분리된 backend-issued immutable lowercase UUID `project_key` |
-| 빈 project | 독자 empty-folder CRUD 없음; 공식 template copy 또는 첫 Workflow 저장 흐름에서 명시적 초기화 |
-| Copy/rename/import | 같은 top-level folder는 key 유지; 다른 top-level/import는 explicit blank rebind |
-| 후보 결과 | reference마다 Queue job 1개, 그 job 안에 candidate branch 5개 |
-| branch 실패 | job failed; 이미 저장된 파일은 보존하지만 기존 Assets 노출은 보장하지 않음 |
-| 최종 선택 | 파일 복사 없음; run별 `selection.json`의 unique `reference_id` entry만 원자적으로 갱신 |
-| Assets card | Omarketing badge/body/context menu 변경 없음; filter와 lightbox detail/action만 확장 |
-| History 삭제 | 파일/manifest가 남아도 기존 Assets 재발견을 보장하지 않음; 영구 index 금지 |
-| Auth | single-owner same-origin gateway session; Comfy cloud token/query 흐름과 분리 |
-| Web/Electron data | production Electron은 web과 같은 canonical gateway HTTPS origin을 로드; direct Comfy/file renderer/별도 store 금지 |
-| 범위 경계 | Omarketing → internal backend → Hermes/automation/media까지만; OWrite·SNS 발행 연동 제외 |
-| 외부 cancel | adapter가 idempotent remote cancel·poll reconciliation·late artifact quarantine 담당 |
-| GPL | frontend fork와 in-process bridge는 `GPL-3.0-only`; independent HTTP service 경계는 별도 사실·license review 필요 |
+| 항목               | Phase 0 결정                                                                                                       |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| 배포 build         | 이 release line은 Omarketing-only. stock build는 upstream source에서 얻고 runtime brand flag를 만들지 않음         |
+| Frontend extension | remote-only가 아니라 `src/extensions/core/index.ts`의 built-in import 1개                                          |
+| 실행 node          | frontend-only node 금지; 별도 backend package가 `/object_info`에 등록                                              |
+| Fan-out entry      | 전역 Run 자동 감지 금지; `레퍼런스 선택` node의 `선택 항목 실행`만 활성화                                          |
+| Project            | 기존 `workflows/<top-level-project>/<workflow>.json` tree를 표시 source로 사용                                     |
+| Project identity   | folder명과 분리된 backend-issued immutable lowercase UUID `project_key`                                            |
+| 빈 project         | 독자 empty-folder CRUD 없음; 공식 template copy 또는 첫 Workflow 저장 흐름에서 명시적 초기화                       |
+| Copy/rename/import | 같은 top-level folder는 key 유지; 다른 top-level/import는 explicit blank rebind                                    |
+| 후보 결과          | reference마다 Queue job 1개, 그 job 안에 candidate branch 5개                                                      |
+| branch 실패        | job failed; 이미 저장된 파일은 보존하지만 기존 Assets 노출은 보장하지 않음                                         |
+| 최종 선택          | 파일 복사 없음; run별 `selection.json`의 unique `reference_id` entry만 원자적으로 갱신                             |
+| Assets card        | Omarketing badge/body/context menu 변경 없음; filter와 lightbox detail/action만 확장                               |
+| History 삭제       | 파일/manifest가 남아도 기존 Assets 재발견을 보장하지 않음; 영구 index 금지                                         |
+| Auth               | single-owner same-origin gateway session; Comfy cloud token/query 흐름과 분리                                      |
+| Web/Electron data  | production Electron은 web과 같은 canonical gateway HTTPS origin을 로드; direct Comfy/file renderer/별도 store 금지 |
+| 범위 경계          | Omarketing → internal backend → Hermes/automation/media까지만; OWrite·SNS 발행 연동 제외                           |
+| 외부 cancel        | adapter가 idempotent remote cancel·poll reconciliation·late artifact quarantine 담당                               |
+| GPL                | frontend fork와 in-process bridge는 `GPL-3.0-only`; independent HTTP service 경계는 별도 사실·license review 필요  |
 
 ## 산출물
 

@@ -1,1 +1,38 @@
-{"schema_version":1,"session_id":"01a042c5-32d8-75e4-a82c-788a62338d61","state":"completed","ready_for_input":false,"updated_at":"2026-08-27T10:43:41.181Z","current_turn_id":null,"last_turn_id":null,"live":false,"reason":null,"source":"agent_session_event","event":"agent_end","cwd":"/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing","workdir":"/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing","branch":null,"session_file":"/private/tmp/gjc-sessions/omarketing-release-receipt-contract/2026-08-27T10-30-15-000Z_01a042c5-32d8-75e4-a82c-788a62338d61.jsonl","activity":{"seq":118,"last_activity_at":"2026-08-27T10:43:20.126Z","tool":"bash","phase":"finished","outcome":"success","elapsed_ms":285,"active_tool_count":0,"active_tools":[],"in_flight":[]},"execution_state":"terminal_ok","receipt_state":"present","ended_at":"2026-08-27T10:43:41.181Z","final_response":{"text":"## 완료 판정\n\n**CONTRACT PASS / ACTUAL RELEASE BLOCKED**\n\n- `contract_only=true`\n- `actual_release_created=false`\n- `production_ready=false`\n\n### 검증\n\n- 전체 테스트: **201/201 통과**, 실패 0\n- Valid CLI: exit `0`, `releaseStatus=BLOCKED`\n- Secret fixture CLI: exit `1`, 단일 `ENV_SECRET_VALUE`, 값 비노출\n- Moving-branch CLI: exit `1`\n- 이름 14종과 값 형태 7종 모두 거부 확인\n- 실제 환경·credential source·network·build·deploy는 접근하지 않음\n\n### 변경 파일 SHA-256\n\n- Schema: `8a8a06837259926be27878ce915b7c391ddc2f5315b61d33c74f402c7bdcc6a1`\n- Validator: `eab035094b4839bfda58b376161f8888df394b4917ec2d501f58ec8ab697b6c4`\n- RED tests: `447f545ad5ed33f6d9a3c9c4758f9ba62f5416e1ceed54aac233923ac88054ea`\n- Main tests: `ae464ee44deb41663fc7dada65609101ffe28d90bf3cd2834101583faac8229e`\n- Valid fixture: `c50fd086035094a404807a561a8fd92e9a79a0efdaa880b164ba43aff507068d`\n- Moving fixture: `5f3f8765ae429d2bdc1d65b4d444336e999ac1943c64b2e5fe1c449abf768886`\n- Secret fixture: `0023ca2488fe40ac782bd7d5b06cd880b9075cf2d641425a2c29ec19d7f866eb`\n\n전체 결과를 `omarketing-release-receipt-secret-boundary-correction-v1`에 저장하고 terminator까지 재확인했습니다.","format":"markdown","source":"agent_end","artifact_path":null,"truncated":false}}
+{
+  "schema_version": 1,
+  "session_id": "01a042c5-32d8-75e4-a82c-788a62338d61",
+  "state": "completed",
+  "ready_for_input": false,
+  "updated_at": "2026-08-27T10:43:41.181Z",
+  "current_turn_id": null,
+  "last_turn_id": null,
+  "live": false,
+  "reason": null,
+  "source": "agent_session_event",
+  "event": "agent_end",
+  "cwd": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+  "workdir": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+  "branch": null,
+  "session_file": "/private/tmp/gjc-sessions/omarketing-release-receipt-contract/2026-08-27T10-30-15-000Z_01a042c5-32d8-75e4-a82c-788a62338d61.jsonl",
+  "activity": {
+    "seq": 118,
+    "last_activity_at": "2026-08-27T10:43:20.126Z",
+    "tool": "bash",
+    "phase": "finished",
+    "outcome": "success",
+    "elapsed_ms": 285,
+    "active_tool_count": 0,
+    "active_tools": [],
+    "in_flight": []
+  },
+  "execution_state": "terminal_ok",
+  "receipt_state": "present",
+  "ended_at": "2026-08-27T10:43:41.181Z",
+  "final_response": {
+    "text": "## 완료 판정\n\n**CONTRACT PASS / ACTUAL RELEASE BLOCKED**\n\n- `contract_only=true`\n- `actual_release_created=false`\n- `production_ready=false`\n\n### 검증\n\n- 전체 테스트: **201/201 통과**, 실패 0\n- Valid CLI: exit `0`, `releaseStatus=BLOCKED`\n- Secret fixture CLI: exit `1`, 단일 `ENV_SECRET_VALUE`, 값 비노출\n- Moving-branch CLI: exit `1`\n- 이름 14종과 값 형태 7종 모두 거부 확인\n- 실제 환경·credential source·network·build·deploy는 접근하지 않음\n\n### 변경 파일 SHA-256\n\n- Schema: `8a8a06837259926be27878ce915b7c391ddc2f5315b61d33c74f402c7bdcc6a1`\n- Validator: `eab035094b4839bfda58b376161f8888df394b4917ec2d501f58ec8ab697b6c4`\n- RED tests: `447f545ad5ed33f6d9a3c9c4758f9ba62f5416e1ceed54aac233923ac88054ea`\n- Main tests: `ae464ee44deb41663fc7dada65609101ffe28d90bf3cd2834101583faac8229e`\n- Valid fixture: `c50fd086035094a404807a561a8fd92e9a79a0efdaa880b164ba43aff507068d`\n- Moving fixture: `5f3f8765ae429d2bdc1d65b4d444336e999ac1943c64b2e5fe1c449abf768886`\n- Secret fixture: `0023ca2488fe40ac782bd7d5b06cd880b9075cf2d641425a2c29ec19d7f866eb`\n\n전체 결과를 `omarketing-release-receipt-secret-boundary-correction-v1`에 저장하고 terminator까지 재확인했습니다.",
+    "format": "markdown",
+    "source": "agent_end",
+    "artifact_path": null,
+    "truncated": false
+  }
+}

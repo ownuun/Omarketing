@@ -1,1 +1,43 @@
-{"schema_version":1,"session_id":"01a0424e-d65e-749e-946e-16419664b3bd","state":"completed","ready_for_input":false,"updated_at":"2026-08-27T08:43:07.775Z","current_turn_id":null,"last_turn_id":null,"live":false,"reason":null,"source":"agent_session_event","event":"agent_end","cwd":"/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing","workdir":"/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing","branch":null,"session_file":"/Users/ownuun/.gjc/agent/sessions/v2-hoqwkh2wefxmyiuhsl66vkg4mo6rrxbqemo47psscgetgo2tx3oa/2026-08-27T08-20-58-078Z_01a0424e-d65e-749e-946e-16419664b3bd.jsonl","activity":{"seq":140,"last_activity_at":"2026-08-27T08:42:54.612Z","tool":"irc","phase":"finished","outcome":"failure","elapsed_ms":1,"active_tool_count":0,"active_tools":[],"in_flight":[]},"execution_state":"terminal_ok","receipt_state":"missing","ended_at":"2026-08-27T08:43:07.775Z","final_response":{"text":null,"format":"markdown","source":"agent_end","artifact_path":null,"truncated":false},"error":{"code":"receipt_missing","message":"Agent completed without reportable final response text or artifact path.","recoverable":true}}
+{
+  "schema_version": 1,
+  "session_id": "01a0424e-d65e-749e-946e-16419664b3bd",
+  "state": "completed",
+  "ready_for_input": false,
+  "updated_at": "2026-08-27T08:43:07.775Z",
+  "current_turn_id": null,
+  "last_turn_id": null,
+  "live": false,
+  "reason": null,
+  "source": "agent_session_event",
+  "event": "agent_end",
+  "cwd": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+  "workdir": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+  "branch": null,
+  "session_file": "/Users/ownuun/.gjc/agent/sessions/v2-hoqwkh2wefxmyiuhsl66vkg4mo6rrxbqemo47psscgetgo2tx3oa/2026-08-27T08-20-58-078Z_01a0424e-d65e-749e-946e-16419664b3bd.jsonl",
+  "activity": {
+    "seq": 140,
+    "last_activity_at": "2026-08-27T08:42:54.612Z",
+    "tool": "irc",
+    "phase": "finished",
+    "outcome": "failure",
+    "elapsed_ms": 1,
+    "active_tool_count": 0,
+    "active_tools": [],
+    "in_flight": []
+  },
+  "execution_state": "terminal_ok",
+  "receipt_state": "missing",
+  "ended_at": "2026-08-27T08:43:07.775Z",
+  "final_response": {
+    "text": null,
+    "format": "markdown",
+    "source": "agent_end",
+    "artifact_path": null,
+    "truncated": false
+  },
+  "error": {
+    "code": "receipt_missing",
+    "message": "Agent completed without reportable final response text or artifact path.",
+    "recoverable": true
+  }
+}

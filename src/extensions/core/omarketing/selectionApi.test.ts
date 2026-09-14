@@ -177,16 +177,12 @@ describe('selection API: real transport with injected test fetch', () => {
       directory_type: 'output' as const,
       media_type: 'text'
     }
-    const fetcher = vi
-      .fn()
-      .mockResolvedValue(
-        ok({
-          schema_version: 1,
-          results: [
-            { correlation_id: 'wrong', status: 'bound', binding, output }
-          ]
-        })
-      )
+    const fetcher = vi.fn().mockResolvedValue(
+      ok({
+        schema_version: 1,
+        results: [{ correlation_id: 'wrong', status: 'bound', binding, output }]
+      })
+    )
     await expect(
       createSelectionApi(fetcher).associate(
         [target],

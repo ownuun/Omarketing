@@ -12,15 +12,15 @@ A private development build is not marked release-ready. Network operation witho
 
 ## Fixed baseline facts
 
-| Item | Recorded Phase 0 value |
-|---|---|
-| Frontend base | ComfyUI Frontend `f8db605df6c7a3fb1a936f17806e42ea2d76fe05` |
-| Backend compatibility pin | ComfyUI `b08e6cf35fac50d3ca8470dffb3f9a1fbb7187d2` |
-| Frontend baseline package | `@comfyorg/comfyui-frontend` version `1.53.1` |
-| Frontend baseline license declaration | `GPL-3.0-only` |
-| Baseline toolchain declarations | Node `>=25 <26`, pnpm `>=11.3`, `packageManager` `pnpm@11.13.1` |
-| In-process bridge decision | Separate `comfyui-omarketing` repository, `GPL-3.0-only`, installed at `<ComfyUI>/custom_nodes/comfyui-omarketing/` |
-| Modification record date | Set to the UTC calendar date of each released modified version; do not reuse the Phase 0 document date as a release date |
+| Item                                  | Recorded Phase 0 value                                                                                                   |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Frontend base                         | ComfyUI Frontend `f8db605df6c7a3fb1a936f17806e42ea2d76fe05`                                                              |
+| Backend compatibility pin             | ComfyUI `b08e6cf35fac50d3ca8470dffb3f9a1fbb7187d2`                                                                       |
+| Frontend baseline package             | `@comfyorg/comfyui-frontend` version `1.53.1`                                                                            |
+| Frontend baseline license declaration | `GPL-3.0-only`                                                                                                           |
+| Baseline toolchain declarations       | Node `>=25 <26`, pnpm `>=11.3`, `packageManager` `pnpm@11.13.1`                                                          |
+| In-process bridge decision            | Separate `comfyui-omarketing` repository, `GPL-3.0-only`, installed at `<ComfyUI>/custom_nodes/comfyui-omarketing/`      |
+| Modification record date              | Set to the UTC calendar date of each released modified version; do not reuse the Phase 0 document date as a release date |
 
 The current baseline `package.json` describes itself as the “Official front-end implementation of ComfyUI” and points its name, homepage, and repository to Comfy organizations. Those values are upstream facts in the unmodified baseline, not acceptable Omarketing release metadata.
 
@@ -118,19 +118,19 @@ Selecting `GPL-3.0-only` for the bridge is the project policy for the in-process
 
 The released product must identify Omarketing first while preserving clear upstream credit. Attribution does not authorize implying sponsorship, affiliation, endorsement, or official status.
 
-| Surface | Required Omarketing state | Prohibited/release blocker |
-|---|---|---|
-| README heading/lead | “Omarketing”; state that it is a modified ComfyUI Frontend distribution; link upstream | “Official ComfyUI,” “official front-end,” upstream wordmark as product identity, or omitted modification statement |
-| `package.json` name | Omarketing-controlled package name, selected as `@omarketing/comfyui-frontend` if that namespace is verifiably controlled; otherwise release blocks until a truthful controlled name is assigned | `@comfyorg/comfyui-frontend` or any namespace not controlled by the publisher |
-| `package.json` description | “Omarketing front end, a modified ComfyUI Frontend distribution for marketing workflows” | “Official front-end implementation of ComfyUI” |
-| `package.json` homepage/repository | Actual Omarketing-controlled homepage and independent origin URL; upstream link remains in README/About | `https://comfy.org`, `Comfy-Org/ComfyUI_frontend`, placeholder, dead link, or an origin the publisher does not control |
-| Browser title | `Omarketing` (page context may follow after a separator) | `ComfyUI` alone or “Official ComfyUI” |
-| Splash/loading screen | Omarketing name/logo and accessible name; small upstream credit may be separate | Comfy wordmark/logo as primary identity; `aria-label` that announces ComfyUI as the product |
-| Favicon | Omarketing-owned icon | Upstream Comfy favicon or confusingly similar recolor |
-| PWA manifest | Omarketing `name`, `short_name`, description, start URL/scope, theme, and Omarketing-owned icons | ComfyUI names/icons or stale upstream screenshots implying official origin |
-| About | Omarketing product/version first; “modified from ComfyUI Frontend”; upstream link; modification date/base commit; source/license/no-warranty links | affiliation/endorsement claim, hidden upstream attribution, or source link to a moving branch |
-| Help/release metadata | Existing Comfy docs/community/support/releases are explicitly labeled upstream; the existing source/GitHub item points to the controlled Omarketing origin; Omarketing issues/support/update destinations are added only when controlled and operational | unlabeled upstream destinations, routing an Omarketing issue to upstream maintainers, or calling upstream changes Omarketing support guarantees |
-| Template gallery | Omarketing category/tag/logo only on the five curated official Omarketing sources | “official ComfyUI” badge, Omarketing badge on user copies/templates, or replacement of existing upstream/user entries |
+| Surface                            | Required Omarketing state                                                                                                                                                                                                                                | Prohibited/release blocker                                                                                                                      |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| README heading/lead                | “Omarketing”; state that it is a modified ComfyUI Frontend distribution; link upstream                                                                                                                                                                   | “Official ComfyUI,” “official front-end,” upstream wordmark as product identity, or omitted modification statement                              |
+| `package.json` name                | Omarketing-controlled package name, selected as `@omarketing/comfyui-frontend` if that namespace is verifiably controlled; otherwise release blocks until a truthful controlled name is assigned                                                         | `@comfyorg/comfyui-frontend` or any namespace not controlled by the publisher                                                                   |
+| `package.json` description         | “Omarketing front end, a modified ComfyUI Frontend distribution for marketing workflows”                                                                                                                                                                 | “Official front-end implementation of ComfyUI”                                                                                                  |
+| `package.json` homepage/repository | Actual Omarketing-controlled homepage and independent origin URL; upstream link remains in README/About                                                                                                                                                  | `https://comfy.org`, `Comfy-Org/ComfyUI_frontend`, placeholder, dead link, or an origin the publisher does not control                          |
+| Browser title                      | `Omarketing` (page context may follow after a separator)                                                                                                                                                                                                 | `ComfyUI` alone or “Official ComfyUI”                                                                                                           |
+| Splash/loading screen              | Omarketing name/logo and accessible name; small upstream credit may be separate                                                                                                                                                                          | Comfy wordmark/logo as primary identity; `aria-label` that announces ComfyUI as the product                                                     |
+| Favicon                            | Omarketing-owned icon                                                                                                                                                                                                                                    | Upstream Comfy favicon or confusingly similar recolor                                                                                           |
+| PWA manifest                       | Omarketing `name`, `short_name`, description, start URL/scope, theme, and Omarketing-owned icons                                                                                                                                                         | ComfyUI names/icons or stale upstream screenshots implying official origin                                                                      |
+| About                              | Omarketing product/version first; “modified from ComfyUI Frontend”; upstream link; modification date/base commit; source/license/no-warranty links                                                                                                       | affiliation/endorsement claim, hidden upstream attribution, or source link to a moving branch                                                   |
+| Help/release metadata              | Existing Comfy docs/community/support/releases are explicitly labeled upstream; the existing source/GitHub item points to the controlled Omarketing origin; Omarketing issues/support/update destinations are added only when controlled and operational | unlabeled upstream destinations, routing an Omarketing issue to upstream maintainers, or calling upstream changes Omarketing support guarantees |
+| Template gallery                   | Omarketing category/tag/logo only on the five curated official Omarketing sources                                                                                                                                                                        | “official ComfyUI” badge, Omarketing badge on user copies/templates, or replacement of existing upstream/user entries                           |
 
 Checklist:
 

@@ -4,10 +4,10 @@
 
 Reproduced **17 failed / 9 passed / 26 tests**, across exactly the two requested files, using installed Vitest 4.1.10 on Node v26.7.0. Both scripts fail because the test subprocess resolves `bash` to macOS `/bin/bash` **3.2.57**, which has no `mapfile` builtin. This is an evidenced local shell compatibility/prerequisite failure, not evidence of a regression in the completed composable correction or browser tests. These shell tests remain red locally; do not describe the entire suite as green or every defect as fixed.
 
-| File | Failed | Passed | First blocked statement |
-| --- | ---: | ---: | --- |
-| `scripts/cicd/check-binary-size.test.ts` | 12 | 8 | `check-binary-size.sh:96`: `mapfile -d '' -t numstat_records <"$numstat_file"` |
-| `scripts/cicd/reconcile-latest-release.test.ts` | 5 | 1 | `reconcile-latest-release.sh:22`: `mapfile -t stable_tags < <(...)` |
+| File                                            | Failed | Passed | First blocked statement                                                        |
+| ----------------------------------------------- | -----: | -----: | ------------------------------------------------------------------------------ |
+| `scripts/cicd/check-binary-size.test.ts`        |     12 |      8 | `check-binary-size.sh:96`: `mapfile -d '' -t numstat_records <"$numstat_file"` |
+| `scripts/cicd/reconcile-latest-release.test.ts` |      5 |      1 | `reconcile-latest-release.sh:22`: `mapfile -t stable_tags < <(...)`            |
 
 The passing cases reject invalid arguments / an unset REPO before reaching `mapfile`.
 
@@ -56,12 +56,12 @@ Independent probe `bash -c 'type mapfile; declare -A probe'` also reports `mapfi
 
 At inspection HEAD was **`7dce57dbe49bc24dec701ec66f22a81cde142356`**. Scoped `git --no-optional-locks status --short` and `git diff HEAD -- <four files>` both emitted no changes, before/after test execution. Each working-tree file was also compared byte-for-byte to `git show HEAD:<path>` and **all four matched**.
 
-| File | Working-tree SHA-256 |
-| --- | --- |
-| `scripts/cicd/check-binary-size.test.ts` | `ff09af67582e4196d5f1749678d1823720e1af69a92d2816dc8ca1cb8f7a32ab` |
-| `scripts/cicd/check-binary-size.sh` | `5ddf9119be03869704e4fc6610d0b48afe8c956f26dd5c3f1660a9483da499cd` |
+| File                                            | Working-tree SHA-256                                               |
+| ----------------------------------------------- | ------------------------------------------------------------------ |
+| `scripts/cicd/check-binary-size.test.ts`        | `ff09af67582e4196d5f1749678d1823720e1af69a92d2816dc8ca1cb8f7a32ab` |
+| `scripts/cicd/check-binary-size.sh`             | `5ddf9119be03869704e4fc6610d0b48afe8c956f26dd5c3f1660a9483da499cd` |
 | `scripts/cicd/reconcile-latest-release.test.ts` | `3ae9eb3c79bc80a1f0bdf959fe2a84f748754e1b13cf58e39c5bcdc7f88b8af3` |
-| `scripts/cicd/reconcile-latest-release.sh` | `4969948e80d66a9add28f745b27e53b888ddbbf6966957b13d5d3b843d888d7a` |
+| `scripts/cicd/reconcile-latest-release.sh`      | `4969948e80d66a9add28f745b27e53b888ddbbf6966957b13d5d3b843d888d7a` |
 
 Latest commit returned by scoped `git log -1` across these four paths: `58e9ea45ddd695e2c194f765153b9c4d3bee3e30 ci(release): harden core-release workflow (fixes from 1.47.10) (#14039)`.
 

@@ -1,1 +1,28 @@
-{"schema_version":1,"session_id":"[\"subagent-canonical\",\"01a05cf3-822d-7485-aba8-592c4f84fee1\",\"19-RalplanArchitectPass2\"]","state":"running","ready_for_input":false,"updated_at":"2026-09-01T13:40:15.326Z","current_turn_id":null,"last_turn_id":null,"live":true,"reason":null,"source":"agent_session_event","event":"turn_start","cwd":"/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing","workdir":"/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing","branch":null,"session_file":"/Users/ownuun/Documents/1. 개인문서/marketing/.gjc/sessions/omarketing-marketing-flow-ui-interview-v1/2026-09-01T12-30-57-581Z_01a05cf3-822d-7485-aba8-592c4f84fee1/19-RalplanArchitectPass2.jsonl","activity":{"seq":48,"last_activity_at":"2026-09-01T13:39:34.870Z","tool":"search","phase":"finished","outcome":"success","elapsed_ms":53,"active_tool_count":0,"active_tools":[],"in_flight":[]}}
+{
+  "schema_version": 1,
+  "session_id": "[\"subagent-canonical\",\"01a05cf3-822d-7485-aba8-592c4f84fee1\",\"19-RalplanArchitectPass2\"]",
+  "state": "running",
+  "ready_for_input": false,
+  "updated_at": "2026-09-01T13:40:15.326Z",
+  "current_turn_id": null,
+  "last_turn_id": null,
+  "live": true,
+  "reason": null,
+  "source": "agent_session_event",
+  "event": "turn_start",
+  "cwd": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+  "workdir": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+  "branch": null,
+  "session_file": "/Users/ownuun/Documents/1. 개인문서/marketing/.gjc/sessions/omarketing-marketing-flow-ui-interview-v1/2026-09-01T12-30-57-581Z_01a05cf3-822d-7485-aba8-592c4f84fee1/19-RalplanArchitectPass2.jsonl",
+  "activity": {
+    "seq": 48,
+    "last_activity_at": "2026-09-01T13:39:34.870Z",
+    "tool": "search",
+    "phase": "finished",
+    "outcome": "success",
+    "elapsed_ms": 53,
+    "active_tool_count": 0,
+    "active_tools": [],
+    "in_flight": []
+  }
+}

@@ -37,36 +37,33 @@
       "enum": ["accepted", "running", "succeeded", "failed", "canceled"]
     },
     "progress": {
-      "oneOf": [
-        {"type": "null"},
-        {"$ref": "#/$defs/progress"}
-      ]
+      "oneOf": [{ "type": "null" }, { "$ref": "#/$defs/progress" }]
     },
     "item_outcomes": {
       "type": "array",
       "maxItems": 1000,
-      "items": {"$ref": "#/$defs/itemOutcome"}
+      "items": { "$ref": "#/$defs/itemOutcome" }
     },
     "artifact_handles": {
       "type": "array",
       "maxItems": 64,
       "uniqueItems": true,
-      "items": {"$ref": "external-job-artifact-handle.v1.schema.json"}
+      "items": { "$ref": "external-job-artifact-handle.v1.schema.json" }
     },
     "warnings": {
       "type": "array",
       "maxItems": 32,
-      "items": {"$ref": "#/$defs/safeWarning"}
+      "items": { "$ref": "#/$defs/safeWarning" }
     },
     "errors": {
       "type": "array",
       "maxItems": 32,
-      "items": {"$ref": "external-job-error.v1.schema.json"}
+      "items": { "$ref": "external-job-error.v1.schema.json" }
     },
     "next_poll_after_seconds": {
       "oneOf": [
-        {"type": "null"},
-        {"type": "integer", "minimum": 1, "maximum": 15}
+        { "type": "null" },
+        { "type": "integer", "minimum": 1, "maximum": 15 }
       ]
     }
   },
@@ -75,7 +72,7 @@
       "if": {
         "type": "object",
         "properties": {
-          "status": {"enum": ["accepted", "running"]}
+          "status": { "enum": ["accepted", "running"] }
         },
         "required": ["status"]
       },
@@ -94,14 +91,14 @@
       "if": {
         "type": "object",
         "properties": {
-          "status": {"enum": ["succeeded", "failed", "canceled"]}
+          "status": { "enum": ["succeeded", "failed", "canceled"] }
         },
         "required": ["status"]
       },
       "then": {
         "type": "object",
         "properties": {
-          "next_poll_after_seconds": {"type": "null"}
+          "next_poll_after_seconds": { "type": "null" }
         }
       }
     },
@@ -109,17 +106,17 @@
       "if": {
         "type": "object",
         "properties": {
-          "status": {"const": "succeeded"}
+          "status": { "const": "succeeded" }
         },
         "required": ["status"]
       },
       "then": {
         "type": "object",
         "properties": {
-          "errors": {"type": "array", "maxItems": 0},
+          "errors": { "type": "array", "maxItems": 0 },
           "item_outcomes": {
             "type": "array",
-            "items": {"$ref": "#/$defs/succeededItemOutcome"}
+            "items": { "$ref": "#/$defs/succeededItemOutcome" }
           }
         }
       }
@@ -128,14 +125,14 @@
       "if": {
         "type": "object",
         "properties": {
-          "status": {"const": "failed"}
+          "status": { "const": "failed" }
         },
         "required": ["status"]
       },
       "then": {
         "type": "object",
         "properties": {
-          "errors": {"type": "array", "minItems": 1}
+          "errors": { "type": "array", "minItems": 1 }
         }
       }
     }

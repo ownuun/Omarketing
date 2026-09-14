@@ -1,1 +1,28 @@
-{"schema_version":1,"session_id":"[\"subagent-canonical\",\"01a0428e-586d-7526-9862-d90a0887417b\",\"2-AuthValidatorReview\"]","state":"running","ready_for_input":false,"updated_at":"2026-08-27T10:04:19.484Z","current_turn_id":null,"last_turn_id":null,"live":true,"reason":null,"source":"agent_session_event","event":"turn_start","cwd":"/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing","workdir":"/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing","branch":null,"session_file":"/private/tmp/gjc-sessions/omarketing-auth-contract-security-remediation-v1/2026-08-27T09-30-20-141Z_01a0428e-586d-7526-9862-d90a0887417b/2-AuthValidatorReview.jsonl","activity":{"seq":64,"last_activity_at":"2026-08-27T10:04:19.462Z","tool":"yield","phase":"finished","outcome":"success","elapsed_ms":1,"active_tool_count":0,"active_tools":[],"in_flight":[]}}
+{
+  "schema_version": 1,
+  "session_id": "[\"subagent-canonical\",\"01a0428e-586d-7526-9862-d90a0887417b\",\"2-AuthValidatorReview\"]",
+  "state": "running",
+  "ready_for_input": false,
+  "updated_at": "2026-08-27T10:04:19.484Z",
+  "current_turn_id": null,
+  "last_turn_id": null,
+  "live": true,
+  "reason": null,
+  "source": "agent_session_event",
+  "event": "turn_start",
+  "cwd": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+  "workdir": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+  "branch": null,
+  "session_file": "/private/tmp/gjc-sessions/omarketing-auth-contract-security-remediation-v1/2026-08-27T09-30-20-141Z_01a0428e-586d-7526-9862-d90a0887417b/2-AuthValidatorReview.jsonl",
+  "activity": {
+    "seq": 64,
+    "last_activity_at": "2026-08-27T10:04:19.462Z",
+    "tool": "yield",
+    "phase": "finished",
+    "outcome": "success",
+    "elapsed_ms": 1,
+    "active_tool_count": 0,
+    "active_tools": [],
+    "in_flight": []
+  }
+}

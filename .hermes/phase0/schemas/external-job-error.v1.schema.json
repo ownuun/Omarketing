@@ -59,7 +59,7 @@
     },
     "item_id": {
       "oneOf": [
-        {"type": "null"},
+        { "type": "null" },
         {
           "type": "string",
           "minLength": 1,
@@ -76,8 +76,8 @@
     },
     "external_job_locator": {
       "oneOf": [
-        {"type": "null"},
-        {"$ref": "external-job-locator.v1.schema.json"}
+        { "type": "null" },
+        { "$ref": "external-job-locator.v1.schema.json" }
       ]
     },
     "diagnostic_id": {

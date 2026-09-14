@@ -11,7 +11,10 @@ const project = '10000000-0000-4000-8000-000000000001'
 const run = '20000000-0000-4000-8000-000000000002'
 const workflow = 'workflows/TestHandoff/main.json'
 const correlation = '3a000000-0000-4000-8000-000000000003'
-const frontendRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
+const frontendRoot = resolve(
+  dirname(fileURLToPath(import.meta.url)),
+  '../../..'
+)
 
 test('TEST generator rejects unsupported schemas', () => {
   assert.throws(
@@ -26,7 +29,8 @@ test('TEST schema generates one closed parser output with backend parity', async
   assert.equal(generate().changedOutputs, 0)
   assert.equal(readFileSync(OUTPUT, 'utf8'), first)
 
-  const api = await import('../../../src/extensions/core/omarketing/testHandoffApi.generated')
+  const api =
+    await import('../../../src/extensions/core/omarketing/testHandoffApi.generated')
   const request = {
     schema_version: 1,
     workflow_locator: workflow,
@@ -58,12 +62,21 @@ test('TEST schema generates one closed parser output with backend parity', async
     history: [],
     publication_job_id: null
   }
-  assert.equal(api.TestHandoffCreateRequestSchema.safeParse(request).success, true)
-  assert.equal(api.TestHandoffProjectionSchema.safeParse(projection).success, true)
+  assert.equal(
+    api.TestHandoffCreateRequestSchema.safeParse(request).success,
+    true
+  )
+  assert.equal(
+    api.TestHandoffProjectionSchema.safeParse(projection).success,
+    true
+  )
 
   const vectors = [
     ['TestHandoffCreateRequest', request],
-    ['TestHandoffCreateRequest', { ...request, expected_manifest_revision: true }],
+    [
+      'TestHandoffCreateRequest',
+      { ...request, expected_manifest_revision: true }
+    ],
     ['TestHandoffCreateRequest', { ...request, owner_user_id: 'forged' }],
     ['TestHandoffProjection', projection],
     ['TestHandoffProjection', { ...projection, publication_job_id: 'job' }]

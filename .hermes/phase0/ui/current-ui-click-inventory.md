@@ -19,23 +19,23 @@ in-memory fixture로 intercept했다. 이 tab은 backend History/output을 쓰�
 
 ## 클릭 인벤토리
 
-| # | 표면 | 동작 | 실제 관찰 | Phase 0 결론 | 증거 |
-|---|---|---|---|---|---|
-| 1 | 기본 workspace | localhost 진입 | 기존 10-node Workflow, 실행 버튼, Queue badge, 왼쪽 navigation, 오른쪽 속성 패널과 minimap 표시. 누락 모델로 검증 오류 2개가 존재 | Canvas·Node·실행 표면은 현행 그대로 유지 | `screenshots/01-workspace-initial.png` |
-| 2 | Comfy 주 메뉴 | 좌상단 Comfy menu 클릭 | 새로 만들기, 파일, 편집, 보기, 테마, Nodes 2.0, 템플릿 탐색, 설정, 확장 프로그램 관리, 도움말 표시 | 제품 메뉴를 교체하지 않고 Omarketing command만 추가해야 함 | `screenshots/02-main-menu.png` |
-| 3 | Assets | `data-testid=assets-tab-button` 클릭 | localhost Assets에는 검색, 보기 설정, `생성됨`, `가져옴`만 표시. completed History output이 없어 empty state 표시 | Omarketing filter/action은 범용 presentation host로 추가하며 기존 두 tab과 empty state를 보존 | `screenshots/03-assets-localhost.png` |
-| 4 | Node Library | `data-testid=node-library-tab-button` 클릭 | 필수/모든 노드/즐겨찾기, Comfy node category, custom extension category를 같은 tree에서 표시 | backend `/object_info` custom node가 이 기존 library에 추가되므로 독자 library 불필요 | `screenshots/04-node-library.png` |
-| 5 | Workflows | `data-testid=workflows-tab-button` 클릭 | 북마크/찾아보기와 empty state 표시. 현재 backend user storage에는 workflow folder 항목이 없음 | 기존 Workflow tree가 source of truth. 빈 프로젝트 folder, move/drop은 현 상태에서 증명되지 않음 | `screenshots/05-workflows.png` |
-| 6 | Templates | `.templates-tab-button` 클릭 | 기존 full gallery, search, category, model/task/runtime filter, tags와 rich thumbnail/logo 표시 | Omarketing 공식 템플릿도 이 gallery source에 병합해야 함. custom example_workflows만으로는 같은 metadata 수준을 보장하지 않음 | `screenshots/06-templates-gallery.png` |
-| 7 | Settings | `aria-label='설정 (Ctrl + ,)'` 클릭 | User/Comfy/LiteGraph/Appearance/3D/Mask Editor/Keybinding/Extension/Info/Server config 등 기존 category 표시 | Omarketing 설정이 필요하면 extension-owned section으로 추가하고 기존 설정 schema/store는 교체하지 않음 | `screenshots/07-settings.png` |
-| 8 | Queue/History | `data-testid=queue-overlay-toggle` 클릭 | 모두/완료됨/실패 filter와 기존 failed History item 표시 | prompt N개는 기존 Queue/History item N개로 남아야 하며 run-group store를 만들지 않음 | `screenshots/08-queue-history-overlay.png` |
-| 9 | Run mode | `data-testid=queue-mode-menu-trigger` 클릭 | `실행`, `실행 (변경 시)`, `실행 (즉시)` 표시 | 일반 실행 계열은 fan-out session이 없을 때 모두 no-op hook이어야 함 | `screenshots/09-run-mode-menu.png` |
-| 10 | Help Center | `data-testid=help-center-button` 클릭 | 피드백, 도움말/지원, 문서, Discord, Github, 관리자 확장, 최근 릴리스 표시 | 브랜딩 시 Comfy 전용 support/release 표면의 유지·교체 여부를 비혼동 체크리스트로 검증 | `screenshots/10-help-center.png` |
-| 11 | Node context menu | node 우클릭 | Pin, clone, extension, rename/copy/duplicate, bypass, subgraph, node info, shape/color, remove 표시 | Omarketing node는 기존 node context semantics를 그대로 사용 | `screenshots/11-node-context-menu.png` |
-| 12 | Canvas context menu | 실제 blank canvas hit target 우클릭 | 노드 추가, 그룹 추가, 붙여넣기, 선택된 부분을 템플릿으로 저장, 노드 템플릿 표시 | 기존 Canvas와 Node Template 흐름 유지. 전용 Canvas mode 불필요 | `screenshots/12-canvas-context-menu.png` |
-| 13 | Assets five-output parent | fixture completed job 표시 | parent card가 output count `5`와 기존 download/context/output-stack action을 표시 | reference job 하나의 후보 5개를 기존 output stack으로 표현 가능 | `screenshots/13-assets-five-output-fixture.png` |
-| 14 | Assets output stack | output count click | parent preview를 제외한 나머지 output 4개가 같은 job folder에 표시 | 후보마다 Queue job을 만들지 않고 job 내부 branch 5개 유지 | `screenshots/14-assets-output-stack-fixture.png` |
-| 15 | MediaLightbox | fixture image card double-click | 기존 `갤러리` modal과 닫기/이전/다음 control 표시 | preview를 교체하지 않고 generic detail/action 영역만 추가 | `screenshots/15-assets-lightbox-fixture.png` |
+| #   | 표면                      | 동작                                       | 실제 관찰                                                                                                                         | Phase 0 결론                                                                                                                  | 증거                                             |
+| --- | ------------------------- | ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------ |
+| 1   | 기본 workspace            | localhost 진입                             | 기존 10-node Workflow, 실행 버튼, Queue badge, 왼쪽 navigation, 오른쪽 속성 패널과 minimap 표시. 누락 모델로 검증 오류 2개가 존재 | Canvas·Node·실행 표면은 현행 그대로 유지                                                                                      | `screenshots/01-workspace-initial.png`           |
+| 2   | Comfy 주 메뉴             | 좌상단 Comfy menu 클릭                     | 새로 만들기, 파일, 편집, 보기, 테마, Nodes 2.0, 템플릿 탐색, 설정, 확장 프로그램 관리, 도움말 표시                                | 제품 메뉴를 교체하지 않고 Omarketing command만 추가해야 함                                                                    | `screenshots/02-main-menu.png`                   |
+| 3   | Assets                    | `data-testid=assets-tab-button` 클릭       | localhost Assets에는 검색, 보기 설정, `생성됨`, `가져옴`만 표시. completed History output이 없어 empty state 표시                 | Omarketing filter/action은 범용 presentation host로 추가하며 기존 두 tab과 empty state를 보존                                 | `screenshots/03-assets-localhost.png`            |
+| 4   | Node Library              | `data-testid=node-library-tab-button` 클릭 | 필수/모든 노드/즐겨찾기, Comfy node category, custom extension category를 같은 tree에서 표시                                      | backend `/object_info` custom node가 이 기존 library에 추가되므로 독자 library 불필요                                         | `screenshots/04-node-library.png`                |
+| 5   | Workflows                 | `data-testid=workflows-tab-button` 클릭    | 북마크/찾아보기와 empty state 표시. 현재 backend user storage에는 workflow folder 항목이 없음                                     | 기존 Workflow tree가 source of truth. 빈 프로젝트 folder, move/drop은 현 상태에서 증명되지 않음                               | `screenshots/05-workflows.png`                   |
+| 6   | Templates                 | `.templates-tab-button` 클릭               | 기존 full gallery, search, category, model/task/runtime filter, tags와 rich thumbnail/logo 표시                                   | Omarketing 공식 템플릿도 이 gallery source에 병합해야 함. custom example_workflows만으로는 같은 metadata 수준을 보장하지 않음 | `screenshots/06-templates-gallery.png`           |
+| 7   | Settings                  | `aria-label='설정 (Ctrl + ,)'` 클릭        | User/Comfy/LiteGraph/Appearance/3D/Mask Editor/Keybinding/Extension/Info/Server config 등 기존 category 표시                      | Omarketing 설정이 필요하면 extension-owned section으로 추가하고 기존 설정 schema/store는 교체하지 않음                        | `screenshots/07-settings.png`                    |
+| 8   | Queue/History             | `data-testid=queue-overlay-toggle` 클릭    | 모두/완료됨/실패 filter와 기존 failed History item 표시                                                                           | prompt N개는 기존 Queue/History item N개로 남아야 하며 run-group store를 만들지 않음                                          | `screenshots/08-queue-history-overlay.png`       |
+| 9   | Run mode                  | `data-testid=queue-mode-menu-trigger` 클릭 | `실행`, `실행 (변경 시)`, `실행 (즉시)` 표시                                                                                      | 일반 실행 계열은 fan-out session이 없을 때 모두 no-op hook이어야 함                                                           | `screenshots/09-run-mode-menu.png`               |
+| 10  | Help Center               | `data-testid=help-center-button` 클릭      | 피드백, 도움말/지원, 문서, Discord, Github, 관리자 확장, 최근 릴리스 표시                                                         | 브랜딩 시 Comfy 전용 support/release 표면의 유지·교체 여부를 비혼동 체크리스트로 검증                                         | `screenshots/10-help-center.png`                 |
+| 11  | Node context menu         | node 우클릭                                | Pin, clone, extension, rename/copy/duplicate, bypass, subgraph, node info, shape/color, remove 표시                               | Omarketing node는 기존 node context semantics를 그대로 사용                                                                   | `screenshots/11-node-context-menu.png`           |
+| 12  | Canvas context menu       | 실제 blank canvas hit target 우클릭        | 노드 추가, 그룹 추가, 붙여넣기, 선택된 부분을 템플릿으로 저장, 노드 템플릿 표시                                                   | 기존 Canvas와 Node Template 흐름 유지. 전용 Canvas mode 불필요                                                                | `screenshots/12-canvas-context-menu.png`         |
+| 13  | Assets five-output parent | fixture completed job 표시                 | parent card가 output count `5`와 기존 download/context/output-stack action을 표시                                                 | reference job 하나의 후보 5개를 기존 output stack으로 표현 가능                                                               | `screenshots/13-assets-five-output-fixture.png`  |
+| 14  | Assets output stack       | output count click                         | parent preview를 제외한 나머지 output 4개가 같은 job folder에 표시                                                                | 후보마다 Queue job을 만들지 않고 job 내부 branch 5개 유지                                                                     | `screenshots/14-assets-output-stack-fixture.png` |
+| 15  | MediaLightbox             | fixture image card double-click            | 기존 `갤러리` modal과 닫기/이전/다음 control 표시                                                                                 | preview를 교체하지 않고 generic detail/action 영역만 추가                                                                     | `screenshots/15-assets-lightbox-fixture.png`     |
 
 전체 파일 hash와 byte size는 `evidence-manifest.json`에 기록했다.
 
@@ -70,14 +70,14 @@ in-memory fixture로 intercept했다. 이 tab은 backend History/output을 쓰�
 
 현재 Omarketing extension과 fan-out widget은 아직 구현되지 않았으므로 fan-out 동작을 실제 UI에서 실행해 검증할 수 없다. 이번 Gate 0은 현행 Run 표면과 core queue contract를 확인한 것이다. 구현 후 다음 항목은 별도 focused UI/E2E Gate가 되어야 한다.
 
-| Case | 구현 후 기대 결과 | Phase 0 계약 판정 |
-|---|---|---|
-| Run button | `fanout_active=false`; reference cursor 변화 없음; 기존 prompt 1개 | MUST |
-| Shift+Run/Queue front | `fanout_active=false`; reference cursor 변화 없음; 기존 front prompt 1개 | MUST |
-| Auto Queue/변경 시/즉시 | `fanout_active=false`; reference cursor 변화 없음 | MUST |
-| 선택 항목 실행 | 이 action만 `fanout_active=true` 설정 후 `queuePrompt(number, N)` 한 번 호출 | MUST |
-| prompt k 제출 실패 | `k-1/N queued` 표시, 미제출 reference 기록, session 즉시 해제 | MUST |
-| 재실행 | 새 request id와 새 cursor로 시작; 이전 session 재사용 금지 | MUST |
+| Case                    | 구현 후 기대 결과                                                            | Phase 0 계약 판정 |
+| ----------------------- | ---------------------------------------------------------------------------- | ----------------- |
+| Run button              | `fanout_active=false`; reference cursor 변화 없음; 기존 prompt 1개           | MUST              |
+| Shift+Run/Queue front   | `fanout_active=false`; reference cursor 변화 없음; 기존 front prompt 1개     | MUST              |
+| Auto Queue/변경 시/즉시 | `fanout_active=false`; reference cursor 변화 없음                            | MUST              |
+| 선택 항목 실행          | 이 action만 `fanout_active=true` 설정 후 `queuePrompt(number, N)` 한 번 호출 | MUST              |
+| prompt k 제출 실패      | `k-1/N queued` 표시, 미제출 reference 기록, session 즉시 해제                | MUST              |
+| 재실행                  | 새 request id와 새 cursor로 시작; 이전 session 재사용 금지                   | MUST              |
 
 정확한 state protocol은 `../contracts/project-key-and-fanout.md`를 따른다.
 

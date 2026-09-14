@@ -5,6 +5,7 @@ repo: `/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing`
 baseline: `f8db605df6c7a3fb1a936f17806e42ea2d76fe05`, GPL-3.0-only
 
 권위 문서 (해시 검증 완료):
+
 - spec `.gjc/_session-01a043d8-f2ed-7193-90de-d5033724e455/specs/deep-interview-omarketing-phase1-additive-frontend-foundation.md` sha256 `1eebf16a8c4c3491a6d190feb72eb256f78861efcc85ba5271b4cf8d93410135`
 - plan `.gjc/_session-01a043d8-f2ed-7193-90de-d5033724e455/plans/ralplan/01a043d8-f2ed-7193-90de-d5033724e455/pending-approval.md` sha256 `2b8bcbc1742d4de287b166b1fb8c1a023e76d24183e7a61c96dd8b01dd899ee0`
 
@@ -14,6 +15,7 @@ EVIDENCE_ROOT: `/Users/ownuun/Documents/1. 개인문서/marketing/Test/omarketin
 승인 밖 (절대 금지): commit, push, release, deploy, server restart, credential/account/payment, 유료 호출, 외부 업로드/게시, production write, 삭제, 되돌릴 수 없는 외부 작업. git origin이 upstream `Comfy-Org/ComfyUI_frontend`이므로 push 특히 금지.
 
 전역 불변 제약:
+
 - CR-1이 여는 source/tool exact path는 정확히 6개. 일곱 번째 경로, wildcard, directory grant 금지.
 - no-touch 유지: `src/composables/useCoreCommands.ts`, `src/router.ts`, `src/views/UserSelectView.vue`, `src/views/LinearView.vue`, `src/scripts/app.ts`, `src/scripts/api.ts`, `src/scripts/ui.ts`, `src/stores/**`, `src/lib/litegraph/**`, `src/platform/workflow/**`, `src/types/comfy.ts`, `src/types/litegraph-augmentation.d.ts`, `src/platform/distribution/types.ts`.
 - 타 lane 산출물 절대 미접촉: `vite.electron.config.mts`, `.hermes/phase1/**`, `.hermes/phase0/contracts/odesign-integration-v1.md`, `.hermes/phase0/contracts/external-job-lifecycle.md`, `.hermes/plans/**`. revert/stash 금지.

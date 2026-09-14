@@ -33,14 +33,14 @@ W1은 `awaiting_approval` 표시와 승인 경계를 고정하고, 외부 상태
 
 Odesign API v1의 상태는 다음 여섯 개만 사용한다.
 
-| 상태 | 전이 | 쉬운 한국어 표시 | 사용자가 할 일 |
-|---|---|---|---|
-| `accepted` | `accepted → running` | 접수됨 | 실행이 시작될 때까지 기다린다. |
-| `awaiting_approval` | `awaiting_approval → accepted → running` | **승인 대기** | **Odesign에서 승인을 완료해야 작업이 계속됩니다.** Omarketing에서는 승인 action을 제공하지 않는다. 현재 Omarketing Comfy prompt는 기다리지 않고 `APPROVAL_REQUIRED_IN_ODDESIGN`으로 안전하게 실패한다. |
-| `running` | `running → succeeded` 또는 `running → failed`; 결과가 불명확하면 `running → outcome_unknown` | 실행 중 | 완료 또는 실패가 확정될 때까지 기다린다. 취소할 수 없다. |
-| `succeeded` | 종결 상태 | 제작 완료 | 후보를 확인하고 Omarketing에서 최종 선택을 한다. 사람의 최종 승인은 별도다. |
-| `failed` | 종결 상태 | 실패 | `error.code`와 안내를 확인하고, `retryable`이 true일 때만 재시도를 선택한다. |
-| `outcome_unknown` | `outcome_unknown → succeeded` 또는 `outcome_unknown → failed` | 결과 확인 중 | polling과 재조회가 끝날 때까지 기다리며 자동 재실행하지 않는다. |
+| 상태                | 전이                                                                                         | 쉬운 한국어 표시 | 사용자가 할 일                                                                                                                                                                                         |
+| ------------------- | -------------------------------------------------------------------------------------------- | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `accepted`          | `accepted → running`                                                                         | 접수됨           | 실행이 시작될 때까지 기다린다.                                                                                                                                                                         |
+| `awaiting_approval` | `awaiting_approval → accepted → running`                                                     | **승인 대기**    | **Odesign에서 승인을 완료해야 작업이 계속됩니다.** Omarketing에서는 승인 action을 제공하지 않는다. 현재 Omarketing Comfy prompt는 기다리지 않고 `APPROVAL_REQUIRED_IN_ODDESIGN`으로 안전하게 실패한다. |
+| `running`           | `running → succeeded` 또는 `running → failed`; 결과가 불명확하면 `running → outcome_unknown` | 실행 중          | 완료 또는 실패가 확정될 때까지 기다린다. 취소할 수 없다.                                                                                                                                               |
+| `succeeded`         | 종결 상태                                                                                    | 제작 완료        | 후보를 확인하고 Omarketing에서 최종 선택을 한다. 사람의 최종 승인은 별도다.                                                                                                                            |
+| `failed`            | 종결 상태                                                                                    | 실패             | `error.code`와 안내를 확인하고, `retryable`이 true일 때만 재시도를 선택한다.                                                                                                                           |
+| `outcome_unknown`   | `outcome_unknown → succeeded` 또는 `outcome_unknown → failed`                                | 결과 확인 중     | polling과 재조회가 끝날 때까지 기다리며 자동 재실행하지 않는다.                                                                                                                                        |
 
 정상 흐름은 `accepted`에서 `running`으로 간 뒤 `succeeded` 또는 `failed`로 끝난다. 비용 재승인이 필요하면 Odesign의 자체 run이 `awaiting_approval`에서 `accepted`로 돌아간 뒤 실행한다. Omarketing Comfy prompt는 승인 대기에서 종료되므로 기존 prompt를 재개하지 않는다. 실행 결과가 불명확하면 `running`에서 `outcome_unknown`으로 두고 이후 `succeeded` 또는 `failed`로 확정한다.
 
@@ -167,18 +167,18 @@ Omarketing에 보관한 캠페인 사본은 Odesign 제작 이력의 authoritati
 
 아래 표는 합의와 구현을 구분한 현재 상태다. “미구현”, “계획됨”, “검증 전”은 구현 완료를 뜻하지 않는다.
 
-| 항목 | 합의 여부 | Odesign 구현 상태 | Omarketing 구현 상태 |
-|---|---|---|---|
-| 두 인스턴스의 실행 권위와 세 ID 상관관계 | 합의됨 | 계약 방향은 합의 가능; production 구현·검증 없음 | `comfyui-omarketing` 연동 구현 없음 |
-| TEST-ONLY `run_id`/artifact 조회 기반 | 조회 필요성 합의됨 | 기존 기반 일부 존재(TEST-ONLY) | 호출 adapter·표시 연동 없음 |
-| 정적 광고 production API | 범위 합의됨 | Omarketing-facing API 미구현 | 패키지·노드·라우트 미구현 |
-| Shorts execution API | 범위 합의됨 | 미구현 | 패키지·노드·라우트 미구현 |
-| selection feedback endpoint | 회신 방향 합의됨 | 미구현 | 회신 호출·결정 연동 미구현 |
-| 15분 download URL 발급 및 같은 `artifact_id` 재발급 | 계약 목표 합의됨 | 계획됨, 미구현 | 다운로드 adapter·검증 미구현 |
-| 시간 제한 없는 durable `run_id` 재조회 | 계약 목표 합의됨 | production 검증 전 | 재조회 adapter 미구현 |
-| polling 기반 상태 확정과 artifact SHA-256 재확인 | 규칙 합의됨 | production 검증 전 | polling·무결성 검증 미구현 |
-| 실제 provider 호출·유료 실행·외부 게시 | v1 시험 범위에서 수행하지 않음 | 수행하지 않음 | 수행하지 않음 |
-| Omarketing backend package, Omarketing 노드와 라우트, auth gateway, provider adapter | 구현 필요성 합의됨 | 해당 없음 | 전부 미구현 |
+| 항목                                                                                 | 합의 여부                      | Odesign 구현 상태                                | Omarketing 구현 상태                |
+| ------------------------------------------------------------------------------------ | ------------------------------ | ------------------------------------------------ | ----------------------------------- |
+| 두 인스턴스의 실행 권위와 세 ID 상관관계                                             | 합의됨                         | 계약 방향은 합의 가능; production 구현·검증 없음 | `comfyui-omarketing` 연동 구현 없음 |
+| TEST-ONLY `run_id`/artifact 조회 기반                                                | 조회 필요성 합의됨             | 기존 기반 일부 존재(TEST-ONLY)                   | 호출 adapter·표시 연동 없음         |
+| 정적 광고 production API                                                             | 범위 합의됨                    | Omarketing-facing API 미구현                     | 패키지·노드·라우트 미구현           |
+| Shorts execution API                                                                 | 범위 합의됨                    | 미구현                                           | 패키지·노드·라우트 미구현           |
+| selection feedback endpoint                                                          | 회신 방향 합의됨               | 미구현                                           | 회신 호출·결정 연동 미구현          |
+| 15분 download URL 발급 및 같은 `artifact_id` 재발급                                  | 계약 목표 합의됨               | 계획됨, 미구현                                   | 다운로드 adapter·검증 미구현        |
+| 시간 제한 없는 durable `run_id` 재조회                                               | 계약 목표 합의됨               | production 검증 전                               | 재조회 adapter 미구현               |
+| polling 기반 상태 확정과 artifact SHA-256 재확인                                     | 규칙 합의됨                    | production 검증 전                               | polling·무결성 검증 미구현          |
+| 실제 provider 호출·유료 실행·외부 게시                                               | v1 시험 범위에서 수행하지 않음 | 수행하지 않음                                    | 수행하지 않음                       |
+| Omarketing backend package, Omarketing 노드와 라우트, auth gateway, provider adapter | 구현 필요성 합의됨             | 해당 없음                                        | 전부 미구현                         |
 
 ## 14. 연동 개시 전 충족해야 할 조건
 

@@ -13,9 +13,7 @@
   },
   "git": {
     "origin": {
-      "fetch_urls": [
-        "https://github.com/Comfy-Org/ComfyUI_frontend.git"
-      ],
+      "fetch_urls": ["https://github.com/Comfy-Org/ComfyUI_frontend.git"],
       "explicit_push_urls": [],
       "effective_push_urls": [
         "https://github.com/Comfy-Org/ComfyUI_frontend.git"
@@ -68,9 +66,7 @@
       {
         "command": "git -C \"$REPO\" config --local --get-all remote.origin.url",
         "exit_code": 0,
-        "stdout": [
-          "https://github.com/Comfy-Org/ComfyUI_frontend.git"
-        ],
+        "stdout": ["https://github.com/Comfy-Org/ComfyUI_frontend.git"],
         "stderr": []
       },
       {
@@ -82,9 +78,7 @@
       {
         "command": "git -C \"$REPO\" remote get-url --push --all origin",
         "exit_code": 0,
-        "stdout": [
-          "https://github.com/Comfy-Org/ComfyUI_frontend.git"
-        ],
+        "stdout": ["https://github.com/Comfy-Org/ComfyUI_frontend.git"],
         "stderr": []
       },
       {
@@ -103,9 +97,7 @@
         "command": "git -C \"$REPO\" remote get-url --push --all upstream",
         "exit_code": 2,
         "stdout": [],
-        "stderr": [
-          "error: No such remote 'upstream'"
-        ]
+        "stderr": ["error: No such remote 'upstream'"]
       },
       {
         "command": "git -C \"$REPO\" status --porcelain=v1 --untracked-files=all -- index.html manifest.json package.json src/components/helpcenter/HelpCenterMenuContent.vue src/components/sidebar/ComfyMenuButton.vue src/composables/useBrowserTabTitle.test.ts src/composables/useBrowserTabTitle.ts src/composables/useExternalLink.ts src/config.ts",

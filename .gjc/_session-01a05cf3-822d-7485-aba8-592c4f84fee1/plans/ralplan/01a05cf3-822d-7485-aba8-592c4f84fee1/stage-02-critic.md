@@ -5,9 +5,11 @@
 - mode: read-only; delta-only per ratchet; no product code, tests, linters, or `.gjc/` files touched
 
 ## Verdict
+
 **OKAY**
 
 ## Claim Checks
+
 Delta-only review of the revision against pass-1 findings:
 
 - **C1-F1 (prohibited node) — RESOLVED.** The revision removes the frontend executable-node step entirely; Reconciled Scope states the first entry is not a custom node; Contract Alignment defers real nodes to the backend package plus a separately approved file-placement/contract review. Verified against `.hermes/phase0/contracts/core-file-allowlist.md:16` ("does not authorize executable frontend nodes … belong to the backend `comfyui-omarketing` custom-node package"). Step 2 carries the placement-review requirement for any new additive file, matching the allowlist's exact-path freeze (line 94: no seventh path/wildcard/directory grant). ADR records the rejection with the contract as driver.
@@ -20,12 +22,15 @@ Delta-only review of the revision against pass-1 findings:
 - **Monotonicity/novelty check:** no new blocker on previously-reviewed ground; any residual concern below fails the rule-2 novelty test and is recorded as non-blocking.
 
 ## Missing Evidence
+
 None blocking. Non-blocking residual: the mechanism by which the development/browser fixture harness "prepares" the one existing output `AssetItem` (which existing browser fixture produces the deterministic demo asset) is delegated to step 1's re-read plus `browser_tests/AGENTS.md` conventions — previously-approved ground (pass 1 accepted "using existing Comfy fixtures" for the browser row), so per rule 4 it cannot block pass 2. Claimed sha256 values for the revision and architect receipt were not independently recomputable under the read-only shell restriction; file contents were reviewed directly instead.
 
 ## Approval Boundary
+
 Execution may proceed on the revised plan (steps 1–8) as written, subject to the plan's own embedded gate: any new additive file requires an allowlist-permitted placement or the prior file-placement review. Not approved: real frontend/backend nodes, endpoints, persistence, provider calls, publishes, or any production integration (deferred per ADR); mutation of the unowned dirty worktree changes (including both locale files); the `job-history` QPOV2 gating nuance beyond invoking the established toggle. This review approves the plan only — no product-code changes are within its scope.
 
 ## Summary
+
 - Clarity: good — carrier rule, types, steps, and verification are now pinned; executors need not invent the domain model or binding rule.
 - Verifiability: strong — exact-ID positive/negative unit and component rows, named no-network/no-persistence mechanisms, browser path with filter preservation, explicit regression gates.
 - Completeness: all pass-1 blockers and caveats resolved or addressed; placement-review path for new files explicitly sequenced (step 2).
@@ -35,6 +40,7 @@ Execution may proceed on the revised plan (steps 1–8) as written, subject to t
 - Risk/Verification Rigor: pre-mortem targets the three realistic regressions (wrong-asset match, fake-authoritative UI, locale clobber); mitigations map to named tests.
 
 ## Required Changes
+
 None
 
 material-open-items: none (C1-F1, C1-F2, C1-F3 resolved; C1-C1, C1-C2, C1-C3 addressed)

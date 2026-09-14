@@ -6,10 +6,7 @@
   "$comment": "Messages are fixed per code so malformed, expired, revoked, and missing sessions cannot create a distinguishing error body.",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "schema_version",
-    "error"
-  ],
+  "required": ["schema_version", "error"],
   "properties": {
     "schema_version": {
       "type": "integer",
@@ -18,10 +15,7 @@
     "error": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "code",
-        "message"
-      ],
+      "required": ["code", "message"],
       "properties": {
         "code": {
           "type": "string",
@@ -61,9 +55,7 @@
                 "const": "INVALID_REQUEST"
               }
             },
-            "required": [
-              "code"
-            ]
+            "required": ["code"]
           },
           "then": {
             "properties": {
@@ -80,9 +72,7 @@
                 "const": "INVALID_CREDENTIALS"
               }
             },
-            "required": [
-              "code"
-            ]
+            "required": ["code"]
           },
           "then": {
             "properties": {
@@ -99,9 +89,7 @@
                 "const": "AUTH_REQUIRED"
               }
             },
-            "required": [
-              "code"
-            ]
+            "required": ["code"]
           },
           "then": {
             "properties": {
@@ -118,9 +106,7 @@
                 "const": "CSRF_REJECTED"
               }
             },
-            "required": [
-              "code"
-            ]
+            "required": ["code"]
           },
           "then": {
             "properties": {
@@ -137,14 +123,10 @@
                 "const": "RATE_LIMITED"
               }
             },
-            "required": [
-              "code"
-            ]
+            "required": ["code"]
           },
           "then": {
-            "required": [
-              "retry_after_seconds"
-            ],
+            "required": ["retry_after_seconds"],
             "properties": {
               "message": {
                 "const": "Too many requests."
@@ -169,9 +151,7 @@
                 "const": "SERVICE_UNAVAILABLE"
               }
             },
-            "required": [
-              "code"
-            ]
+            "required": ["code"]
           },
           "then": {
             "properties": {

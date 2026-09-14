@@ -1,1 +1,7 @@
-{"version":1,"sessionId":"01a05cf3-822d-7485-aba8-592c4f84fee1","url":"ws://127.0.0.1:53738/","token":"-ciwGflyYEkVEbMCVWiYyP2KEWpgYZoA","pid":49487}
+{
+  "version": 1,
+  "sessionId": "01a05cf3-822d-7485-aba8-592c4f84fee1",
+  "url": "ws://127.0.0.1:53738/",
+  "token": "-ciwGflyYEkVEbMCVWiYyP2KEWpgYZoA",
+  "pid": 49487
+}

@@ -8,7 +8,6 @@ This amendment supersedes legacy storage/request/response examples below for loc
 
 Only an explicitly allowlisted local export capability for one designated, pre-produced PNG/JPEG may create a local output. The capability pins a single-link regular source file plus producer artifact/version/hash/size/MIME and independently verified production, QA and rights receipt digests. No request path, directory, URL, scan, video, generation or external fetch is authority. Admission reuses the authenticated `ProjectContextStore`, checks exact project revision/workflow ownership, assigns an independent canonical UUID local run, and immutably binds reference/candidate and real prompt/node before publication. Additional candidates may join only an already recorded exact owner/project/workflow run; an arbitrary supplied run cannot create authority. The output node copies without modifying the source through no-follow bounded reads into `SelectionManifestStore.expected_directory`, exclusive staging, fsync and no-overwrite publication. Admission/publication receipts are append-only under the existing owner namespace. Receipt publication does not forge completion: `SelectionHistory` joins these receipts only when an injected native History adapter reports genuine successful output membership. Failed/lost History, partial byte commit, foreign owner, changed source, symlink, hardlink, traversal or conflicting receipt is never selectable.
 
-
 Status: Phase 0 contract; 제품 구현이 아니다.
 
 ## 권위 경계
@@ -140,18 +139,18 @@ Download, 후속 규격 변환, Assets detail 새로고침은 이 검증을 사�
 
 ## 오류 contract
 
-| HTTP | code | manifest 변경 |
-|---:|---|---|
-| 400 | `INVALID_SELECTION_REQUEST` | 없음 |
-| 401 | `AUTH_REQUIRED` | 없음 |
-| 403 | `CSRF_REJECTED` 또는 `SELECTION_NOT_AUTHORIZED` | 없음 |
-| 404 | `PROJECT_RUN_OR_OUTPUT_NOT_FOUND` | 없음; foreign 존재 여부 비노출 |
-| 409 | `MANIFEST_REVISION_CONFLICT`, `OUTPUT_LOCATOR_CONFLICT`, `OUTPUT_CHANGED_DURING_VALIDATION` | 없음 |
-| 410 | `OUTPUT_STALE` 또는 `OUTPUT_MISSING` | explicit revalidate route에서만 stale revision 기록 가능 |
-| 413 | `OUTPUT_TOO_LARGE` | 없음 |
-| 415 | `OUTPUT_MIME_NOT_ALLOWED` | 없음 |
-| 422 | `JOB_NOT_COMPLETED` 또는 `OUTPUT_NOT_IN_JOB` | 없음 |
-| 500 | `SELECTION_WRITE_FAILED` | 성공으로 보고하지 않음; old manifest 보존 |
+| HTTP | code                                                                                        | manifest 변경                                            |
+| ---: | ------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
+|  400 | `INVALID_SELECTION_REQUEST`                                                                 | 없음                                                     |
+|  401 | `AUTH_REQUIRED`                                                                             | 없음                                                     |
+|  403 | `CSRF_REJECTED` 또는 `SELECTION_NOT_AUTHORIZED`                                             | 없음                                                     |
+|  404 | `PROJECT_RUN_OR_OUTPUT_NOT_FOUND`                                                           | 없음; foreign 존재 여부 비노출                           |
+|  409 | `MANIFEST_REVISION_CONFLICT`, `OUTPUT_LOCATOR_CONFLICT`, `OUTPUT_CHANGED_DURING_VALIDATION` | 없음                                                     |
+|  410 | `OUTPUT_STALE` 또는 `OUTPUT_MISSING`                                                        | explicit revalidate route에서만 stale revision 기록 가능 |
+|  413 | `OUTPUT_TOO_LARGE`                                                                          | 없음                                                     |
+|  415 | `OUTPUT_MIME_NOT_ALLOWED`                                                                   | 없음                                                     |
+|  422 | `JOB_NOT_COMPLETED` 또는 `OUTPUT_NOT_IN_JOB`                                                | 없음                                                     |
+|  500 | `SELECTION_WRITE_FAILED`                                                                    | 성공으로 보고하지 않음; old manifest 보존                |
 
 오류에는 safe code/message와 diagnostic ID만 포함한다. 실제 path, owner ID, provider body, credential, stack trace를 반환하지 않는다.
 
@@ -165,15 +164,15 @@ Download, 후속 규격 변환, Assets detail 새로고침은 이 검증을 사�
 
 ## 구현 Gate 검증표
 
-| Case | PASS | FAIL |
-|---|---|---|
-| 합성 ID | request/manifest에 primitive locator가 분리되어 있고 synthetic ID가 없어도 동작 | 합성 ID를 split/parse하거나 단독 조회 key로 사용 |
-| Path containment | traversal·absolute·symlink escape가 모두 거부 | output root 밖 파일을 열 수 있음 |
-| Byte verification | 서버 hash/MIME/size가 fixture 및 실제 bytes와 일치 | client metadata를 복사 |
-| TOCTOU | read 중 변경을 감지하고 manifest 불변 | 변경된 파일을 선택 성공 처리 |
-| History status | completed job의 실제 output만 선택 가능 | failed/unknown output 선택 가능 |
-| Revision | stale expected revision은 409, old manifest 보존 | lost update 또는 silent overwrite |
-| Atomicity | fault injection 각 단계 후 old 또는 new valid JSON만 존재 | partial/truncated JSON 존재 |
-| Stale | checksum/size/MIME/path 변경이 stale로 기록되고 후속 처리 차단 | stale output 다운로드/변환 허용 |
-| History deletion | file/manifest는 남아도 기존 Assets에서 재발견되지 않음 | 별도 scan/index가 Assets membership을 복구 |
-| Redaction | 오류/로그/UI에 credential·실제 path·provider body가 없음 | 민감 정보 노출 |
+| Case              | PASS                                                                            | FAIL                                             |
+| ----------------- | ------------------------------------------------------------------------------- | ------------------------------------------------ |
+| 합성 ID           | request/manifest에 primitive locator가 분리되어 있고 synthetic ID가 없어도 동작 | 합성 ID를 split/parse하거나 단독 조회 key로 사용 |
+| Path containment  | traversal·absolute·symlink escape가 모두 거부                                   | output root 밖 파일을 열 수 있음                 |
+| Byte verification | 서버 hash/MIME/size가 fixture 및 실제 bytes와 일치                              | client metadata를 복사                           |
+| TOCTOU            | read 중 변경을 감지하고 manifest 불변                                           | 변경된 파일을 선택 성공 처리                     |
+| History status    | completed job의 실제 output만 선택 가능                                         | failed/unknown output 선택 가능                  |
+| Revision          | stale expected revision은 409, old manifest 보존                                | lost update 또는 silent overwrite                |
+| Atomicity         | fault injection 각 단계 후 old 또는 new valid JSON만 존재                       | partial/truncated JSON 존재                      |
+| Stale             | checksum/size/MIME/path 변경이 stale로 기록되고 후속 처리 차단                  | stale output 다운로드/변환 허용                  |
+| History deletion  | file/manifest는 남아도 기존 Assets에서 재발견되지 않음                          | 별도 scan/index가 Assets membership을 복구       |
+| Redaction         | 오류/로그/UI에 credential·실제 path·provider body가 없음                        | 민감 정보 노출                                   |

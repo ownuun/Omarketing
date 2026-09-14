@@ -5,9 +5,11 @@
 - mode: read-only; architect output not consulted; no product code, tests, linters, or `.gjc/` files touched
 
 ## Verdict
+
 **ITERATE**
 
 ## Claim Checks
+
 - **Plan format:** human-readable markdown plan (scope/principles/options/steps/state contract/AC/verification/pre-mortem/risks/ADR/reconciliation) — valid; not a YAML-only plan.
 - **Step 4 (bootstrap):** `src/extensions/core/omarketing/index.ts` verified — registers exactly one Assets presentation provider + About badge; `registerOmarketingExtension()` is idempotent with HMR dispose. "Single bootstrap registration contract" matches the file as-is.
 - **Step 3 (provider evolution):** `src/extensions/core/omarketing/assetsPresentation.ts` verified — Phase-1 provider is exactly as the plan describes: one status chip, zero actions, `getStandingState()` = `disconnected`, `loadMetadataBatch()` → `not-applicable` for all targets, `predicate()` → `match`, `appliesTo()` = `tab === 'output'`. The generic registry (`src/platform/assets/presentation/assetPresentationRegistry.ts`) genuinely supports detail sections + per-target actions (`AssetDetailSection`, `PresentationAction{isAvailable,execute}`, `AssetDetail.actionContext`, `requiresOutputLocator`), and the detail host `AssetPresentationDetails.vue` renders sections/actions; per `assets-presentation-registry.md` the detail surfaces are `AssetsSidebarTab.vue`/`MediaLightbox.vue`. Step 3 is mappable without mutating any host file or `MediaAssetCard.vue`.
@@ -20,6 +22,7 @@
 - **Representative task simulation:** (a) fixture domain module + transition table/one-Pass invariant → executable without guessing; (b) provider evolution → blocked by undefined fixture-target binding (C1-F2); (c) Queue/History link → executable; (d) node registration → blocked by unreconciled contract ceiling (C1-F1).
 
 ## Missing Evidence
+
 **Blocking (must resolve before execution):**
 
 - **C1-F1 — Custom Workflow node is unreconciled with the cited core-file allowlist.** Target: plan step 5 / Risks / Intent Reconciliation. `.hermes/phase0/contracts/core-file-allowlist.md` — the contract both `index.ts` and `assetsPresentation.ts` name as governing — states the frontend ceiling "does not authorize executable frontend nodes", that the extension "cannot own executable node logic", freezes additive extension files to an exact six-file list, and requires a reviewed file-placement decision for any new additive file (which also covers the new fixture/node/test files in steps 2, 5, 8). The spec mandates a custom marketing node and the plan schedules it, but neither reconciles it with this contract. The plan's Intent Reconciliation ("no material open item") is wrong on this point. Required correction: add an explicit contract-alignment decision — either (a) record the contract revision / file-placement review that admits a presentation-only, non-executable node and the new files, or (b) restructure step 5 to a surface the allowlist already permits, and state which contract governs this slice's new-file additions.
@@ -27,14 +30,17 @@
 - **C1-F3 — Fixture state model shape is under-determined.** Target: plan State Contract. The plan flattens spec's per-object model into one 8-value list (`qa_required`, `passed`, `deleted`, `selected`, `handed_to_auto`, `processing`, `completed`, `failed`), while the spec defines per-`fixtureKind` shapes: result `qaRequired` boolean, candidate disposition `unreviewed | passed | deleted`, read-back 5 states, plus `schemaVersion`/`fixtureKind`/`fixtureState`. Required correction: pin the discriminated union(s) — which object kinds carry which states — so the executor does not invent the domain model.
 
 **Non-blocking caveats:**
+
 - **C1-C1:** `src/locales/en/main.json` is currently dirty with unowned changes and step 7 writes to it; the plan should state the additive-only protocol (append new keys; never revert or absorb unowned hunks) to remove the superficial conflict with "do not touch the unowned dirty worktree".
 - **C1-C2:** the verification plan does not state the mechanism proving the negative boundary ("no network/persistence/prompt execution") — e.g. fetch/WebSocket spies, asserting no store writes / no `selection.json` path usage — nor the regression gates (typecheck, lint, affected vitest suites, i18n key audit) backing the "existing behavior unchanged" ACs.
 - **C1-C3:** the job-history toggle has distribution/setting nuances (`job-history` sidebar tab is gated by `Comfy.Queue.QPOV2`; floating vs docked panel); pin the chosen existing toggle entry in the revision.
 
 ## Approval Boundary
+
 Approved to keep: overall architecture choice (Option A — generic Assets presentation registry + existing extension bootstrap), principles, no-authority boundaries, non-goals, fixture sensitive-data restrictions, alternatives analysis, ADR, pre-mortem shape, and steps 1, 4, 6, 7 as written (subject to C1-C1's protocol note). Not approved for execution: step 3's target-binding mechanism, step 5's node registration, the State Contract's type shape, and the integration/browser verification rows that depend on them, until C1-F1..F3 are resolved by planner revision. No product-code changes, tests, linters, formatters, commits, or direct `.gjc/` edits are within this review's scope.
 
 ## Summary
+
 - **Clarity:** good at boundary level; load-bearing mechanism (fixture→target binding) left to executor invention.
 - **Verifiability:** most ACs testable; negative-boundary mechanism and fixture-target integration test under-specified.
 - **Completeness:** steps, ownership, i18n, and tests covered; contract reconciliation for the custom node and new files missing.
@@ -44,6 +50,7 @@ Approved to keep: overall architecture choice (Option A — generic Assets prese
 - **Risk/Verification Rigor:** pre-mortem names the right top-3 risks; risk #1 acknowledges the API-mapping problem but does not resolve it (C1-F2); dirty-worktree risk is factual but needs an edit protocol for `main.json` (C1-C1).
 
 ## Required Changes
+
 1. (C1-F1) Add a contract-alignment section reconciling step 5's custom node (and all new additive files/tests) with `core-file-allowlist.md`: record the contract revision or file-placement review that admits them, or restructure to an already-permitted surface; correct the Intent Reconciliation claim of "no material open item".
 2. (C1-F2) Define the deterministic, dev-only rule binding fixture data to Assets presentation targets, and specify candidate enumeration + per-candidate Pass/Delete mapping onto the per-target action model; restate the integration and browser verification rows in those terms so the QA flow is reachable in test.
 3. (C1-F3) Replace the flat 8-value state list with the typed per-`fixtureKind` discriminated unions (result `qaRequired`; candidate `unreviewed|passed|deleted`; read-back 5 states; `schemaVersion`/`fixture: true` markers).

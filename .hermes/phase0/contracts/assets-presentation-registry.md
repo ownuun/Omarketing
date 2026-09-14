@@ -4,7 +4,6 @@
 
 Public API projection is not generic full OutputLocatorV1 or legacy SelectionManifestV1. verifiedOutputLocator remains null. requiresOutputLocator:false bypasses only full-locator presence, never bound association/current revision/authenticated verify or PUT revalidation. Generic host must reject assetId/tuple ambiguity, ignore obsolete generations and refresh provider metadata after actions. Provider must not derive authority from UI ID or active workflow.
 
-
 Status: Phase 0 contract; no product implementation is contained in this file.
 
 ## Purpose and boundary
@@ -27,12 +26,12 @@ Normative source anchors:
 
 The generic hook may modify only these existing Assets presentation hosts:
 
-| File | Sole permitted responsibility |
-|---|---|
-| `src/platform/assets/components/MediaAssetFilterBar.vue` | Render registered localhost controls, their chips, clear/remove affordances, and provider loading/error status independently of the existing cloud-only filter menu. |
-| `src/platform/assets/composables/useMediaAssetFiltering.ts` | Combine registered synchronous tri-state predicates with the existing search/media/date filtering and sorting. |
-| `src/components/sidebar/tabs/AssetsSidebarTab.vue` | Subscribe to registry snapshots, own ephemeral presentation state, request deduplicated metadata batches for the visible/active window, and pass the active asset presentation to the lightbox. |
-| `src/components/sidebar/tabs/queue/MediaLightbox.vue` | Render generic read-only detail sections and registered actions beside the existing preview while preserving modal and media behavior. |
+| File                                                        | Sole permitted responsibility                                                                                                                                                                   |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/platform/assets/components/MediaAssetFilterBar.vue`    | Render registered localhost controls, their chips, clear/remove affordances, and provider loading/error status independently of the existing cloud-only filter menu.                            |
+| `src/platform/assets/composables/useMediaAssetFiltering.ts` | Combine registered synchronous tri-state predicates with the existing search/media/date filtering and sorting.                                                                                  |
+| `src/components/sidebar/tabs/AssetsSidebarTab.vue`          | Subscribe to registry snapshots, own ephemeral presentation state, request deduplicated metadata batches for the visible/active window, and pass the active asset presentation to the lightbox. |
+| `src/components/sidebar/tabs/queue/MediaLightbox.vue`       | Render generic read-only detail sections and registered actions beside the existing preview while preserving modal and media behavior.                                                          |
 
 The generic implementation files are fixed as:
 
@@ -157,7 +156,10 @@ interface MetadataBatchRequest {
 
 interface MetadataBatchEntry {
   readonly assetId: string
-  readonly state: Exclude<MetadataState, { readonly status: 'idle' | 'loading' }>
+  readonly state: Exclude<
+    MetadataState,
+    { readonly status: 'idle' | 'loading' }
+  >
 }
 
 type PresentationActionResult =
@@ -203,9 +205,7 @@ interface AssetPresentationRegistration {
 }
 
 interface AssetPresentationRegistry {
-  register(
-    provider: AssetPresentationProvider
-  ): AssetPresentationRegistration
+  register(provider: AssetPresentationProvider): AssetPresentationRegistration
   snapshot(): readonly AssetPresentationProvider[]
   subscribe(listener: () => void): () => void
 }
@@ -269,18 +269,18 @@ sufficient selection authority. The server response is parsed against
 
 The existing search/media/date predicates run first. Registered predicates run only on that resulting set. Existing sorting remains last; a registered relevance/score comparator is active only while its corresponding registered control is active and ready.
 
-| State | Required behavior |
-|---|---|
-| Core Assets are loading and there are no base assets | Preserve the existing Assets skeleton. Do not replace it with provider UI. |
-| Core Assets have items; provider metadata is loading | Keep `pending` items visible (fail open), mark provider controls/details `aria-busy`, and show a localized non-blocking loading status. Do not flash a false empty state. |
-| Provider predicate returns `match` | Keep the asset. |
-| Provider predicate returns `no-match` | Exclude the asset only for that provider's active filters. |
-| Provider predicate returns `pending` | Keep the asset until that target reaches a terminal metadata state, then recompute. |
-| Provider reports `not-applicable` while none of its controls are active | Keep the asset; omit its detail section/actions. |
-| Provider reports `not-applicable` while one of its controls is active | Treat it as `no-match`; an Omarketing filter must not relabel an unrelated asset. |
-| A provider batch/predicate fails | Fail open for that provider, isolate the error, retain core assets and other providers, and offer retry. |
-| Base loading has ended, all relevant provider lookups settled successfully, and filters yield zero assets | Show a filter-specific no-match state with clear-provider and clear-all-filter actions. Do not use the unfiltered “no files” claim. |
-| Base loading has ended and the unfiltered base set is empty | Preserve the existing imported/generated empty state. |
+| State                                                                                                     | Required behavior                                                                                                                                                         |
+| --------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Core Assets are loading and there are no base assets                                                      | Preserve the existing Assets skeleton. Do not replace it with provider UI.                                                                                                |
+| Core Assets have items; provider metadata is loading                                                      | Keep `pending` items visible (fail open), mark provider controls/details `aria-busy`, and show a localized non-blocking loading status. Do not flash a false empty state. |
+| Provider predicate returns `match`                                                                        | Keep the asset.                                                                                                                                                           |
+| Provider predicate returns `no-match`                                                                     | Exclude the asset only for that provider's active filters.                                                                                                                |
+| Provider predicate returns `pending`                                                                      | Keep the asset until that target reaches a terminal metadata state, then recompute.                                                                                       |
+| Provider reports `not-applicable` while none of its controls are active                                   | Keep the asset; omit its detail section/actions.                                                                                                                          |
+| Provider reports `not-applicable` while one of its controls is active                                     | Treat it as `no-match`; an Omarketing filter must not relabel an unrelated asset.                                                                                         |
+| A provider batch/predicate fails                                                                          | Fail open for that provider, isolate the error, retain core assets and other providers, and offer retry.                                                                  |
+| Base loading has ended, all relevant provider lookups settled successfully, and filters yield zero assets | Show a filter-specific no-match state with clear-provider and clear-all-filter actions. Do not use the unfiltered “no files” claim.                                       |
+| Base loading has ended and the unfiltered base set is empty                                               | Preserve the existing imported/generated empty state.                                                                                                                     |
 
 `clearFilters` clears existing and registered filter state. Removing one registered chip resets only its fully-qualified `providerId/controlId`. Registry state keys are namespaced; a provider cannot clear another provider's values.
 
@@ -324,17 +324,17 @@ Registry/host programming errors use the repository telemetry wrapper, never a r
 
 No commands are executed by this Phase 0 contract task. The implementation must later produce evidence for every row.
 
-| Case | Pass | Fail |
-|---|---|---|
-| Localhost controls | Omarketing controls render on localhost while existing cloud-only controls retain their behavior. | Controls are gated by `isCloud`, or distribution types are changed. |
-| Base-store integrity | Store/provider arrays and `AssetItem` objects are unchanged before/after filtering and detail use. | Registry mutates, replaces, or persists into an Assets store. |
-| Batch behavior | 100 visible targets cause bounded provider batches, not per-card requests; stale responses are discarded. | N visible cards cause N requests or stale detail appears after navigation. |
-| Loading | Existing assets remain visible while extension metadata loads. | Loading produces a false “no files/no matches” flash. |
-| No match | A settled zero result is filter-specific and offers clear actions. | Provider failure or pending work is presented as no matches. |
-| Isolation | One provider throws and core Assets plus another provider remain usable. | Preview/list/filter/action surface crashes or becomes disabled globally. |
-| Card regression | `MediaAssetCard.vue` has no diff and existing check/context-menu behavior is unchanged. | Card body, badge, footer, or menu is modified. |
-| Detail regression | Image/video/audio/text preview, arrows, close, focus restore, and narrow layout still work. | Provider detail replaces media rendering or breaks modal behavior. |
-| Selection authority | Network request contains a structured locator; server response supplies recomputed hash/MIME/size and validated manifest revision. | A frontend asset/synthetic ID or client checksum is accepted as authority. |
-| Action failure | Confirmed state remains, safe error/retry appears, and navigation works. | UI shows optimistic success or closes/locks the lightbox. |
-| Cleanup | Logout/backend change/unmount aborts requests and removes ephemeral cache/state. | Owner A metadata appears for owner B or after backend switch. |
-| Accessibility | Controls and actions are keyboard reachable; announcements, focus trap/restore, and interactive-key exclusions work. | Unlabelled controls, focus loss, arrow hijacking, or color-only status occurs. |
+| Case                 | Pass                                                                                                                               | Fail                                                                           |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| Localhost controls   | Omarketing controls render on localhost while existing cloud-only controls retain their behavior.                                  | Controls are gated by `isCloud`, or distribution types are changed.            |
+| Base-store integrity | Store/provider arrays and `AssetItem` objects are unchanged before/after filtering and detail use.                                 | Registry mutates, replaces, or persists into an Assets store.                  |
+| Batch behavior       | 100 visible targets cause bounded provider batches, not per-card requests; stale responses are discarded.                          | N visible cards cause N requests or stale detail appears after navigation.     |
+| Loading              | Existing assets remain visible while extension metadata loads.                                                                     | Loading produces a false “no files/no matches” flash.                          |
+| No match             | A settled zero result is filter-specific and offers clear actions.                                                                 | Provider failure or pending work is presented as no matches.                   |
+| Isolation            | One provider throws and core Assets plus another provider remain usable.                                                           | Preview/list/filter/action surface crashes or becomes disabled globally.       |
+| Card regression      | `MediaAssetCard.vue` has no diff and existing check/context-menu behavior is unchanged.                                            | Card body, badge, footer, or menu is modified.                                 |
+| Detail regression    | Image/video/audio/text preview, arrows, close, focus restore, and narrow layout still work.                                        | Provider detail replaces media rendering or breaks modal behavior.             |
+| Selection authority  | Network request contains a structured locator; server response supplies recomputed hash/MIME/size and validated manifest revision. | A frontend asset/synthetic ID or client checksum is accepted as authority.     |
+| Action failure       | Confirmed state remains, safe error/retry appears, and navigation works.                                                           | UI shows optimistic success or closes/locks the lightbox.                      |
+| Cleanup              | Logout/backend change/unmount aborts requests and removes ephemeral cache/state.                                                   | Owner A metadata appears for owner B or after backend switch.                  |
+| Accessibility        | Controls and actions are keyboard reachable; announcements, focus trap/restore, and interactive-key exclusions work.               | Unlabelled controls, focus loss, arrow hijacking, or color-only status occurs. |

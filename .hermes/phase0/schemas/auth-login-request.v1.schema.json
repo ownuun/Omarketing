@@ -6,11 +6,7 @@
   "$comment": "Unknown URL, token, API-key, owner, role, and privilege fields are rejected by additionalProperties. The password is transported only inside this TLS request and must never be logged.",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "schema_version",
-    "username",
-    "password"
-  ],
+  "required": ["schema_version", "username", "password"],
   "properties": {
     "schema_version": {
       "type": "integer",

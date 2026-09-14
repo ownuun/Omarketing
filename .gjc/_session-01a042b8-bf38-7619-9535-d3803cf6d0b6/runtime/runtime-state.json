@@ -1,1 +1,38 @@
-{"schema_version":1,"session_id":"01a042b8-bf38-7619-9535-d3803cf6d0b6","state":"completed","ready_for_input":false,"updated_at":"2026-08-27T10:26:45.192Z","current_turn_id":null,"last_turn_id":null,"live":false,"reason":null,"source":"agent_session_event","event":"agent_end","cwd":"/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing","workdir":"/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing","branch":null,"session_file":"/private/tmp/gjc-sessions/omarketing-auth-contract-security-remediation-v1/2026-08-27T10-16-38-968Z_01a042b8-bf38-7619-9535-d3803cf6d0b6.jsonl","activity":{"seq":122,"last_activity_at":"2026-08-27T10:26:21.540Z","tool":"todo_write","phase":"finished","outcome":"success","elapsed_ms":0,"active_tool_count":0,"active_tools":[],"in_flight":[]},"execution_state":"terminal_ok","receipt_state":"present","ended_at":"2026-08-27T10:26:45.192Z","final_response":{"text":"## 완료\n\n- **H2 계약 disposition: RESOLVED/PASS.** 단일 소유자 gateway password/session만 지원하며 Comfy sign-in/API-key 진입점은 hidden/unreachable입니다. Upstream source는 유지하지만 v1 entry point나 identity/session authority가 아닙니다.\n- `H2 remains outside this lane` 문장은 제거 및 부재 검증했습니다.\n- **H1/H4/M3 regression: PASS**\n- Strict H2 fixture는 omission, extra property, drift, reversal을 모두 거부합니다.\n- `contract_only=true`\n- `production_ready=false`\n- `product_writes=0`\n- Auth schema 5개 및 `pnpm-lock.yaml` 변경 없음.\n\n## 검증\n\n- Strict JSON/unique IDs: exit `0` — 6 files, 61 IDs\n- Validator: exit `0` — schemas 5, routes 19, schema cases 23, raw JSON 3, H2 policy 1, clock 6/17, revoke 9/41\n- Node tests: exit `0` — **11/11 PASS**\n- Owned-path/lockfile audits: exit `0`\n\n## SHA-256\n\n```text\n0cc63bb903f342d211b6eee8461798f07b5bf7ff2ce83d075d340d0627f09053  .hermes/phase0/contracts/auth-gateway.md\nec922c2a96228e2befc9ccdbcf4dd5d8ab244cd169ae9be336f7ca6882a6da51  .hermes/phase0/fixtures/auth-gateway.cases.json\n56e17a29ebe2bbd352b98d0d47d3c00f194470842346dfab15409361089047b3  .hermes/phase0/schemas/auth-error-response.v1.schema.json\n98da0d08b4ed1d74cb2ab8d290e6a481de9bc18c752c24ae2d9b89257a76d708  .hermes/phase0/schemas/auth-login-request.v1.schema.json\nb46cbf885100e9a542425dd952fef6d635f860e7cd0a6345e967c662af2962c7  .hermes/phase0/schemas/auth-logout-response.v1.schema.json\n0132ce290f7a1cc4ded81ecabc13ec16267bcf54a5edc44536d7b860d4c1e3a8  .hermes/phase0/schemas/auth-revoke-all-response.v1.schema.json\n940791d874b65ad3c459f924d5c22d791ad5e3ca734e4de73d4bb6e2f4ada2ae  .hermes/phase0/schemas/auth-session-response.v1.schema.json\nd6f5a8624da2c067f6849bf573704bf80dde66e1561cbfe879d31074467f6709  .hermes/phase1/security/auth-contract/auth-contract.test.mjs\n66bc1c7171852727e4b83fb14684f8157debc0db73ee1a61560515c1f3d4c003  .hermes/phase1/security/auth-contract/validate-auth-contract.mjs\n```\n\n`omarketing-auth-contract-h2-correction-v1` 결과를 `mt result`로 기록하고 `</worker-result>` terminator까지 읽어 확인했습니다.","format":"markdown","source":"agent_end","artifact_path":null,"truncated":false}}
+{
+  "schema_version": 1,
+  "session_id": "01a042b8-bf38-7619-9535-d3803cf6d0b6",
+  "state": "completed",
+  "ready_for_input": false,
+  "updated_at": "2026-08-27T10:26:45.192Z",
+  "current_turn_id": null,
+  "last_turn_id": null,
+  "live": false,
+  "reason": null,
+  "source": "agent_session_event",
+  "event": "agent_end",
+  "cwd": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+  "workdir": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+  "branch": null,
+  "session_file": "/private/tmp/gjc-sessions/omarketing-auth-contract-security-remediation-v1/2026-08-27T10-16-38-968Z_01a042b8-bf38-7619-9535-d3803cf6d0b6.jsonl",
+  "activity": {
+    "seq": 122,
+    "last_activity_at": "2026-08-27T10:26:21.540Z",
+    "tool": "todo_write",
+    "phase": "finished",
+    "outcome": "success",
+    "elapsed_ms": 0,
+    "active_tool_count": 0,
+    "active_tools": [],
+    "in_flight": []
+  },
+  "execution_state": "terminal_ok",
+  "receipt_state": "present",
+  "ended_at": "2026-08-27T10:26:45.192Z",
+  "final_response": {
+    "text": "## 완료\n\n- **H2 계약 disposition: RESOLVED/PASS.** 단일 소유자 gateway password/session만 지원하며 Comfy sign-in/API-key 진입점은 hidden/unreachable입니다. Upstream source는 유지하지만 v1 entry point나 identity/session authority가 아닙니다.\n- `H2 remains outside this lane` 문장은 제거 및 부재 검증했습니다.\n- **H1/H4/M3 regression: PASS**\n- Strict H2 fixture는 omission, extra property, drift, reversal을 모두 거부합니다.\n- `contract_only=true`\n- `production_ready=false`\n- `product_writes=0`\n- Auth schema 5개 및 `pnpm-lock.yaml` 변경 없음.\n\n## 검증\n\n- Strict JSON/unique IDs: exit `0` — 6 files, 61 IDs\n- Validator: exit `0` — schemas 5, routes 19, schema cases 23, raw JSON 3, H2 policy 1, clock 6/17, revoke 9/41\n- Node tests: exit `0` — **11/11 PASS**\n- Owned-path/lockfile audits: exit `0`\n\n## SHA-256\n\n```text\n0cc63bb903f342d211b6eee8461798f07b5bf7ff2ce83d075d340d0627f09053  .hermes/phase0/contracts/auth-gateway.md\nec922c2a96228e2befc9ccdbcf4dd5d8ab244cd169ae9be336f7ca6882a6da51  .hermes/phase0/fixtures/auth-gateway.cases.json\n56e17a29ebe2bbd352b98d0d47d3c00f194470842346dfab15409361089047b3  .hermes/phase0/schemas/auth-error-response.v1.schema.json\n98da0d08b4ed1d74cb2ab8d290e6a481de9bc18c752c24ae2d9b89257a76d708  .hermes/phase0/schemas/auth-login-request.v1.schema.json\nb46cbf885100e9a542425dd952fef6d635f860e7cd0a6345e967c662af2962c7  .hermes/phase0/schemas/auth-logout-response.v1.schema.json\n0132ce290f7a1cc4ded81ecabc13ec16267bcf54a5edc44536d7b860d4c1e3a8  .hermes/phase0/schemas/auth-revoke-all-response.v1.schema.json\n940791d874b65ad3c459f924d5c22d791ad5e3ca734e4de73d4bb6e2f4ada2ae  .hermes/phase0/schemas/auth-session-response.v1.schema.json\nd6f5a8624da2c067f6849bf573704bf80dde66e1561cbfe879d31074467f6709  .hermes/phase1/security/auth-contract/auth-contract.test.mjs\n66bc1c7171852727e4b83fb14684f8157debc0db73ee1a61560515c1f3d4c003  .hermes/phase1/security/auth-contract/validate-auth-contract.mjs\n```\n\n`omarketing-auth-contract-h2-correction-v1` 결과를 `mt result`로 기록하고 `</worker-result>` terminator까지 읽어 확인했습니다.",
+    "format": "markdown",
+    "source": "agent_end",
+    "artifact_path": null,
+    "truncated": false
+  }
+}

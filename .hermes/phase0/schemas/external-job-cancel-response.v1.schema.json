@@ -46,33 +46,33 @@
     {
       "if": {
         "type": "object",
-        "properties": {"status": {"const": "cancel_requested"}},
+        "properties": { "status": { "const": "cancel_requested" } },
         "required": ["status"]
       },
       "then": {
         "type": "object",
         "properties": {
-          "observed_external_status": {"enum": ["accepted", "running"]}
+          "observed_external_status": { "enum": ["accepted", "running"] }
         }
       }
     },
     {
       "if": {
         "type": "object",
-        "properties": {"status": {"const": "canceled"}},
+        "properties": { "status": { "const": "canceled" } },
         "required": ["status"]
       },
       "then": {
         "type": "object",
         "properties": {
-          "observed_external_status": {"const": "canceled"}
+          "observed_external_status": { "const": "canceled" }
         }
       }
     },
     {
       "if": {
         "type": "object",
-        "properties": {"status": {"const": "already_terminal"}},
+        "properties": { "status": { "const": "already_terminal" } },
         "required": ["status"]
       },
       "then": {

@@ -29,9 +29,7 @@
           "planHashBeforeCheckpoint": "850fcf4c423ec1f7d48ebe3f381ea5f3a43ce4e15002df0f3273bb1fba01dd6c",
           "latestRelevantLedgerEventIdBeforeCheckpoint": "272a0327-393c-418d-9408-cbaeb0237ccc",
           "goalUpdatedAtBeforeCheckpoint": "2026-08-30T07:51:09.241Z",
-          "relevantGoalIdsBeforeCheckpoint": [
-            "G001"
-          ],
+          "relevantGoalIdsBeforeCheckpoint": ["G001"],
           "requiredGoalSetHashBeforeCheckpoint": "6d51c04e4be9a7ca01c785e58926e4eb559697c0b0f639d444898c521b81c3d8"
         },
         "checkpointLedgerEventId": "0297fc65-aaef-401d-9441-d6e5c1055a53"
@@ -62,9 +60,7 @@
           "planHashBeforeCheckpoint": "c9e14352527089ce67a950528f754a3a6ff445327590719438db4674062f43f3",
           "latestRelevantLedgerEventIdBeforeCheckpoint": "a1f9bcc2-ca85-4cec-a342-cbed507d4b48",
           "goalUpdatedAtBeforeCheckpoint": "2026-08-30T08:55:34.237Z",
-          "relevantGoalIdsBeforeCheckpoint": [
-            "G002"
-          ],
+          "relevantGoalIdsBeforeCheckpoint": ["G002"],
           "requiredGoalSetHashBeforeCheckpoint": "98d45d3f4e2faf8aa4738a2f4ed4f5ff23b25e14e47dc0b8b739fd384034b84a"
         },
         "checkpointLedgerEventId": "2250caca-b61d-4ccc-b4f1-d75302a38eca"
@@ -95,9 +91,7 @@
           "planHashBeforeCheckpoint": "1f289696a12bbc267e7c1276a28fadad1253749cc86cb8bceb63b0de47ccda25",
           "latestRelevantLedgerEventIdBeforeCheckpoint": "03f88767-8915-41f5-bcf0-d782f33c2633",
           "goalUpdatedAtBeforeCheckpoint": "2026-08-30T08:59:34.763Z",
-          "relevantGoalIdsBeforeCheckpoint": [
-            "G003"
-          ],
+          "relevantGoalIdsBeforeCheckpoint": ["G003"],
           "requiredGoalSetHashBeforeCheckpoint": "6e0b1e1659c47e54a37340b15c972fb0b34428e11cd3e762c75a1892f9a6e0b6"
         },
         "checkpointLedgerEventId": "a95f9ae0-4a35-4783-a5e2-d5f522b53951"
@@ -128,9 +122,7 @@
           "planHashBeforeCheckpoint": "7dccc2c3dc80e3425eb47ccdd7616bae64566c75c149369d3ddad4f27aa30d72",
           "latestRelevantLedgerEventIdBeforeCheckpoint": "e4cf641e-de42-4488-bd29-cd7d8ebb6251",
           "goalUpdatedAtBeforeCheckpoint": "2026-08-30T09:13:25.132Z",
-          "relevantGoalIdsBeforeCheckpoint": [
-            "G004"
-          ],
+          "relevantGoalIdsBeforeCheckpoint": ["G004"],
           "requiredGoalSetHashBeforeCheckpoint": "62914cbf56b3e83ca2038265649b2d0e3a0d688b265a0a5fac494a949776cba7"
         },
         "checkpointLedgerEventId": "3d3d770f-6573-4ac1-a02a-85d5a717ebc1"
@@ -161,9 +153,7 @@
           "planHashBeforeCheckpoint": "81b1498800588a3bcf59cf2d8b3ee475a375cea156adbbafc64a200979656380",
           "latestRelevantLedgerEventIdBeforeCheckpoint": "e433f8b5-eb07-4902-84a9-a11a9291c8a6",
           "goalUpdatedAtBeforeCheckpoint": "2026-08-30T09:21:35.000Z",
-          "relevantGoalIdsBeforeCheckpoint": [
-            "G005"
-          ],
+          "relevantGoalIdsBeforeCheckpoint": ["G005"],
           "requiredGoalSetHashBeforeCheckpoint": "f2d74fc120f2f419a7b67672a4915b0378766d24fbea71e892562d4aec8a3d91"
         },
         "checkpointLedgerEventId": "5690a74b-c2e4-441b-916a-e2372bb95432"
@@ -194,9 +184,7 @@
           "planHashBeforeCheckpoint": "894863a74f6c9107b3f489d06301bdaca9cafaa13f3e006626a441c95efb77ba",
           "latestRelevantLedgerEventIdBeforeCheckpoint": "531c1887-8cd9-470b-924c-0da15212f6c4",
           "goalUpdatedAtBeforeCheckpoint": "2026-08-30T09:30:59.075Z",
-          "relevantGoalIdsBeforeCheckpoint": [
-            "G006"
-          ],
+          "relevantGoalIdsBeforeCheckpoint": ["G006"],
           "requiredGoalSetHashBeforeCheckpoint": "8b72ae7e0bc8631f28c260b385567ee47a1864f764d7b6bfd9c38a81349c31c0"
         },
         "checkpointLedgerEventId": "bfbf8fab-df56-4eea-a51f-400bfaaef621"
@@ -227,9 +215,7 @@
           "planHashBeforeCheckpoint": "d150bcb61c0c7ea8cfde763dd1338363d12617ea2d56c260b3c92b0a217b571e",
           "latestRelevantLedgerEventIdBeforeCheckpoint": "e4dc95d8-2360-42e1-abea-4056ab62b082",
           "goalUpdatedAtBeforeCheckpoint": "2026-08-30T09:35:22.229Z",
-          "relevantGoalIdsBeforeCheckpoint": [
-            "G007"
-          ],
+          "relevantGoalIdsBeforeCheckpoint": ["G007"],
           "requiredGoalSetHashBeforeCheckpoint": "e4b585993ea788b875041f5165b2c95a739fc004278e7a96cc7b8b656c0b5924"
         },
         "checkpointLedgerEventId": "0130d49a-e102-421b-9376-786576e8164e"

@@ -17,24 +17,23 @@ proof only. It must not add a dashboard, panel, route, view, sidebar, store,
 run-state machine, editor, copy generation, retry/resend/resume behavior, or
 generic-host change.
 
-| Exact file | Allowed diff |
-|---|---|
-| `src/extensions/core/omarketing/assetsPresentation.ts` | Add provider-only confirmed-selection TEST readback, one explicit local simulated TEST action, fixed read-only fixture copy, and immutable current/history projection. It must use the generated TEST contract and preserve existing selection semantics and the unregistered fixture suffix. |
-| `src/extensions/core/omarketing/assetsPresentation.test.ts` | Add behavioral coverage for the provider-only TEST action, readback, status/history, selection/TEST exclusion, and no retry/resend behavior. |
-| `src/extensions/core/omarketing/testHandoffApi.ts` | Add same-origin relative GET/create-or-read POST transport that imports generated request/projection/error schemas and types only from `./testHandoffApi.generated`. |
-| `src/extensions/core/omarketing/testHandoffApi.test.ts` | Add closed transport/parser/error-classification tests without real network access. |
-| `src/extensions/core/omarketing/testHandoffApi.generated.ts` | Add the sole generated TEST wire parser/type output. It is produced only by the exact TEST generator below and must retain its provenance header. |
-| `.hermes/phase0/tools/generate-test-handoff-api.ts` | Add a deterministic, fail-closed TEST-only generator. Its sole input is `../comfyui-omarketing/schemas/v1/test-handoff-api.schema.json`; its sole output is `src/extensions/core/omarketing/testHandoffApi.generated.ts`. It must not read, write, import, or alter the local-selection or legacy generators and outputs. |
-| `.hermes/phase0/tools/generate-test-handoff-api.test.ts` | Add deterministic regeneration and frontend-Zod/backend-wire parity tests for the exact TEST schema/vector set. |
-| `src/locales/en/main.json` | Add only the approved `omarketing.assets.testHandoff` local simulated TEST labels, status, and safe-error leaves. |
-| `src/locales/ko/main.json` | Add only the Korean equivalents of the approved `omarketing.assets.testHandoff` leaves. |
-| `browser_tests/tests/omarketing/real-owner-selection.spec.ts` | Extend the existing isolated loopback real-owner browser proof with explicit TEST action, fixed read-only copy, accepted/failed_hold/unknown readback, reselection history separation, reload/relogin recovery, and process/network no-effect assertions. |
+| Exact file                                                    | Allowed diff                                                                                                                                                                                                                                                                                                              |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/extensions/core/omarketing/assetsPresentation.ts`        | Add provider-only confirmed-selection TEST readback, one explicit local simulated TEST action, fixed read-only fixture copy, and immutable current/history projection. It must use the generated TEST contract and preserve existing selection semantics and the unregistered fixture suffix.                             |
+| `src/extensions/core/omarketing/assetsPresentation.test.ts`   | Add behavioral coverage for the provider-only TEST action, readback, status/history, selection/TEST exclusion, and no retry/resend behavior.                                                                                                                                                                              |
+| `src/extensions/core/omarketing/testHandoffApi.ts`            | Add same-origin relative GET/create-or-read POST transport that imports generated request/projection/error schemas and types only from `./testHandoffApi.generated`.                                                                                                                                                      |
+| `src/extensions/core/omarketing/testHandoffApi.test.ts`       | Add closed transport/parser/error-classification tests without real network access.                                                                                                                                                                                                                                       |
+| `src/extensions/core/omarketing/testHandoffApi.generated.ts`  | Add the sole generated TEST wire parser/type output. It is produced only by the exact TEST generator below and must retain its provenance header.                                                                                                                                                                         |
+| `.hermes/phase0/tools/generate-test-handoff-api.ts`           | Add a deterministic, fail-closed TEST-only generator. Its sole input is `../comfyui-omarketing/schemas/v1/test-handoff-api.schema.json`; its sole output is `src/extensions/core/omarketing/testHandoffApi.generated.ts`. It must not read, write, import, or alter the local-selection or legacy generators and outputs. |
+| `.hermes/phase0/tools/generate-test-handoff-api.test.ts`      | Add deterministic regeneration and frontend-Zod/backend-wire parity tests for the exact TEST schema/vector set.                                                                                                                                                                                                           |
+| `src/locales/en/main.json`                                    | Add only the approved `omarketing.assets.testHandoff` local simulated TEST labels, status, and safe-error leaves.                                                                                                                                                                                                         |
+| `src/locales/ko/main.json`                                    | Add only the Korean equivalents of the approved `omarketing.assets.testHandoff` leaves.                                                                                                                                                                                                                                   |
+| `browser_tests/tests/omarketing/real-owner-selection.spec.ts` | Extend the existing isolated loopback real-owner browser proof with explicit TEST action, fixed read-only copy, accepted/failed_hold/unknown readback, reselection history separation, reload/relogin recovery, and process/network no-effect assertions.                                                                 |
 
 The backend schema is the sole TEST wire source of truth. Generation/parity
 evidence is written only to
 `../Test/tower-observation/omarketing-internal-test-flow-discovery/implementation-evidence/<RUN_ID>/test-handoff-schema-generation.json`.
 Every other frontend path remains denied.
-
 
 Status: Phase 0 contract; no product implementation is contained in this file.
 
@@ -68,27 +67,27 @@ existing `desktop | localhost | cloud` contract.
 
 ### Bootstrap: one import only
 
-| Exact file | Allowed diff |
-|---|---|
+| Exact file                     | Allowed diff                                                                                                                                  |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
 | `src/extensions/core/index.ts` | Exactly one side-effect import of `./omarketing`. No condition, distribution branch, startup reordering, or edits to another built-in import. |
 
 `src/extensions/core/index.ts` currently owns built-in imports and cloud/nightly branches. The Omarketing import must be unconditional for the localhost distribution and must not edit `src/platform/distribution/types.ts` to create a new distribution mode.
 
 ### Static branding and notices
 
-| Exact file | Allowed diff |
-|---|---|
-| `index.html` | Static title, splash/logo markup, favicon reference, and static accessible branding text only. |
-| `manifest.json` | Name, short name, description, and icon URLs only. |
-| `src/config.ts` | Static `app_title` product name only; version behavior is unchanged. |
-| `src/composables/useBrowserTabTitle.ts` | Replace static ComfyUI title/suffix constants with Omarketing branding; execution/workflow/unsaved logic is unchanged. |
-| `src/composables/useExternalLink.ts` | Static Omarketing source/issues URLs and preserved upstream URLs only; URL-building, locale, cloud, telemetry, and open behavior are unchanged. No value changes until the publisher proves control of its destination. |
-| `src/components/sidebar/ComfyMenuButton.vue` | Logo import/render and its accessible product name only; menu, telemetry, commands, settings, and interaction behavior are unchanged. |
+| Exact file                                            | Allowed diff                                                                                                                                                                                                                                         |
+| ----------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `index.html`                                          | Static title, splash/logo markup, favicon reference, and static accessible branding text only.                                                                                                                                                       |
+| `manifest.json`                                       | Name, short name, description, and icon URLs only.                                                                                                                                                                                                   |
+| `src/config.ts`                                       | Static `app_title` product name only; version behavior is unchanged.                                                                                                                                                                                 |
+| `src/composables/useBrowserTabTitle.ts`               | Replace static ComfyUI title/suffix constants with Omarketing branding; execution/workflow/unsaved logic is unchanged.                                                                                                                               |
+| `src/composables/useExternalLink.ts`                  | Static Omarketing source/issues URLs and preserved upstream URLs only; URL-building, locale, cloud, telemetry, and open behavior are unchanged. No value changes until the publisher proves control of its destination.                              |
+| `src/components/sidebar/ComfyMenuButton.vue`          | Logo import/render and its accessible product name only; menu, telemetry, commands, settings, and interaction behavior are unchanged.                                                                                                                |
 | `src/components/helpcenter/HelpCenterMenuContent.vue` | Relabel preserved Comfy docs/community/releases/support as upstream and route the existing GitHub/source item to the controlled Omarketing origin. No release fetching, command, telemetry, layout, visibility, updater, or menu interaction change. |
-| `package.json` | Package name/description/homepage/repository/license metadata only; no scripts, dependencies, engines, workspaces, overrides, or package-manager changes. |
-| `README.md` | Product identity, upstream attribution/source link, modified-source instructions, and local startup documentation only. |
-| `THIRD_PARTY_NOTICES.md` | Upstream ComfyUI and added third-party attribution/license notices only. |
-| `public/assets/favicon.ico` | Static replacement asset. |
+| `package.json`                                        | Package name/description/homepage/repository/license metadata only; no scripts, dependencies, engines, workspaces, overrides, or package-manager changes.                                                                                            |
+| `README.md`                                           | Product identity, upstream attribution/source link, modified-source instructions, and local startup documentation only.                                                                                                                              |
+| `THIRD_PARTY_NOTICES.md`                              | Upstream ComfyUI and added third-party attribution/license notices only.                                                                                                                                                                             |
+| `public/assets/favicon.ico`                           | Static replacement asset.                                                                                                                                                                                                                            |
 
 These new static files are also allowed, with no alternate names or locations:
 
@@ -106,14 +105,14 @@ not modified.
 
 ### Generic Assets presentation hook
 
-| Exact existing file | Allowed diff |
-|---|---|
-| `src/platform/assets/components/MediaAssetFilterBar.vue` | Generic registered control/chip/status host. |
-| `src/platform/assets/composables/useMediaAssetFiltering.ts` | Generic registered predicate composition after existing search/media/date filtering. |
-| `src/components/sidebar/tabs/AssetsSidebarTab.vue` | Registry subscription, ephemeral orchestration, bounded metadata batching, and active-detail props. |
-| `src/components/sidebar/tabs/queue/MediaLightbox.vue` | Generic read-only details/actions region and the accessibility changes necessary for interactive detail content. |
-| `src/locales/en/main.json` | English labels/status/errors for the generic presentation hook/Omarketing provider plus static Omarketing-vs-upstream/help/external-connection wording. No unrelated copy rewrite. |
-| `src/locales/ko/main.json` | Korean labels/status/errors for the generic presentation hook/Omarketing provider plus static Omarketing-vs-upstream/help/external-connection wording. No unrelated copy rewrite. |
+| Exact existing file                                         | Allowed diff                                                                                                                                                                       |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/platform/assets/components/MediaAssetFilterBar.vue`    | Generic registered control/chip/status host.                                                                                                                                       |
+| `src/platform/assets/composables/useMediaAssetFiltering.ts` | Generic registered predicate composition after existing search/media/date filtering.                                                                                               |
+| `src/components/sidebar/tabs/AssetsSidebarTab.vue`          | Registry subscription, ephemeral orchestration, bounded metadata batching, and active-detail props.                                                                                |
+| `src/components/sidebar/tabs/queue/MediaLightbox.vue`       | Generic read-only details/actions region and the accessibility changes necessary for interactive detail content.                                                                   |
+| `src/locales/en/main.json`                                  | English labels/status/errors for the generic presentation hook/Omarketing provider plus static Omarketing-vs-upstream/help/external-connection wording. No unrelated copy rewrite. |
+| `src/locales/ko/main.json`                                  | Korean labels/status/errors for the generic presentation hook/Omarketing provider plus static Omarketing-vs-upstream/help/external-connection wording. No unrelated copy rewrite.  |
 
 These new generic files are allowed, with their responsibilities fixed by `assets-presentation-registry.md`:
 
@@ -129,13 +128,13 @@ The generic registry cannot import an Omarketing module. Dependency direction is
 
 These five exact existing paths are the complete set opened by CR-1 for purpose 4. A sixth path below covers the contract generator. No seventh path, wildcard, or directory grant exists.
 
-| Exact file | Allowed diff |
-|---|---|
-| `src/components/TopMenuSection.vue` | Non-render of the legacy-layout `CurrentUserButton` and `LoginButton` auth entry points only. Menu, telemetry, commands, settings, routing, and every other interaction stay unchanged. |
-| `src/components/topbar/WorkflowTabs.vue` | Non-render of the integrated-tab-bar `CurrentUserButton` and `LoginButton` auth entry points only. Tab behavior, layout computation, and every other interaction stay unchanged. |
-| `src/renderer/extensions/linearMode/MobileDisplay.vue` | Non-render of the responsive linear-mobile `CurrentUserButton` only. Surrounding mobile UI, menus, and workflow controls stay unchanged. |
-| `src/components/dialog/content/setting/UserPanel.vue` | Non-render of the logged-out Settings sign-in description, button, and handler entry point only. Every other settings behavior stays unchanged. |
-| `src/services/dialogService.ts` | Fail-closed behavior of `showSignInDialog` and `showApiNodesSignInDialog` only: they must not load a lazy auth component, must not call `dialogStore.showDialog`, and must return `false`. Every other dialog stays unchanged. |
+| Exact file                                             | Allowed diff                                                                                                                                                                                                                   |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `src/components/TopMenuSection.vue`                    | Non-render of the legacy-layout `CurrentUserButton` and `LoginButton` auth entry points only. Menu, telemetry, commands, settings, routing, and every other interaction stay unchanged.                                        |
+| `src/components/topbar/WorkflowTabs.vue`               | Non-render of the integrated-tab-bar `CurrentUserButton` and `LoginButton` auth entry points only. Tab behavior, layout computation, and every other interaction stay unchanged.                                               |
+| `src/renderer/extensions/linearMode/MobileDisplay.vue` | Non-render of the responsive linear-mobile `CurrentUserButton` only. Surrounding mobile UI, menus, and workflow controls stay unchanged.                                                                                       |
+| `src/components/dialog/content/setting/UserPanel.vue`  | Non-render of the logged-out Settings sign-in description, button, and handler entry point only. Every other settings behavior stays unchanged.                                                                                |
+| `src/services/dialogService.ts`                        | Fail-closed behavior of `showSignInDialog` and `showApiNodesSignInDialog` only: they must not load a lazy auth component, must not call `dialogStore.showDialog`, and must return `false`. Every other dialog stays unchanged. |
 
 These five files keep their upstream auth components and source. Deleting or rewriting auth capability, or blocking a later gateway attachment, is prohibited.
 
@@ -143,8 +142,8 @@ The following are prohibited implementations of this allowance and fail the gate
 
 ### Contract generator (CR-1)
 
-| Exact file | Allowed diff |
-|---|---|
+| Exact file                                   | Allowed diff                                                                                                                                                                                                                             |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `.hermes/phase0/tools/generate-contracts.ts` | New non-build generator source. Reads exactly the two schemas below and emits exactly the two existing allowlisted `*.generated.ts` outputs. It produces no other output, adds no dependency, and changes no package script or lockfile. |
 
 This tool is generator source, not a generated build artifact, and it is not part of the product runtime or bundle. Its inputs are exactly `.hermes/phase0/schemas/output-locator.v1.schema.json` and `.hermes/phase0/schemas/selection-manifest.v1.schema.json`. Its outputs are exactly `src/platform/assets/presentation/outputLocatorV1.generated.ts` and `src/extensions/core/omarketing/selectionManifestV1.generated.ts`.
@@ -348,11 +347,11 @@ An implementation run writes exactly these three durable artifacts, and only
 under its `EVIDENCE_ROOT` outside the product repository. Creating any of them
 inside `Omarketing/`, renaming one, or omitting one fails the gate.
 
-| Artifact | Exact filename | Minimum schema |
-|---|---|---|
-| W0 scope inventory | `w0-scope-inventory.<baseline-commit>.json` | `baseline`, `captured_at`, `modified[]`, `untracked[]`, `phase1_candidate[]`, `preexisting_or_other_lane[]`. Paths sort lexically. It records path and classification only, never file contents. |
-| AC-5 generator digest | `ac-5-generator-digest.receipt.json` | `schema_version`, `generator{path,version}`, `inputs[2]{path,sha256}`, `outputs[2]{path,sha256}`, `supported_keyword_map_version`, `parity{schema_path,positive_passes,negative_rejections}`, `prepublish{validated_outputs:2,published_outputs:2}`, `second_run{changed_outputs:0}`, `package_mutations{scripts:0,dependencies:0,lockfiles:0}`, `reviewer`, `reviewed_at`. Arrays sort lexically. |
-| AC-13 allowlist review | `ac-13-core-allowlist-10-check.receipt.json` | `schema_version`, `baseline`, `frozen_diff_id`, `checks[10]`, `reviewer`, `reviewed_at`. The fixed row schema and order are defined at the end of this document. |
+| Artifact               | Exact filename                               | Minimum schema                                                                                                                                                                                                                                                                                                                                                                                     |
+| ---------------------- | -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| W0 scope inventory     | `w0-scope-inventory.<baseline-commit>.json`  | `baseline`, `captured_at`, `modified[]`, `untracked[]`, `phase1_candidate[]`, `preexisting_or_other_lane[]`. Paths sort lexically. It records path and classification only, never file contents.                                                                                                                                                                                                   |
+| AC-5 generator digest  | `ac-5-generator-digest.receipt.json`         | `schema_version`, `generator{path,version}`, `inputs[2]{path,sha256}`, `outputs[2]{path,sha256}`, `supported_keyword_map_version`, `parity{schema_path,positive_passes,negative_rejections}`, `prepublish{validated_outputs:2,published_outputs:2}`, `second_run{changed_outputs:0}`, `package_mutations{scripts:0,dependencies:0,lockfiles:0}`, `reviewer`, `reviewed_at`. Arrays sort lexically. |
+| AC-13 allowlist review | `ac-13-core-allowlist-10-check.receipt.json` | `schema_version`, `baseline`, `frozen_diff_id`, `checks[10]`, `reviewer`, `reviewed_at`. The fixed row schema and order are defined at the end of this document.                                                                                                                                                                                                                                   |
 
 The AC-5 receipt is the generator's release receipt for the purpose of the
 diff-accounting rule above: a generated contract file is accepted only when this
@@ -365,18 +364,18 @@ must be `0`.
 
 No test, build, lint, formatter, migration, server, commit, or push is run for this Phase 0 contract task. The caller validates all Phase 0 artifacts together. A later implementation diff must satisfy:
 
-| Check | Pass | Fail |
-|---|---|---|
-| Path allowlist | Every modified existing path appears verbatim in an allowed table, including the five CR-1 auth sources and the CR-1 generator source. | Any absent path, rename, generated file, or incidental formatting change. |
-| Bootstrap ceiling | One import is added to `src/extensions/core/index.ts`; all existing imports/branches are byte-for-byte functionally unchanged. | More than one bootstrap hook, conditional distribution edit, or startup reorder. |
-| Branding scope | Only static identity/assets/notices and exact accessible logo text change. | Menu, telemetry, auth, routing, settings, command, or dependency behavior changes. |
-| Generic dependency | Assets hosts import generic presentation modules only; the Omarketing extension registers through the registry. | A host imports `src/extensions/core/omarketing/**` or branches on Omarketing. |
-| Assets integrity | Existing provider/store/schema/card/context-menu/selection files have no diff. | An Omarketing store/index/card badge/context-menu/bulk authority action appears. |
-| Queue integrity | No diff in prompt, API, Queue, execution, jobs, Run, Shift+Run, or Auto Queue files. | Fan-out changes a global Run path or patches `queuePrompt`. |
-| Workflow integrity | No diff in workflow management/persistence or user-file store. | Save completion is intercepted or path/folder becomes a new identity model. |
-| LiteGraph integrity | No diff under `src/lib/litegraph/**` or widget/extension type declarations. | Core class/type/callback semantics change. |
-| Dependency/lock integrity | No dependency or lockfile change. | A package, script, override, or lock entry changes. |
-| Operational integrity | Review shows no migration/server/Git/deploy side effect. | The implementation relies on any prohibited operational action. |
+| Check                     | Pass                                                                                                                                   | Fail                                                                               |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Path allowlist            | Every modified existing path appears verbatim in an allowed table, including the five CR-1 auth sources and the CR-1 generator source. | Any absent path, rename, generated file, or incidental formatting change.          |
+| Bootstrap ceiling         | One import is added to `src/extensions/core/index.ts`; all existing imports/branches are byte-for-byte functionally unchanged.         | More than one bootstrap hook, conditional distribution edit, or startup reorder.   |
+| Branding scope            | Only static identity/assets/notices and exact accessible logo text change.                                                             | Menu, telemetry, auth, routing, settings, command, or dependency behavior changes. |
+| Generic dependency        | Assets hosts import generic presentation modules only; the Omarketing extension registers through the registry.                        | A host imports `src/extensions/core/omarketing/**` or branches on Omarketing.      |
+| Assets integrity          | Existing provider/store/schema/card/context-menu/selection files have no diff.                                                         | An Omarketing store/index/card badge/context-menu/bulk authority action appears.   |
+| Queue integrity           | No diff in prompt, API, Queue, execution, jobs, Run, Shift+Run, or Auto Queue files.                                                   | Fan-out changes a global Run path or patches `queuePrompt`.                        |
+| Workflow integrity        | No diff in workflow management/persistence or user-file store.                                                                         | Save completion is intercepted or path/folder becomes a new identity model.        |
+| LiteGraph integrity       | No diff under `src/lib/litegraph/**` or widget/extension type declarations.                                                            | Core class/type/callback semantics change.                                         |
+| Dependency/lock integrity | No dependency or lockfile change.                                                                                                      | A package, script, override, or lock entry changes.                                |
+| Operational integrity     | Review shows no migration/server/Git/deploy side effect.                                                                               | The implementation relies on any prohibited operational action.                    |
 
 The ten checks above are unchanged in count and meaning. CR-1 adds no eleventh
 check; it only widens the exact-path set that `Path allowlist` accepts and

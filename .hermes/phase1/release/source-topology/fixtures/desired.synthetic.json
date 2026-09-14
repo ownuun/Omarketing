@@ -24,9 +24,7 @@
       ]
     },
     "upstream": {
-      "fetch_urls": [
-        "https://github.com/Comfy-Org/ComfyUI_frontend.git"
-      ],
+      "fetch_urls": ["https://github.com/Comfy-Org/ComfyUI_frontend.git"],
       "explicit_push_urls": [],
       "effective_push_urls": []
     }

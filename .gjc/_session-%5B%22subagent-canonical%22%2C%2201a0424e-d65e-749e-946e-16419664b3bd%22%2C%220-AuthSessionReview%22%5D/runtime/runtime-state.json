@@ -1,1 +1,28 @@
-{"schema_version":1,"session_id":"[\"subagent-canonical\",\"01a0424e-d65e-749e-946e-16419664b3bd\",\"0-AuthSessionReview\"]","state":"running","ready_for_input":false,"updated_at":"2026-08-27T08:41:48.683Z","current_turn_id":null,"last_turn_id":null,"live":true,"reason":null,"source":"agent_session_event","event":"turn_start","cwd":"/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing","workdir":"/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing","branch":null,"session_file":"/Users/ownuun/.gjc/agent/sessions/v2-hoqwkh2wefxmyiuhsl66vkg4mo6rrxbqemo47psscgetgo2tx3oa/2026-08-27T08-20-58-078Z_01a0424e-d65e-749e-946e-16419664b3bd/0-AuthSessionReview.jsonl","activity":{"seq":44,"last_activity_at":"2026-08-27T08:41:41.991Z","tool":"search","phase":"finished","outcome":"success","elapsed_ms":9569,"active_tool_count":0,"active_tools":[],"in_flight":[]}}
+{
+  "schema_version": 1,
+  "session_id": "[\"subagent-canonical\",\"01a0424e-d65e-749e-946e-16419664b3bd\",\"0-AuthSessionReview\"]",
+  "state": "running",
+  "ready_for_input": false,
+  "updated_at": "2026-08-27T08:41:48.683Z",
+  "current_turn_id": null,
+  "last_turn_id": null,
+  "live": true,
+  "reason": null,
+  "source": "agent_session_event",
+  "event": "turn_start",
+  "cwd": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+  "workdir": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+  "branch": null,
+  "session_file": "/Users/ownuun/.gjc/agent/sessions/v2-hoqwkh2wefxmyiuhsl66vkg4mo6rrxbqemo47psscgetgo2tx3oa/2026-08-27T08-20-58-078Z_01a0424e-d65e-749e-946e-16419664b3bd/0-AuthSessionReview.jsonl",
+  "activity": {
+    "seq": 44,
+    "last_activity_at": "2026-08-27T08:41:41.991Z",
+    "tool": "search",
+    "phase": "finished",
+    "outcome": "success",
+    "elapsed_ms": 9569,
+    "active_tool_count": 0,
+    "active_tools": [],
+    "in_flight": []
+  }
+}
