@@ -1,6 +1,7 @@
 import { expect } from '@playwright/test'
 
 import { comfyPageFixture as test } from '@e2e/fixtures/ComfyPage'
+import { jobOutputInsertionJobs } from '@e2e/fixtures/data/jobOutputInsertion'
 
 /**
  * Omarketing Phase 1 additive foundation, end to end.
@@ -205,4 +206,26 @@ test.describe('Omarketing Phase 1 additive foundation', () => {
       expect(errors).toEqual([])
     })
   })
+})
+
+test('shows the fixture-only QA flow for the prepared output asset', async ({
+  comfyPage
+}) => {
+  await comfyPage.assets.mockOutputHistory(jobOutputInsertionJobs)
+  await comfyPage.page.reload()
+
+  await comfyPage.menu.assetsTab.open()
+  await comfyPage.menu.assetsTab.waitForAssets()
+
+  const card = comfyPage.menu.assetsTab.assetCards.first()
+  await card.hover()
+  await card.getByRole('button', { name: 'More options' }).click()
+  await comfyPage.menu.assetsTab.contextMenuItem('Inspect asset').click()
+
+  await expect(comfyPage.mediaLightbox.root).toBeVisible()
+  await expect(comfyPage.page.getByText('Fixture-only demo')).toBeVisible()
+  await comfyPage.page
+    .getByRole('button', { name: 'Pass fixture candidate' })
+    .click()
+  await expect(comfyPage.page.getByText('preview:passed')).toBeVisible()
 })

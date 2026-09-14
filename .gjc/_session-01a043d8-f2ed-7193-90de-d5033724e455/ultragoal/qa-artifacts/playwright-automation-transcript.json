@@ -1,0 +1,250 @@
+{
+  "schemaVersion": 1,
+  "kind": "browser-automation-transcript",
+  "tool": "playwright",
+  "url": "http://localhost:5173",
+  "startedAt": "2026-08-30T13:23:58.751Z",
+  "durationMs": 95904.92199999999,
+  "command": "playwright test browser_tests/tests/omarketing/phase1-additive.spec.ts --workers=1 --retries=0 --timeout=60000",
+  "summary": {
+    "expected": 17,
+    "unexpected": 0,
+    "flaky": 0,
+    "skipped": 0
+  },
+  "result": "passed",
+  "actions": [
+    {
+      "target": "renders no auth entry point in the Default tab bar",
+      "status": "passed",
+      "durationMs": 6237,
+      "type": "e2e-test",
+      "timestamp": "2026-08-30T13:23:58.751000+00:00",
+      "selector": "[data-testid=\"current-user-button\"]",
+      "assertion": {
+        "type": "toHaveCount",
+        "selector": "[data-testid=\"current-user-button\"]",
+        "expected": 0,
+        "note": "counted for every auth selector; count not visibility, so a hidden control still fails"
+      }
+    },
+    {
+      "target": "renders no auth entry point in the Legacy tab bar",
+      "status": "passed",
+      "durationMs": 4403,
+      "type": "e2e-test",
+      "timestamp": "2026-08-30T13:24:04.988000+00:00",
+      "selector": "[data-testid=\"current-user-button\"]",
+      "assertion": {
+        "type": "toHaveCount",
+        "selector": "[data-testid=\"current-user-button\"]",
+        "expected": 0,
+        "note": "counted for every auth selector; count not visibility, so a hidden control still fails"
+      }
+    },
+    {
+      "target": "renders no auth entry point at a narrow mobile viewport",
+      "status": "passed",
+      "durationMs": 5530,
+      "type": "e2e-test",
+      "timestamp": "2026-08-30T13:24:09.391000+00:00",
+      "selector": "[data-testid=\"current-user-button\"]",
+      "assertion": {
+        "type": "toHaveCount",
+        "selector": "[data-testid=\"current-user-button\"]",
+        "expected": 0,
+        "note": "counted for every auth selector; count not visibility, so a hidden control still fails"
+      }
+    },
+    {
+      "target": "renders no sign-in entry point in the Settings user panel",
+      "status": "passed",
+      "durationMs": 4006,
+      "type": "e2e-test",
+      "timestamp": "2026-08-30T13:24:14.921000+00:00",
+      "selector": "[data-testid=\"current-user-button\"]",
+      "assertion": {
+        "type": "toHaveCount",
+        "selector": "[data-testid=\"current-user-button\"]",
+        "expected": 0,
+        "note": "counted for every auth selector; count not visibility, so a hidden control still fails"
+      }
+    },
+    {
+      "target": "opens zero dialogs when the residual sign-in command runs",
+      "status": "passed",
+      "durationMs": 5423,
+      "type": "e2e-test",
+      "timestamp": "2026-08-30T13:24:18.927000+00:00",
+      "selector": "[data-testid=\"current-user-button\"]",
+      "assertion": {
+        "type": "toHaveCount",
+        "selector": "[data-testid=\"current-user-button\"]",
+        "expected": 0,
+        "note": "counted for every auth selector; count not visibility, so a hidden control still fails"
+      }
+    },
+    {
+      "target": "deep-link probe /login exposes no auth entry point",
+      "status": "passed",
+      "durationMs": 7563,
+      "type": "e2e-test",
+      "timestamp": "2026-08-30T13:24:24.350000+00:00",
+      "selector": "[data-testid=\"current-user-button\"]",
+      "assertion": {
+        "type": "toHaveCount",
+        "selector": "[data-testid=\"current-user-button\"]",
+        "expected": 0,
+        "note": "counted for every auth selector; count not visibility, so a hidden control still fails"
+      }
+    },
+    {
+      "target": "deep-link probe /signin exposes no auth entry point",
+      "status": "passed",
+      "durationMs": 6237,
+      "type": "e2e-test",
+      "timestamp": "2026-08-30T13:24:31.913000+00:00",
+      "selector": "[data-testid=\"current-user-button\"]",
+      "assertion": {
+        "type": "toHaveCount",
+        "selector": "[data-testid=\"current-user-button\"]",
+        "expected": 0,
+        "note": "counted for every auth selector; count not visibility, so a hidden control still fails"
+      }
+    },
+    {
+      "target": "deep-link probe /auth/login exposes no auth entry point",
+      "status": "passed",
+      "durationMs": 5227,
+      "type": "e2e-test",
+      "timestamp": "2026-08-30T13:24:38.150000+00:00",
+      "selector": "[data-testid=\"current-user-button\"]",
+      "assertion": {
+        "type": "toHaveCount",
+        "selector": "[data-testid=\"current-user-button\"]",
+        "expected": 0,
+        "note": "counted for every auth selector; count not visibility, so a hidden control still fails"
+      }
+    },
+    {
+      "target": "deep-link probe /?oauth_request_id=probe exposes no auth entry point",
+      "status": "passed",
+      "durationMs": 5271,
+      "type": "e2e-test",
+      "timestamp": "2026-08-30T13:24:43.377000+00:00",
+      "selector": "[data-testid=\"current-user-button\"]",
+      "assertion": {
+        "type": "toHaveCount",
+        "selector": "[data-testid=\"current-user-button\"]",
+        "expected": 0,
+        "note": "counted for every auth selector; count not visibility, so a hidden control still fails"
+      }
+    },
+    {
+      "target": "deep-link probe /?desktop_login_code=probe exposes no auth entry point",
+      "status": "passed",
+      "durationMs": 6629,
+      "type": "e2e-test",
+      "timestamp": "2026-08-30T13:24:48.648000+00:00",
+      "selector": "[data-testid=\"current-user-button\"]",
+      "assertion": {
+        "type": "toHaveCount",
+        "selector": "[data-testid=\"current-user-button\"]",
+        "expected": 0,
+        "note": "counted for every auth selector; count not visibility, so a hidden control still fails"
+      }
+    },
+    {
+      "target": "shows a dedicated disconnected status that is not an alert",
+      "status": "passed",
+      "durationMs": 8585,
+      "type": "e2e-test",
+      "timestamp": "2026-08-30T13:24:55.277000+00:00",
+      "selector": "[data-testid=\"asset-presentation-disconnected\"]",
+      "assertion": {
+        "type": "toHaveAttribute",
+        "selector": "[data-testid=\"asset-presentation-disconnected\"]",
+        "attribute": "role",
+        "expected": "status"
+      }
+    },
+    {
+      "target": "keeps the disconnected status visible while the asset list is empty",
+      "status": "passed",
+      "durationMs": 4584,
+      "type": "e2e-test",
+      "timestamp": "2026-08-30T13:25:03.862000+00:00",
+      "selector": "[data-testid=\"asset-presentation-disconnected\"]",
+      "assertion": {
+        "type": "toHaveAttribute",
+        "selector": "[data-testid=\"asset-presentation-disconnected\"]",
+        "attribute": "role",
+        "expected": "status"
+      }
+    },
+    {
+      "target": "distinguishes disconnected from an ordinary empty list",
+      "status": "passed",
+      "durationMs": 3919,
+      "type": "e2e-test",
+      "timestamp": "2026-08-30T13:25:08.446000+00:00",
+      "selector": "[data-testid=\"asset-presentation-disconnected\"]",
+      "assertion": {
+        "type": "toHaveAttribute",
+        "selector": "[data-testid=\"asset-presentation-disconnected\"]",
+        "attribute": "role",
+        "expected": "status"
+      }
+    },
+    {
+      "target": "fabricates no card, count, or action while disconnected",
+      "status": "passed",
+      "durationMs": 4415,
+      "type": "e2e-test",
+      "timestamp": "2026-08-30T13:25:12.365000+00:00",
+      "selector": "[data-testid=\"asset-presentation-disconnected\"]",
+      "assertion": {
+        "type": "toHaveAttribute",
+        "selector": "[data-testid=\"asset-presentation-disconnected\"]",
+        "attribute": "role",
+        "expected": "status"
+      }
+    },
+    {
+      "target": "keeps an upstream logo mark rendered in the top bar",
+      "status": "passed",
+      "durationMs": 5847,
+      "type": "e2e-test",
+      "timestamp": "2026-08-30T13:25:16.780000+00:00",
+      "selector": "[data-testid=\"comfy-menu-button\"], .comfyui-logo, header svg, nav svg",
+      "assertion": {
+        "type": "toBeVisible",
+        "selector": "header svg"
+      }
+    },
+    {
+      "target": "keeps the product display name in the document title",
+      "status": "passed",
+      "durationMs": 6443,
+      "type": "e2e-test",
+      "timestamp": "2026-08-30T13:25:22.627000+00:00",
+      "selector": "document.title",
+      "assertion": {
+        "type": "toContain",
+        "expected": "Omarketing"
+      }
+    },
+    {
+      "target": "reports no console error during a normal load",
+      "status": "passed",
+      "durationMs": 3621,
+      "type": "e2e-test",
+      "timestamp": "2026-08-30T13:25:29.070000+00:00",
+      "selector": "body",
+      "assertion": {
+        "type": "consoleErrors",
+        "expected": 0
+      }
+    }
+  ]
+}

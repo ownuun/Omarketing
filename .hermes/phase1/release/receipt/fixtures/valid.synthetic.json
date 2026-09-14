@@ -1,0 +1,125 @@
+{
+  "schemaVersion": "omarketing-release-receipt/v1",
+  "receiptId": "omarketing-frontend@1.0.0-synthetic.1+sha256:5067441a137a9be376cb0af506889d8007b5f92e66e3e68f429325593fd0d2b0",
+  "artifactSpecific": true,
+  "release": {
+    "version": "1.0.0-synthetic.1",
+    "status": "BLOCKED",
+    "modificationDate": "2026-08-27",
+    "buildCompletedAt": "2026-08-27T08:00:00Z"
+  },
+  "source": {
+    "url": "https://github.com/omarketing-synthetic/frontend/archive/7d639fda2c290c0f7a81198a7bd3a9fb44bb00a6.tar.gz",
+    "tag": "refs/tags/v1.0.0-synthetic.1",
+    "commit": "7d639fda2c290c0f7a81198a7bd3a9fb44bb00a6",
+    "archiveSha256": "sha256:75eee0f5f43a5822512aace85e1bd413a4c72ac3d4a3dd590665079ea7613548",
+    "frontendBaseCommit": "f8db605df6c7a3fb1a936f17806e42ea2d76fe05",
+    "backendCompatibilityCommit": "b08e6cf35fac50d3ca8470dffb3f9a1fbb7187d2"
+  },
+  "build": {
+    "toolchain": {
+      "operatingSystem": "Linux",
+      "operatingSystemVersion": "6.12.0",
+      "architecture": "arm64",
+      "nodeVersion": "25.2.0",
+      "pnpmVersion": "11.13.1",
+      "packageManager": "pnpm@11.13.1"
+    },
+    "environment": {
+      "distribution": "production",
+      "variables": [
+        {
+          "classification": "public-build-input",
+          "name": "NODE_ENV",
+          "value": "production"
+        }
+      ]
+    },
+    "commands": ["pnpm install --frozen-lockfile", "pnpm build"],
+    "lockfiles": [
+      {
+        "path": "pnpm-lock.yaml",
+        "manager": "pnpm",
+        "sha256": "sha256:4180ba78da2f232379ef2be6d65f07e96a06304e2d9f328816ccac2310510f6e"
+      }
+    ],
+    "inputs": [
+      {
+        "path": "inputs/frontend-source.tar.gz",
+        "role": "source-archive",
+        "sha256": "sha256:75eee0f5f43a5822512aace85e1bd413a4c72ac3d4a3dd590665079ea7613548"
+      },
+      {
+        "path": "vite.config.mts",
+        "role": "configuration",
+        "sha256": "sha256:53d804c2bf57ae5e8b5dd6689bbb04c34c7d2b78fbe36cfd590b174e1bff308c"
+      }
+    ],
+    "outputs": [
+      {
+        "path": "dist/omarketing-frontend-v1.0.0-synthetic.1.zip",
+        "role": "release-artifact",
+        "sha256": "sha256:5067441a137a9be376cb0af506889d8007b5f92e66e3e68f429325593fd0d2b0"
+      },
+      {
+        "path": "dist/omarketing-frontend-v1.0.0-synthetic.1.zip.map",
+        "role": "source-map",
+        "sha256": "sha256:eabfe2fcaf5a321ebeadaa8685028ca9b0b3782967de820e5b11e2771d17a460"
+      }
+    ]
+  },
+  "artifact": {
+    "name": "omarketing-frontend",
+    "version": "1.0.0-synthetic.1",
+    "path": "dist/omarketing-frontend-v1.0.0-synthetic.1.zip",
+    "mediaType": "application/zip",
+    "sha256": "sha256:5067441a137a9be376cb0af506889d8007b5f92e66e3e68f429325593fd0d2b0"
+  },
+  "legalPayload": {
+    "license": {
+      "path": "LICENSE",
+      "sha256": "sha256:d5bfae44700091b89d50634d4fa39ce222c6b0c17fd89755123f799d5a462711"
+    },
+    "thirdPartyNotices": {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "sha256": "sha256:c1f96bee9dde8fb96fdb4e6206c3da060c77fe6ce13737857bf2e5d155bd583a"
+    },
+    "complianceChecklist": {
+      "path": "GPL_THIRD_PARTY_BRAND_CHECKLIST.md",
+      "sha256": "sha256:d2223a9124dc0e738ba1b8dc43c244fe60f1c834f3eef3329fe552a5c32a97ad"
+    },
+    "sourceDirections": {
+      "path": "SOURCE_DIRECTIONS.md",
+      "sha256": "sha256:94259ecd172a9d96b860a769f8ba0368c287cc89e616a3c80b9d050a7eba50ea"
+    }
+  },
+  "sbom": {
+    "format": "SPDX",
+    "specVersion": "2.3",
+    "path": "sbom.spdx.json",
+    "sha256": "sha256:54fc20fb4fe1ab9fc90ed572bea3d358d6f7025df690b64f49a252cdeb3bec26",
+    "artifactSha256": "sha256:5067441a137a9be376cb0af506889d8007b5f92e66e3e68f429325593fd0d2b0"
+  },
+  "publisher": {
+    "name": "Synthetic Release Publisher",
+    "organization": "Omarketing synthetic fixture",
+    "identity": "fixture:publisher",
+    "attestedAt": "2026-08-27T08:30:00Z",
+    "evidence": {
+      "path": "evidence/publisher.json",
+      "sha256": "sha256:52f154a3e63479a70720aa8bd12b8babf98a7a8ac9306e6e2b7bb3b3d4a5e229"
+    }
+  },
+  "reviewer": {
+    "name": "Synthetic Release Reviewer",
+    "organization": "Omarketing synthetic fixture",
+    "identity": "fixture:reviewer",
+    "reviewedAt": "2026-08-27T09:00:00Z",
+    "decision": "BLOCKED",
+    "scope": "Synthetic structural review only; no release or legal approval.",
+    "evidence": {
+      "path": "evidence/reviewer.json",
+      "sha256": "sha256:60ea5bae56a2d9aeb607bf7f599349edfa764a3b58afeffe7fb386e99dfcce31"
+    }
+  }
+}

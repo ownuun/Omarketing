@@ -1,0 +1,25 @@
+
+Running 17 tests using 1 worker
+
+
+(node:47901) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/17] [chromium] › browser_tests/tests/omarketing/phase1-additive.spec.ts:41:7 › Omarketing Phase 1 additive foundation › AC-1 no auth entry point › renders no auth entry point in the Default tab bar
+[2/17] [chromium] › browser_tests/tests/omarketing/phase1-additive.spec.ts:41:7 › Omarketing Phase 1 additive foundation › AC-1 no auth entry point › renders no auth entry point in the Legacy tab bar
+[3/17] [chromium] › browser_tests/tests/omarketing/phase1-additive.spec.ts:51:5 › Omarketing Phase 1 additive foundation › AC-1 no auth entry point › renders no auth entry point at a narrow mobile viewport
+[4/17] [chromium] › browser_tests/tests/omarketing/phase1-additive.spec.ts:62:5 › Omarketing Phase 1 additive foundation › AC-1 no auth entry point › renders no sign-in entry point in the Settings user panel
+[5/17] [chromium] › browser_tests/tests/omarketing/phase1-additive.spec.ts:74:5 › Omarketing Phase 1 additive foundation › AC-1 no auth entry point › opens zero dialogs when the residual sign-in command runs
+[6/17] [chromium] › browser_tests/tests/omarketing/phase1-additive.spec.ts:104:7 › Omarketing Phase 1 additive foundation › AC-1 no auth entry point › deep-link probe /login exposes no auth entry point
+[7/17] [chromium] › browser_tests/tests/omarketing/phase1-additive.spec.ts:104:7 › Omarketing Phase 1 additive foundation › AC-1 no auth entry point › deep-link probe /signin exposes no auth entry point
+[8/17] [chromium] › browser_tests/tests/omarketing/phase1-additive.spec.ts:104:7 › Omarketing Phase 1 additive foundation › AC-1 no auth entry point › deep-link probe /auth/login exposes no auth entry point
+[9/17] [chromium] › browser_tests/tests/omarketing/phase1-additive.spec.ts:104:7 › Omarketing Phase 1 additive foundation › AC-1 no auth entry point › deep-link probe /?oauth_request_id=probe exposes no auth entry point
+[10/17] [chromium] › browser_tests/tests/omarketing/phase1-additive.spec.ts:104:7 › Omarketing Phase 1 additive foundation › AC-1 no auth entry point › deep-link probe /?desktop_login_code=probe exposes no auth entry point
+[11/17] [chromium] › browser_tests/tests/omarketing/phase1-additive.spec.ts:116:5 › Omarketing Phase 1 additive foundation › AC-2 disconnected assets surface › shows a dedicated disconnected status that is not an alert
+[12/17] [chromium] › browser_tests/tests/omarketing/phase1-additive.spec.ts:129:5 › Omarketing Phase 1 additive foundation › AC-2 disconnected assets surface › keeps the disconnected status visible while the asset list is empty
+[13/17] [chromium] › browser_tests/tests/omarketing/phase1-additive.spec.ts:142:5 › Omarketing Phase 1 additive foundation › AC-2 disconnected assets surface › distinguishes disconnected from an ordinary empty list
+[14/17] [chromium] › browser_tests/tests/omarketing/phase1-additive.spec.ts:161:5 › Omarketing Phase 1 additive foundation › AC-2 disconnected assets surface › fabricates no card, count, or action while disconnected
+[15/17] [chromium] › browser_tests/tests/omarketing/phase1-additive.spec.ts:178:5 › Omarketing Phase 1 additive foundation › AC-4 upstream surfaces preserved › keeps an upstream logo mark rendered in the top bar
+[16/17] [chromium] › browser_tests/tests/omarketing/phase1-additive.spec.ts:190:5 › Omarketing Phase 1 additive foundation › AC-4 upstream surfaces preserved › keeps the product display name in the document title
+[17/17] [chromium] › browser_tests/tests/omarketing/phase1-additive.spec.ts:197:5 › Omarketing Phase 1 additive foundation › AC-4 upstream surfaces preserved › reports no console error during a normal load
+  17 passed (41.2s)

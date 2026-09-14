@@ -81,7 +81,7 @@ describe('useBrowserTabTitle', () => {
   it('sets default title when idle and no workflow', () => {
     const scope = effectScope()
     scope.run(() => useBrowserTabTitle())
-    expect(document.title).toBe('ComfyUI')
+    expect(document.title).toBe('Omarketing')
     scope.stop()
   })
 
@@ -95,7 +95,7 @@ describe('useBrowserTabTitle', () => {
     const scope = effectScope()
     scope.run(() => useBrowserTabTitle())
     await nextTick()
-    expect(document.title).toBe('myFlow - ComfyUI')
+    expect(document.title).toBe('myFlow - Omarketing')
     scope.stop()
   })
 
@@ -109,7 +109,7 @@ describe('useBrowserTabTitle', () => {
     const scope = effectScope()
     scope.run(() => useBrowserTabTitle())
     await nextTick()
-    expect(document.title).toBe('*myFlow - ComfyUI')
+    expect(document.title).toBe('*myFlow - Omarketing')
     scope.stop()
   })
 
@@ -127,7 +127,7 @@ describe('useBrowserTabTitle', () => {
     const scope = effectScope()
     scope.run(() => useBrowserTabTitle())
     await nextTick()
-    expect(document.title).toBe('myFlow - ComfyUI')
+    expect(document.title).toBe('myFlow - Omarketing')
     scope.stop()
   })
 
@@ -146,7 +146,7 @@ describe('useBrowserTabTitle', () => {
     const scope = effectScope()
     scope.run(() => useBrowserTabTitle())
     await nextTick()
-    expect(document.title).toBe('myFlow - ComfyUI')
+    expect(document.title).toBe('myFlow - Omarketing')
     scope.stop()
   })
 
@@ -160,7 +160,7 @@ describe('useBrowserTabTitle', () => {
     const scope = effectScope()
     scope.run(() => useBrowserTabTitle())
     await nextTick()
-    expect(document.title).toBe('ComfyUI')
+    expect(document.title).toBe('Omarketing')
     scope.stop()
   })
 
@@ -170,7 +170,7 @@ describe('useBrowserTabTitle', () => {
     const scope = effectScope()
     scope.run(() => useBrowserTabTitle())
     await nextTick()
-    expect(document.title).toBe('[30%]ComfyUI')
+    expect(document.title).toBe('[30%]Omarketing')
     scope.stop()
   })
 

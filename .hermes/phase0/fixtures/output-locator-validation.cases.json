@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "contract": "selection-manifest-and-output-validation.md",
+  "cases": [
+    {
+      "id": "valid-completed-output",
+      "input": {
+        "job_id": "9a31c126-2563-4cb5-b892-6cb26e4c3b53",
+        "node_id": "42",
+        "directory_type": "output",
+        "subfolder": "omarketing/project/workflow/run/references/r-1f08cc0ab0cc9682536c85fbe5b369cec9a5c762d8be0ecfc8d8c577de70e29f/candidates",
+        "filename": "candidate-03.png",
+        "media_type": "images"
+      },
+      "server_fixture": {
+        "history_status": "completed",
+        "history_output_tuple_matches": true,
+        "contained_in_output_root": true,
+        "bytes_sha256": "8f4c2a1b6d9e0f3751ab82cde79034612fb5c8da97e14360bc2d5f8a01e67439",
+        "bytes_size": 2481937,
+        "sniffed_mime_type": "image/png"
+      },
+      "expected": { "accepted": true, "canonical_values_source": "server-bytes" }
+    },
+    {
+      "id": "frontend-synthetic-id-only",
+      "input": { "asset_id": "9a31c126-2563-4cb5-b892-6cb26e4c3b53-42-sub-folder-candidate-03.png" },
+      "expected": { "accepted": false, "code": "INVALID_SELECTION_REQUEST", "synthetic_id_parsed": false }
+    },
+    {
+      "id": "parent-traversal",
+      "input": { "subfolder": "omarketing/project/../../private", "filename": "candidate.png" },
+      "expected": { "accepted": false, "code": "INVALID_SELECTION_REQUEST", "file_opened": false }
+    },
+    {
+      "id": "symlink-escape",
+      "input": { "subfolder": "omarketing/project/run/candidates", "filename": "outside-link.png" },
+      "server_fixture": { "realpath_outside_output_root": true },
+      "expected": { "accepted": false, "code": "PROJECT_RUN_OR_OUTPUT_NOT_FOUND", "outside_bytes_read": false }
+    },
+    {
+      "id": "client-checksum-mismatch",
+      "input": { "sha256": "8f4c2a1b6d9e0f3751ab82cde79034612fb5c8da97e14360bc2d5f8a01e67439" },
+      "server_fixture": { "bytes_sha256": "3a71d9c4e0852fb694cb137df620a85e1d4793bcab56e2087f9c40da625be183" },
+      "expected": { "accepted": false, "code": "OUTPUT_LOCATOR_CONFLICT", "client_checksum_copied": false }
+    },
+    {
+      "id": "extension-mime-spoof",
+      "input": { "filename": "candidate.png", "mime_type": "image/png" },
+      "server_fixture": { "sniffed_mime_type": "application/zip" },
+      "expected": { "accepted": false, "code": "OUTPUT_MIME_NOT_ALLOWED", "client_mime_copied": false }
+    },
+    {
+      "id": "client-size-mismatch",
+      "input": { "size_bytes": 10 },
+      "server_fixture": { "bytes_size": 2481937 },
+      "expected": { "accepted": false, "code": "OUTPUT_LOCATOR_CONFLICT", "client_size_copied": false }
+    },
+    {
+      "id": "failed-job-output",
+      "server_fixture": { "history_status": "failed", "file_exists": true },
+      "expected": { "accepted": false, "code": "JOB_NOT_COMPLETED", "file_deleted": false }
+    },
+    {
+      "id": "file-changed-during-read",
+      "server_fixture": { "pre_and_post_stat_match": false },
+      "expected": { "accepted": false, "code": "OUTPUT_CHANGED_DURING_VALIDATION", "manifest_revision_changed": false }
+    },
+    {
+      "id": "history-deleted-after-selection",
+      "server_fixture": { "history_entry_exists": false, "file_exists": true, "selection_manifest_exists": true, "checksum_still_matches": true },
+      "expected": { "existing_selection_revalidation": "selected", "assets_rediscovered": false, "new_assets_index_created": false }
+    }
+  ]
+}

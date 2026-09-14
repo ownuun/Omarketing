@@ -1,0 +1,56 @@
+{
+  "active": true,
+  "current_phase": "handoff",
+  "skill": "ralplan",
+  "version": 2,
+  "mode": "deliberate",
+  "interactive": false,
+  "task": ".gjc/_session-01a05cf3-822d-7485-aba8-592c4f84fee1/specs/deep-interview-omarketing-comfy-marketing-flow-ui-v1.md",
+  "run_id": "01a05cf3-822d-7485-aba8-592c4f84fee1",
+  "updated_at": "2026-09-01T13:53:58.061Z",
+  "repository_binding": {
+    "schema": "gjc.repository_binding.v1",
+    "worktreeRoot": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+    "commonDir": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing/.git",
+    "displayPath": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+    "head": "7eb33c520cabe5c9bd11b8f707d8573c0bc8c5c5",
+    "branch": "main"
+  },
+  "session_id": "01a05cf3-822d-7485-aba8-592c4f84fee1",
+  "receipt": {
+    "version": 1,
+    "skill": "ralplan",
+    "owner": "gjc-state-cli",
+    "command": "gjc state ralplan write",
+    "state_path": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing/.gjc/_session-01a05cf3-822d-7485-aba8-592c4f84fee1/state/skill-active-state.json",
+    "storage_path": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing/.gjc/_session-01a05cf3-822d-7485-aba8-592c4f84fee1/state/ralplan-state.json",
+    "mutated_at": "2026-09-01T13:53:58.061Z",
+    "fresh_until": "2026-09-01T14:23:58.061Z",
+    "status": "fresh",
+    "mutation_id": "ralplan:2026-09-01T13:53:58.061Z",
+    "content_sha256": {
+      "algorithm": "sha256",
+      "value": "3402a33bdd34c222c3fc042add7d7a7029ac5389156821947ca9cd0a570e6abb",
+      "covered_path": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing/.gjc/_session-01a05cf3-822d-7485-aba8-592c4f84fee1/state/ralplan-state.json",
+      "computed_at": "2026-09-01T13:53:58.063Z"
+    }
+  },
+  "planner_subagent_id": "main-local-fallback",
+  "planner_resumable": false,
+  "planner_fallback_reason": "no_runner",
+  "planner_fallback_attempted_id": "16-RalplanPlannerFallback",
+  "planner_fallback_stage_n": 2,
+  "critic_id": "20-RalplanCriticPass2",
+  "last_review_verdict": "OKAY",
+  "last_review_verdict_lane": "critic",
+  "last_review_verdict_stage_n": 2,
+  "architect_id": "19-RalplanArchitectPass2",
+  "architect_resumable": false,
+  "auto_handoff": {
+    "configuredTarget": "off",
+    "effectiveTarget": "off",
+    "degradationReason": null,
+    "source": "default"
+  },
+  "state_revision": 1
+}

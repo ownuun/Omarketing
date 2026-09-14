@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "brief": "Implement RALPLAN Revision 2 from the approved pending plan (SHA-256 f95d1bce52b61e98ac3e13120a52451f2307127d339a97ec986528faa10ffe08): fixture-only Assets detail vertical slice for exactly one prepared existing demo output asset. No frontend node, backend, endpoint, network, persistence, prompt, synthetic asset, or publish. Re-read AGENTS/contracts/detail APIs/dirty diff; maintain exclusive touched-file inventory; use strict TDD; run unit/component/browser QA plus typecheck/lint/format and fix failures. Persist green-only result to the required final artifact. No commit/push.",
+  "gjcGoalMode": "aggregate",
+  "gjcObjective": "Complete the durable ultragoal plan in .gjc/ultragoal/goals.json, including later accepted/appended stories, under the original brief constraints; use .gjc/ultragoal/ledger.jsonl as the audit trail.",
+  "goals": [
+    {
+      "id": "G001",
+      "title": "Implement RALPLAN Revision 2 from the approved pending plan (SHA-256 f95d1bce...",
+      "objective": "Implement RALPLAN Revision 2 from the approved pending plan (SHA-256 f95d1bce52b61e98ac3e13120a52451f2307127d339a97ec986528faa10ffe08): fixture-only Assets detail vertical slice for exactly one prepared existing demo output asset. No frontend node, backend, endpoint, network, persistence, prompt, synthetic asset, or publish. Re-read AGENTS/contracts/detail APIs/dirty diff; maintain exclusive touched-file inventory; use strict TDD; run unit/component/browser QA plus typecheck/lint/format and fix failures. Persist green-only result to the required final artifact. No commit/push.",
+      "status": "blocked",
+      "createdAt": "2026-09-01T13:54:17.334Z",
+      "updatedAt": "2026-09-01T14:13:33.026Z",
+      "startedAt": "2026-09-01T13:54:22.189Z",
+      "evidence": "Current repo search finds no prepared existing output AssetItem with ID omarketing-demo-output-r2; the provider’s hard-coded ID therefore has no reachable Assets-detail carrier. Browser fixture coverage cannot be truthfully added without either a real existing demo output asset or a separately approved test-only carrier contract. This blocks the requested browser UI QA and green-only final artifact."
+    }
+  ],
+  "createdAt": "2026-09-01T13:54:17.334Z",
+  "updatedAt": "2026-09-01T14:13:33.026Z",
+  "repositoryBinding": {
+    "schema": "gjc.repository_binding.v1",
+    "worktreeRoot": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+    "commonDir": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing/.git",
+    "displayPath": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+    "head": "7eb33c520cabe5c9bd11b8f707d8573c0bc8c5c5",
+    "branch": "main"
+  },
+  "state_revision": 3
+}

@@ -1,0 +1,42 @@
+{
+  "schemaVersion": "omarketing-release-receipt/v1",
+  "receiptId": "TODO",
+  "artifactSpecific": true,
+  "release": {
+    "version": "TBD",
+    "status": "BLOCKED",
+    "modificationDate": "YYYY-MM-DD",
+    "buildCompletedAt": "2026-08-27T08:00:00Z"
+  },
+  "source": {
+    "url": "https://github.com/CHANGE_ME/frontend/archive/refs/heads/main.tar.gz",
+    "tag": "refs/tags/PLACEHOLDER",
+    "commit": "0000000000000000000000000000000000000000",
+    "archiveSha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+    "frontendBaseCommit": "f8db605df6c7a3fb1a936f17806e42ea2d76fe05",
+    "backendCompatibilityCommit": "b08e6cf35fac50d3ca8470dffb3f9a1fbb7187d2"
+  },
+  "build": {
+    "toolchain": {},
+    "environment": {},
+    "commands": ["<insert build command>"],
+    "lockfiles": [],
+    "inputs": [],
+    "outputs": []
+  },
+  "artifact": {
+    "name": "omarketing-frontend",
+    "version": "TBD",
+    "path": "dist/PLACEHOLDER.zip",
+    "mediaType": "application/zip",
+    "sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "legalPayload": {},
+  "sbom": {},
+  "publisher": {
+    "name": "TBD"
+  },
+  "reviewer": {
+    "name": "TODO"
+  }
+}

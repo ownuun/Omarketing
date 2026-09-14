@@ -1,0 +1,65 @@
+{
+  "schema_version": "omarketing.release-source-topology.snapshot.v1",
+  "scenario": "desired-synthetic",
+  "observed_at": "2026-08-27T17:55:00+09:00",
+  "control": {
+    "state": "verified",
+    "origin_url": "https://code.omarketing.example.invalid/omarketing/Omarketing.git",
+    "package_name": "@omarketing/comfyui-frontend",
+    "homepage_url": "https://omarketing.example.invalid",
+    "source_url": "https://code.omarketing.example.invalid/omarketing/Omarketing",
+    "issues_url": "https://code.omarketing.example.invalid/omarketing/Omarketing/issues",
+    "evidence": "synthetic fixture assertion only"
+  },
+  "git": {
+    "origin": {
+      "fetch_urls": [
+        "https://code.omarketing.example.invalid/omarketing/Omarketing.git"
+      ],
+      "explicit_push_urls": [
+        "https://code.omarketing.example.invalid/omarketing/Omarketing.git"
+      ],
+      "effective_push_urls": [
+        "https://code.omarketing.example.invalid/omarketing/Omarketing.git"
+      ]
+    },
+    "upstream": {
+      "fetch_urls": [
+        "https://github.com/Comfy-Org/ComfyUI_frontend.git"
+      ],
+      "explicit_push_urls": [],
+      "effective_push_urls": []
+    }
+  },
+  "branding": {
+    "index_title": "Omarketing",
+    "splash_aria_label": "Loading Omarketing",
+    "app_title": "Omarketing",
+    "tab_default_title": "Omarketing",
+    "tab_title_suffix": " - Omarketing",
+    "sidebar_logo_component": "ComfyLogo",
+    "sidebar_logo_alt": "Omarketing Logo",
+    "manifest": {
+      "name": "Omarketing",
+      "short_name": "Omarketing",
+      "description": "Omarketing: AI image generation platform"
+    },
+    "package": {
+      "name": "@omarketing/comfyui-frontend",
+      "description": "Omarketing front end, a modified ComfyUI Frontend distribution for marketing workflows",
+      "homepage": "https://omarketing.example.invalid",
+      "repository": "https://code.omarketing.example.invalid/omarketing/Omarketing.git"
+    },
+    "source_links": {
+      "package_homepage": "https://omarketing.example.invalid",
+      "package_repository": "https://code.omarketing.example.invalid/omarketing/Omarketing.git",
+      "external_frontend_source": "https://code.omarketing.example.invalid/omarketing/Omarketing",
+      "external_issues": "https://code.omarketing.example.invalid/omarketing/Omarketing/issues",
+      "help_source": "https://code.omarketing.example.invalid/omarketing/Omarketing"
+    }
+  },
+  "observation": {
+    "changed_branding_paths": [],
+    "commands": []
+  }
+}

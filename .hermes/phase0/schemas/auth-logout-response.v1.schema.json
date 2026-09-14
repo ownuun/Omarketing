@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.omarketing.invalid/auth/auth-logout-response.v1.schema.json",
+  "title": "Omarketing auth logout response v1",
+  "description": "The fixed idempotent response for owner logout, including when no live session remains.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "revoked"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "revoked": {
+      "type": "boolean",
+      "const": true
+    }
+  }
+}

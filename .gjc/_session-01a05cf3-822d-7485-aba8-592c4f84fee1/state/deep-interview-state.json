@@ -1,0 +1,1396 @@
+{
+  "active": true,
+  "version": 2,
+  "current_phase": "handoff",
+  "skill": "deep-interview",
+  "cwd": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing",
+  "updated_at": "2026-09-01T13:14:32.757Z",
+  "session_id": "01a05cf3-822d-7485-aba8-592c4f84fee1",
+  "threshold": 0.05,
+  "threshold_source": "default",
+  "receipt": {
+    "version": 1,
+    "skill": "deep-interview",
+    "owner": "gjc-runtime",
+    "command": "gjc deep-interview persist-spec-state",
+    "state_path": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing/.gjc/_session-01a05cf3-822d-7485-aba8-592c4f84fee1/state/skill-active-state.json",
+    "storage_path": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing/.gjc/_session-01a05cf3-822d-7485-aba8-592c4f84fee1/state/deep-interview-state.json",
+    "mutated_at": "2026-09-01T13:14:32.757Z",
+    "fresh_until": "2026-09-01T13:44:32.757Z",
+    "status": "fresh",
+    "mutation_id": "deep-interview:2026-09-01T13:14:32.757Z",
+    "content_sha256": {
+      "algorithm": "sha256",
+      "value": "970adfabe0fe635478e6cb9cf6848aa0f9f1df69dcc7b3eb028b5dd5d33b4670",
+      "covered_path": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing/.gjc/_session-01a05cf3-822d-7485-aba8-592c4f84fee1/state/deep-interview-state.json",
+      "computed_at": "2026-09-01T13:14:32.761Z"
+    }
+  },
+  "last_applied_draft_id": "f1666c96-b40d-4e56-a217-fb81226742b8",
+  "state": {
+    "threshold": 0.05,
+    "threshold_source": "default",
+    "rounds": [
+      {
+        "round": 1,
+        "round_key": "manual-round-1",
+        "lifecycle": "scored",
+        "question_text": "처음 화면에서 사용자가 디자인 결과를 받으면, 가장 먼저 무엇을 하게 해야 하나요?",
+        "answer": "결과를 먼저 확인한다.",
+        "ambiguity": 0.35,
+        "scores": {
+          "goal": 0.65,
+          "constraints": 0.9,
+          "criteria": 0.25,
+          "context": 0.9
+        },
+        "weakest_component_id": "auto-handoff-readback",
+        "weakest_dimension": "criteria",
+        "component_scores": {
+          "marketing-workflow-entry": {
+            "goal": 0.75,
+            "constraints": 0.9,
+            "criteria": 0.3,
+            "context": 0.9,
+            "gaps": {
+              "goal": "초기 행동과 각 상태의 문구가 아직 확정되지 않음",
+              "criteria": "사용자가 볼 수 있는 성공·실패·대기 기준이 아직 확정되지 않음"
+            }
+          },
+          "assets-qa-selection": {
+            "goal": 0.75,
+            "constraints": 0.9,
+            "criteria": 0.35,
+            "context": 0.9,
+            "gaps": {
+              "goal": "초기 행동과 각 상태의 문구가 아직 확정되지 않음",
+              "criteria": "사용자가 볼 수 있는 성공·실패·대기 기준이 아직 확정되지 않음"
+            }
+          },
+          "auto-handoff-readback": {
+            "goal": 0.72,
+            "constraints": 0.95,
+            "criteria": 0.25,
+            "context": 0.9,
+            "gaps": {
+              "goal": "초기 행동과 각 상태의 문구가 아직 확정되지 않음",
+              "criteria": "사용자가 볼 수 있는 성공·실패·대기 기준이 아직 확정되지 않음"
+            }
+          },
+          "queue-history-links": {
+            "goal": 0.65,
+            "constraints": 0.95,
+            "criteria": 0.3,
+            "context": 0.9,
+            "gaps": {
+              "goal": "초기 행동과 각 상태의 문구가 아직 확정되지 않음",
+              "criteria": "사용자가 볼 수 있는 성공·실패·대기 기준이 아직 확정되지 않음"
+            }
+          }
+        },
+        "structured_scorer_output": {
+          "triggers": [],
+          "trigger_status": "none",
+          "affected_component": null,
+          "affected_dimension": null,
+          "prior_dimension_score": null,
+          "new_dimension_score": null,
+          "prior_ambiguity": 1,
+          "new_ambiguity": 0.35,
+          "evidence": [
+            "사용자는 디자인 결과 수신 후 먼저 결과를 확인해야 한다고 확인했다."
+          ],
+          "contradicted_established_fact": null,
+          "disputed_unresolved_rationale": null
+        },
+        "ontology": {
+          "entities": [
+            {
+              "name": "Design result",
+              "type": "external fixture",
+              "fields": [
+                "status",
+                "asset reference",
+                "hash"
+              ],
+              "relationships": [
+                "is reviewed before selection"
+              ]
+            },
+            {
+              "name": "QA review",
+              "type": "core domain",
+              "fields": [
+                "required",
+                "result"
+              ],
+              "relationships": [
+                "reviews Design result"
+              ]
+            },
+            {
+              "name": "Selection handoff",
+              "type": "core domain",
+              "fields": [
+                "selected output",
+                "manifest hash"
+              ],
+              "relationships": [
+                "follows QA review and precedes Auto handoff"
+              ]
+            },
+            {
+              "name": "Auto read-back receipt",
+              "type": "external fixture",
+              "fields": [
+                "handoff status",
+                "read-back status"
+              ],
+              "relationships": [
+                "reports after Selection handoff"
+              ]
+            },
+            {
+              "name": "Queue/History link",
+              "type": "supporting view",
+              "fields": [
+                "existing job reference"
+              ],
+              "relationships": [
+                "shows existing Comfy lifecycle"
+              ]
+            }
+          ]
+        },
+        "ontology_stability": {
+          "stability_ratio": null,
+          "new": 5,
+          "changed": 0,
+          "stable": 0,
+          "removed": 0,
+          "matching_reasoning": "Round 1: all entities are new."
+        }
+      },
+      {
+        "round": 2,
+        "round_key": "manual-round-2",
+        "lifecycle": "scored",
+        "question_text": "사용자가 디자인 결과 하나를 선택한 뒤, 화면에서 어디까지 확인할 수 있으면 충분한가요?",
+        "answer": "선택됨 → Auto로 전달됨 → 처리 중/완료/실패까지 보임",
+        "ambiguity": 0.3375,
+        "scores": {
+          "goal": 0.65,
+          "constraints": 0.9,
+          "criteria": 0.3,
+          "context": 0.9
+        },
+        "weakest_component_id": "queue-history-links",
+        "weakest_dimension": "criteria",
+        "component_scores": {
+          "marketing-workflow-entry": {
+            "goal": 0.75,
+            "constraints": 0.9,
+            "criteria": 0.3,
+            "context": 0.9,
+            "gaps": {
+              "criteria": "사용자가 Queue/History에서 무엇을 눌러 무엇을 확인하는지 아직 정해지지 않음"
+            }
+          },
+          "assets-qa-selection": {
+            "goal": 0.75,
+            "constraints": 0.9,
+            "criteria": 0.35,
+            "context": 0.9,
+            "gaps": {
+              "criteria": "사용자가 Queue/History에서 무엇을 눌러 무엇을 확인하는지 아직 정해지지 않음"
+            }
+          },
+          "auto-handoff-readback": {
+            "goal": 0.85,
+            "constraints": 0.95,
+            "criteria": 0.8,
+            "context": 0.9,
+            "gaps": {
+              "criteria": "사용자가 Queue/History에서 무엇을 눌러 무엇을 확인하는지 아직 정해지지 않음"
+            }
+          },
+          "queue-history-links": {
+            "goal": 0.65,
+            "constraints": 0.95,
+            "criteria": 0.3,
+            "context": 0.9,
+            "gaps": {
+              "criteria": "사용자가 Queue/History에서 무엇을 눌러 무엇을 확인하는지 아직 정해지지 않음"
+            }
+          }
+        },
+        "structured_scorer_output": {
+          "triggers": [],
+          "trigger_status": "none",
+          "affected_component": "auto-handoff-readback",
+          "affected_dimension": "criteria",
+          "prior_dimension_score": 0.25,
+          "new_dimension_score": 0.8,
+          "prior_ambiguity": 0.35,
+          "new_ambiguity": 0.3375,
+          "evidence": [
+            "User selected selected → handed to Auto → processing/completed/failed."
+          ],
+          "contradicted_established_fact": null,
+          "disputed_unresolved_rationale": null
+        },
+        "ontology": {
+          "entities": [
+            {
+              "name": "Design result",
+              "type": "external fixture",
+              "fields": [
+                "status",
+                "asset reference",
+                "hash"
+              ],
+              "relationships": [
+                "is reviewed before selection"
+              ]
+            },
+            {
+              "name": "QA review",
+              "type": "core domain",
+              "fields": [
+                "required",
+                "result"
+              ],
+              "relationships": [
+                "reviews Design result"
+              ]
+            },
+            {
+              "name": "Selection handoff",
+              "type": "core domain",
+              "fields": [
+                "selected output",
+                "manifest hash"
+              ],
+              "relationships": [
+                "follows QA review and precedes Auto handoff"
+              ]
+            },
+            {
+              "name": "Auto read-back receipt",
+              "type": "external fixture",
+              "fields": [
+                "handoff status",
+                "read-back status",
+                "processing/completed/failed"
+              ],
+              "relationships": [
+                "reports after Selection handoff"
+              ]
+            },
+            {
+              "name": "Queue/History link",
+              "type": "supporting view",
+              "fields": [
+                "existing job reference"
+              ],
+              "relationships": [
+                "shows existing Comfy lifecycle"
+              ]
+            }
+          ]
+        },
+        "ontology_stability": {
+          "stability_ratio": 1,
+          "new": 0,
+          "changed": 0,
+          "stable": 5,
+          "removed": 0,
+          "matching_reasoning": "All five Round 1 entities matched by name; Auto read-back receipt gained explicit status fields."
+        }
+      },
+      {
+        "round": 3,
+        "round_key": "manual-round-3",
+        "lifecycle": "scored",
+        "question_text": "이번 첫 화면에서 처리 중 / 완료 / 실패는 어떻게 보여주는 것이 가장 이해하기 쉬울까요?",
+        "answer": "예시 데이터라고 분명히 표시해서 보여 준다.",
+        "ambiguity": 0.3025,
+        "scores": {
+          "goal": 0.75,
+          "constraints": 0.9,
+          "criteria": 0.3,
+          "context": 0.9
+        },
+        "weakest_component_id": "marketing-workflow-entry",
+        "weakest_dimension": "criteria",
+        "component_scores": {
+          "marketing-workflow-entry": {
+            "goal": 0.75,
+            "constraints": 0.9,
+            "criteria": 0.3,
+            "context": 0.9,
+            "gaps": {
+              "criteria": "QA에서 반드시 확인할 항목과 선택 가능 조건이 아직 정해지지 않음"
+            }
+          },
+          "assets-qa-selection": {
+            "goal": 0.75,
+            "constraints": 0.9,
+            "criteria": 0.35,
+            "context": 0.9,
+            "gaps": {
+              "criteria": "QA에서 반드시 확인할 항목과 선택 가능 조건이 아직 정해지지 않음"
+            }
+          },
+          "auto-handoff-readback": {
+            "goal": 0.85,
+            "constraints": 0.98,
+            "criteria": 0.88,
+            "context": 0.9,
+            "gaps": {
+              "criteria": "QA에서 반드시 확인할 항목과 선택 가능 조건이 아직 정해지지 않음"
+            }
+          },
+          "queue-history-links": {
+            "goal": 0.85,
+            "constraints": 0.98,
+            "criteria": 0.75,
+            "context": 0.9,
+            "gaps": {
+              "criteria": "QA에서 반드시 확인할 항목과 선택 가능 조건이 아직 정해지지 않음"
+            }
+          }
+        },
+        "structured_scorer_output": {
+          "triggers": [],
+          "trigger_status": "none",
+          "affected_component": "queue-history-links",
+          "affected_dimension": "criteria",
+          "prior_dimension_score": 0.3,
+          "new_dimension_score": 0.75,
+          "prior_ambiguity": 0.3375,
+          "new_ambiguity": 0.3025,
+          "evidence": [
+            "User requires a clear simulated-fixture marker for processing/completed/failed."
+          ],
+          "contradicted_established_fact": null,
+          "disputed_unresolved_rationale": null
+        },
+        "ontology": {
+          "entities": [
+            {
+              "name": "Design result",
+              "type": "external fixture",
+              "fields": [
+                "status",
+                "asset reference",
+                "hash"
+              ],
+              "relationships": [
+                "is reviewed before selection"
+              ]
+            },
+            {
+              "name": "QA review",
+              "type": "core domain",
+              "fields": [
+                "required",
+                "result"
+              ],
+              "relationships": [
+                "reviews Design result"
+              ]
+            },
+            {
+              "name": "Selection handoff",
+              "type": "core domain",
+              "fields": [
+                "selected output",
+                "manifest hash"
+              ],
+              "relationships": [
+                "follows QA review and precedes Auto handoff"
+              ]
+            },
+            {
+              "name": "Auto read-back receipt",
+              "type": "external fixture",
+              "fields": [
+                "handoff status",
+                "read-back status",
+                "simulated fixture marker"
+              ],
+              "relationships": [
+                "reports after Selection handoff"
+              ]
+            },
+            {
+              "name": "Queue/History link",
+              "type": "supporting view",
+              "fields": [
+                "existing job reference",
+                "actual-status link"
+              ],
+              "relationships": [
+                "shows existing Comfy lifecycle"
+              ]
+            }
+          ]
+        },
+        "ontology_stability": {
+          "stability_ratio": 1,
+          "new": 0,
+          "changed": 0,
+          "stable": 5,
+          "removed": 0,
+          "matching_reasoning": "All entities matched by name; fixture-marker and actual-status-link fields were clarified."
+        }
+      },
+      {
+        "round": 4,
+        "round_key": "manual-round-4",
+        "lifecycle": "scored",
+        "question_text": "디자인 결과를 처음 확인할 때, 꼭 무엇을 보여 주면 좋을까요?",
+        "answer": "결과 미리보기 + 문구 + 품질 확인 필요 표시",
+        "ambiguity": 0.2725,
+        "scores": {
+          "goal": 0.8,
+          "constraints": 0.9,
+          "criteria": 0.35,
+          "context": 0.9
+        },
+        "weakest_component_id": "assets-qa-selection",
+        "weakest_dimension": "criteria",
+        "component_scores": {
+          "marketing-workflow-entry": {
+            "goal": 0.93,
+            "constraints": 0.9,
+            "criteria": 0.8,
+            "context": 0.9,
+            "gaps": {
+              "criteria": "QA에서 반드시 확인할 항목과 선택 가능 조건이 아직 정해지지 않음"
+            }
+          },
+          "assets-qa-selection": {
+            "goal": 0.8,
+            "constraints": 0.9,
+            "criteria": 0.35,
+            "context": 0.9,
+            "gaps": {
+              "criteria": "QA에서 반드시 확인할 항목과 선택 가능 조건이 아직 정해지지 않음"
+            }
+          },
+          "auto-handoff-readback": {
+            "goal": 0.85,
+            "constraints": 0.98,
+            "criteria": 0.88,
+            "context": 0.9,
+            "gaps": {
+              "criteria": "QA에서 반드시 확인할 항목과 선택 가능 조건이 아직 정해지지 않음"
+            }
+          },
+          "queue-history-links": {
+            "goal": 0.85,
+            "constraints": 0.98,
+            "criteria": 0.75,
+            "context": 0.9,
+            "gaps": {
+              "criteria": "QA에서 반드시 확인할 항목과 선택 가능 조건이 아직 정해지지 않음"
+            }
+          }
+        },
+        "structured_scorer_output": {
+          "triggers": [],
+          "trigger_status": "none",
+          "affected_component": "marketing-workflow-entry",
+          "affected_dimension": "criteria",
+          "prior_dimension_score": 0.3,
+          "new_dimension_score": 0.8,
+          "prior_ambiguity": 0.3025,
+          "new_ambiguity": 0.2725,
+          "evidence": [
+            "User selected preview + copy + QA-required status."
+          ],
+          "contradicted_established_fact": null,
+          "disputed_unresolved_rationale": null
+        },
+        "ontology": {
+          "entities": [
+            {
+              "name": "Design result",
+              "type": "external fixture",
+              "fields": [
+                "preview",
+                "copy",
+                "QA-required status",
+                "asset reference",
+                "hash"
+              ],
+              "relationships": [
+                "is reviewed before selection"
+              ]
+            },
+            {
+              "name": "QA review",
+              "type": "core domain",
+              "fields": [
+                "required",
+                "result"
+              ],
+              "relationships": [
+                "reviews Design result"
+              ]
+            },
+            {
+              "name": "Selection handoff",
+              "type": "core domain",
+              "fields": [
+                "selected output",
+                "manifest hash"
+              ],
+              "relationships": [
+                "follows QA review and precedes Auto handoff"
+              ]
+            },
+            {
+              "name": "Auto read-back receipt",
+              "type": "external fixture",
+              "fields": [
+                "handoff status",
+                "read-back status",
+                "simulated fixture marker"
+              ],
+              "relationships": [
+                "reports after Selection handoff"
+              ]
+            },
+            {
+              "name": "Queue/History link",
+              "type": "supporting view",
+              "fields": [
+                "existing job reference",
+                "actual-status link"
+              ],
+              "relationships": [
+                "shows existing Comfy lifecycle"
+              ]
+            }
+          ]
+        },
+        "ontology_stability": {
+          "stability_ratio": 1,
+          "new": 0,
+          "changed": 0,
+          "stable": 5,
+          "removed": 0,
+          "matching_reasoning": "All entities matched by name; Design result gained preview, copy, and QA-required fields."
+        }
+      },
+      {
+        "round": 5,
+        "round_key": "manual-round-5",
+        "lifecycle": "scored",
+        "question_text": "결과 미리보기와 문구를 확인한 뒤, 무엇을 해야 최종 선택 버튼이 열리면 좋을까요?",
+        "answer": "통과를 누른 결과는 바로 발행 대기열로 들어가며, 별도 최종 선택 버튼은 없다.",
+        "ambiguity": 0.32,
+        "scores": {
+          "goal": 0.7,
+          "constraints": 0.9,
+          "criteria": 0.3,
+          "context": 0.9
+        },
+        "weakest_component_id": "assets-qa-selection",
+        "weakest_dimension": "goal",
+        "component_scores": {
+          "marketing-workflow-entry": {
+            "goal": 0.93,
+            "constraints": 0.9,
+            "criteria": 0.8,
+            "context": 0.9,
+            "gaps": {
+              "goal": "“통과”가 최종 선택 기록을 대신하는지와 하나만 통과 가능한지가 확정되지 않음"
+            }
+          },
+          "assets-qa-selection": {
+            "goal": 0.7,
+            "constraints": 0.9,
+            "criteria": 0.3,
+            "context": 0.9,
+            "gaps": {
+              "goal": "“통과”가 최종 선택 기록을 대신하는지와 하나만 통과 가능한지가 확정되지 않음"
+            }
+          },
+          "auto-handoff-readback": {
+            "goal": 0.85,
+            "constraints": 0.98,
+            "criteria": 0.88,
+            "context": 0.9,
+            "gaps": {
+              "goal": "“통과”가 최종 선택 기록을 대신하는지와 하나만 통과 가능한지가 확정되지 않음"
+            }
+          },
+          "queue-history-links": {
+            "goal": 0.85,
+            "constraints": 0.98,
+            "criteria": 0.75,
+            "context": 0.9,
+            "gaps": {
+              "goal": "“통과”가 최종 선택 기록을 대신하는지와 하나만 통과 가능한지가 확정되지 않음"
+            }
+          }
+        },
+        "structured_scorer_output": {
+          "triggers": [
+            "B internal inconsistency"
+          ],
+          "trigger_status": "unresolved",
+          "affected_component": "assets-qa-selection",
+          "affected_dimension": "goal",
+          "prior_dimension_score": 0.8,
+          "new_dimension_score": 0.7,
+          "prior_ambiguity": 0.2725,
+          "new_ambiguity": 0.32,
+          "evidence": [
+            "User wants pass to enqueue immediately; authoritative contract requires one human final-output selection/selection record between normal executions."
+          ],
+          "contradicted_established_fact": null,
+          "disputed_unresolved_rationale": "The user intent can be consistent only if pass itself creates the required single final selection record; this remains unresolved."
+        },
+        "ontology": {
+          "entities": [
+            {
+              "name": "Design result",
+              "type": "external fixture",
+              "fields": [
+                "preview",
+                "copy",
+                "QA-required status",
+                "asset reference",
+                "hash"
+              ],
+              "relationships": [
+                "is reviewed before selection"
+              ]
+            },
+            {
+              "name": "QA review",
+              "type": "core domain",
+              "fields": [
+                "pass/delete"
+              ],
+              "relationships": [
+                "reviews Design result and may trigger handoff"
+              ]
+            },
+            {
+              "name": "Selection handoff",
+              "type": "core domain",
+              "fields": [
+                "selected output",
+                "manifest hash"
+              ],
+              "relationships": [
+                "must follow QA review before Auto handoff"
+              ]
+            },
+            {
+              "name": "Auto read-back receipt",
+              "type": "external fixture",
+              "fields": [
+                "handoff status",
+                "read-back status",
+                "simulated fixture marker"
+              ],
+              "relationships": [
+                "reports after Selection handoff"
+              ]
+            },
+            {
+              "name": "Queue/History link",
+              "type": "supporting view",
+              "fields": [
+                "existing job reference",
+                "actual-status link"
+              ],
+              "relationships": [
+                "shows existing Comfy lifecycle"
+              ]
+            }
+          ]
+        },
+        "ontology_stability": {
+          "stability_ratio": 1,
+          "new": 0,
+          "changed": 0,
+          "stable": 5,
+          "removed": 0,
+          "matching_reasoning": "All entities matched by name; QA review gained pass/delete actions."
+        }
+      },
+      {
+        "round": 6,
+        "round_key": "manual-round-6",
+        "lifecycle": "scored",
+        "question_text": "통과를 최종 선택까지 한 번에 처리해도 될까요?",
+        "answer": "후보 하나에만 통과를 누를 수 있고, 그 후보를 최종본 1개로 기록한 뒤 바로 발행 대기열에 넣는다.",
+        "ambiguity": 0.155,
+        "scores": {
+          "goal": 0.85,
+          "constraints": 0.9,
+          "criteria": 0.75,
+          "context": 0.9
+        },
+        "weakest_component_id": "queue-history-links",
+        "weakest_dimension": "criteria",
+        "component_scores": {
+          "marketing-workflow-entry": {
+            "goal": 0.93,
+            "constraints": 0.9,
+            "criteria": 0.8,
+            "context": 0.9,
+            "gaps": {
+              "criteria": "사용자가 Queue/History로 이동해 확인할 정확한 행동이 아직 정해지지 않음"
+            }
+          },
+          "assets-qa-selection": {
+            "goal": 0.98,
+            "constraints": 0.97,
+            "criteria": 0.95,
+            "context": 0.95,
+            "gaps": {
+              "criteria": "사용자가 Queue/History로 이동해 확인할 정확한 행동이 아직 정해지지 않음"
+            }
+          },
+          "auto-handoff-readback": {
+            "goal": 0.85,
+            "constraints": 0.98,
+            "criteria": 0.88,
+            "context": 0.9,
+            "gaps": {
+              "criteria": "사용자가 Queue/History로 이동해 확인할 정확한 행동이 아직 정해지지 않음"
+            }
+          },
+          "queue-history-links": {
+            "goal": 0.85,
+            "constraints": 0.98,
+            "criteria": 0.75,
+            "context": 0.9,
+            "gaps": {
+              "criteria": "사용자가 Queue/History로 이동해 확인할 정확한 행동이 아직 정해지지 않음"
+            }
+          }
+        },
+        "structured_scorer_output": {
+          "triggers": [],
+          "trigger_status": "resolved",
+          "affected_component": "assets-qa-selection",
+          "affected_dimension": "goal",
+          "prior_dimension_score": 0.7,
+          "new_dimension_score": 0.98,
+          "prior_ambiguity": 0.32,
+          "new_ambiguity": 0.155,
+          "evidence": [
+            "User selected pass as one explicit final selection record followed by immediate fixture queue entry."
+          ],
+          "contradicted_established_fact": null,
+          "disputed_unresolved_rationale": null
+        },
+        "ontology": {
+          "entities": [
+            {
+              "name": "Design result",
+              "type": "external fixture",
+              "fields": [
+                "preview",
+                "copy",
+                "QA-required status",
+                "asset reference",
+                "hash"
+              ],
+              "relationships": [
+                "is reviewed before selection"
+              ]
+            },
+            {
+              "name": "QA review",
+              "type": "core domain",
+              "fields": [
+                "pass/delete"
+              ],
+              "relationships": [
+                "reviews Design result"
+              ]
+            },
+            {
+              "name": "Selection handoff",
+              "type": "core domain",
+              "fields": [
+                "selected output",
+                "manifest hash"
+              ],
+              "relationships": [
+                "is created by one pass action and precedes Auto handoff"
+              ]
+            },
+            {
+              "name": "Auto read-back receipt",
+              "type": "external fixture",
+              "fields": [
+                "handoff status",
+                "read-back status",
+                "simulated fixture marker"
+              ],
+              "relationships": [
+                "reports after Selection handoff"
+              ]
+            },
+            {
+              "name": "Queue/History link",
+              "type": "supporting view",
+              "fields": [
+                "existing job reference",
+                "actual-status link"
+              ],
+              "relationships": [
+                "shows existing Comfy lifecycle"
+              ]
+            }
+          ]
+        },
+        "ontology_stability": {
+          "stability_ratio": 1,
+          "new": 0,
+          "changed": 0,
+          "stable": 5,
+          "removed": 0,
+          "matching_reasoning": "All entities matched by name; Selection handoff relationship was resolved."
+        }
+      },
+      {
+        "round": 7,
+        "round_key": "manual-round-7",
+        "lifecycle": "scored",
+        "question_text": "Queue 보기와 History 보기를 누르면 어떻게 동작하면 좋을까요?",
+        "answer": "둘 다 기존 작업 기록 화면만 열고, 기존 필터는 바꾸지 않는다.",
+        "ambiguity": 0.05,
+        "scores": {
+          "goal": 0.95,
+          "constraints": 0.95,
+          "criteria": 0.95,
+          "context": 0.95
+        },
+        "weakest_component_id": "marketing-workflow-entry",
+        "weakest_dimension": "constraints",
+        "component_scores": {
+          "marketing-workflow-entry": {
+            "goal": 0.95,
+            "constraints": 0.95,
+            "criteria": 0.95,
+            "context": 0.96,
+            "gaps": {}
+          },
+          "assets-qa-selection": {
+            "goal": 0.98,
+            "constraints": 0.97,
+            "criteria": 0.95,
+            "context": 0.95,
+            "gaps": {}
+          },
+          "auto-handoff-readback": {
+            "goal": 0.95,
+            "constraints": 0.98,
+            "criteria": 0.95,
+            "context": 0.95,
+            "gaps": {}
+          },
+          "queue-history-links": {
+            "goal": 0.98,
+            "constraints": 0.99,
+            "criteria": 0.98,
+            "context": 0.98,
+            "gaps": {}
+          }
+        },
+        "structured_scorer_output": {
+          "triggers": [],
+          "trigger_status": "none",
+          "affected_component": "queue-history-links",
+          "affected_dimension": "criteria",
+          "prior_dimension_score": 0.75,
+          "new_dimension_score": 0.98,
+          "prior_ambiguity": 0.155,
+          "new_ambiguity": 0.05,
+          "evidence": [
+            "User chose both links open the existing unfiltered job-history panel."
+          ],
+          "contradicted_established_fact": null,
+          "disputed_unresolved_rationale": null
+        },
+        "ontology": {
+          "entities": [
+            {
+              "name": "Design result",
+              "type": "external fixture",
+              "fields": [
+                "preview",
+                "copy",
+                "QA-required status",
+                "asset reference",
+                "hash"
+              ],
+              "relationships": [
+                "is reviewed before selection"
+              ]
+            },
+            {
+              "name": "QA review",
+              "type": "core domain",
+              "fields": [
+                "pass/delete"
+              ],
+              "relationships": [
+                "reviews Design result"
+              ]
+            },
+            {
+              "name": "Selection handoff",
+              "type": "core domain",
+              "fields": [
+                "selected output",
+                "manifest hash"
+              ],
+              "relationships": [
+                "is created by one pass action and precedes Auto handoff"
+              ]
+            },
+            {
+              "name": "Auto read-back receipt",
+              "type": "external fixture",
+              "fields": [
+                "handoff status",
+                "read-back status",
+                "simulated fixture marker"
+              ],
+              "relationships": [
+                "reports after Selection handoff"
+              ]
+            },
+            {
+              "name": "Queue/History link",
+              "type": "supporting view",
+              "fields": [
+                "existing job reference",
+                "opens existing unfiltered job-history panel"
+              ],
+              "relationships": [
+                "shows existing Comfy lifecycle"
+              ]
+            }
+          ]
+        },
+        "ontology_stability": {
+          "stability_ratio": 1,
+          "new": 0,
+          "changed": 0,
+          "stable": 5,
+          "removed": 0,
+          "matching_reasoning": "All entities matched by name; Queue/History link behavior was specified."
+        }
+      },
+      {
+        "round": 8,
+        "round_key": "manual-round-8",
+        "lifecycle": "scored",
+        "question_text": "이번 첫 화면에서 통과, 발행 대기열, 읽기 결과는 모두 예시 데이터입니다. 실제 최종 선택 저장이나 실제 게시를 하지 않습니다. 이 기준으로 확정할까요?",
+        "answer": "모두 예시로만 보여 주고, 실제 저장과 게시는 나중에 만든다.",
+        "ambiguity": 0.02,
+        "scores": {
+          "goal": 0.98,
+          "constraints": 0.98,
+          "criteria": 0.98,
+          "context": 0.98
+        },
+        "weakest_component_id": "marketing-workflow-entry",
+        "weakest_dimension": "goal",
+        "component_scores": {
+          "marketing-workflow-entry": {
+            "goal": 0.98,
+            "constraints": 0.98,
+            "criteria": 0.98,
+            "context": 0.98,
+            "gaps": {}
+          },
+          "assets-qa-selection": {
+            "goal": 0.99,
+            "constraints": 0.99,
+            "criteria": 0.99,
+            "context": 0.98,
+            "gaps": {}
+          },
+          "auto-handoff-readback": {
+            "goal": 0.99,
+            "constraints": 0.99,
+            "criteria": 0.99,
+            "context": 0.98,
+            "gaps": {}
+          },
+          "queue-history-links": {
+            "goal": 0.99,
+            "constraints": 0.99,
+            "criteria": 0.99,
+            "context": 0.98,
+            "gaps": {}
+          }
+        },
+        "structured_scorer_output": {
+          "triggers": [],
+          "trigger_status": "resolved",
+          "affected_component": "assets-qa-selection",
+          "affected_dimension": "constraints",
+          "prior_dimension_score": 0.9,
+          "new_dimension_score": 0.99,
+          "prior_ambiguity": 0.05,
+          "new_ambiguity": 0.02,
+          "evidence": [
+            "User confirmed all pass, queue, and read-back states are simulated fixtures; real selection persistence and publishing are deferred."
+          ],
+          "contradicted_established_fact": null,
+          "disputed_unresolved_rationale": null
+        },
+        "ontology": {
+          "entities": [
+            {
+              "name": "Design result",
+              "type": "external fixture",
+              "fields": [
+                "preview",
+                "copy",
+                "QA-required status",
+                "asset reference",
+                "hash"
+              ],
+              "relationships": [
+                "is reviewed before selection"
+              ]
+            },
+            {
+              "name": "QA review",
+              "type": "core domain",
+              "fields": [
+                "pass/delete",
+                "fixture marker"
+              ],
+              "relationships": [
+                "reviews Design result"
+              ]
+            },
+            {
+              "name": "Selection handoff",
+              "type": "fixture state",
+              "fields": [
+                "selected output",
+                "fixture manifest hash"
+              ],
+              "relationships": [
+                "is created by one pass action and precedes fixture Auto handoff"
+              ]
+            },
+            {
+              "name": "Auto read-back receipt",
+              "type": "external fixture",
+              "fields": [
+                "handoff status",
+                "read-back status",
+                "simulated fixture marker"
+              ],
+              "relationships": [
+                "reports after Selection handoff"
+              ]
+            },
+            {
+              "name": "Queue/History link",
+              "type": "supporting view",
+              "fields": [
+                "existing job reference",
+                "opens existing unfiltered job-history panel"
+              ],
+              "relationships": [
+                "shows existing Comfy lifecycle"
+              ]
+            }
+          ]
+        },
+        "ontology_stability": {
+          "stability_ratio": 1,
+          "new": 0,
+          "changed": 0,
+          "stable": 5,
+          "removed": 0,
+          "matching_reasoning": "All entities matched by name; selection handoff was explicitly classified as fixture state."
+        }
+      }
+    ],
+    "established_facts": [
+      {
+        "id": "fact-initial-result-review",
+        "statement": "A user must first inspect the received design result before QA or selection.",
+        "round": 1,
+        "evidence": "User-confirmed refined answer",
+        "disputed": false
+      },
+      {
+        "id": "fact-auto-readback-states",
+        "statement": "The fixture UI must show selected → handed to Auto → processing/completed/failed.",
+        "round": 2,
+        "evidence": "User option selection",
+        "disputed": false
+      },
+      {
+        "id": "fact-fixture-status-label",
+        "statement": "Processing, completed, and failed are visibly labeled as simulated fixture data in this first UI slice.",
+        "round": 3,
+        "evidence": "User option selection",
+        "disputed": false
+      },
+      {
+        "id": "fact-workflow-result-contents",
+        "statement": "The first result view shows a preview, copy, and a QA-required indicator.",
+        "round": 4,
+        "evidence": "User option selection",
+        "disputed": false
+      },
+      {
+        "id": "fact-pass-enqueues",
+        "statement": "The user wants a passed result to enter the fixture publishing queue immediately, without a separate selection button.",
+        "round": 5,
+        "evidence": "User-confirmed refined answer",
+        "disputed": false
+      },
+      {
+        "id": "fact-pass-is-single-selection",
+        "statement": "One pass action may be used for exactly one candidate; it records that candidate as the final selection before immediately entering the fixture publishing queue.",
+        "round": 6,
+        "evidence": "User option selection",
+        "disputed": false
+      },
+      {
+        "id": "fact-links-open-existing-panel",
+        "statement": "Queue and History links only open the existing unfiltered job-history panel.",
+        "round": 7,
+        "evidence": "User option selection",
+        "disputed": false
+      },
+      {
+        "id": "fact-fixture-states-nonauthoritative",
+        "statement": "Pass, publishing queue, and read-back are visibly simulated, non-authoritative fixture data; real selection persistence and publishing are deferred.",
+        "round": 8,
+        "evidence": "User option selection",
+        "disputed": false
+      }
+    ],
+    "interview_id": "98352ad6-bc1b-4bee-befa-e3097858db90",
+    "type": "brownfield",
+    "initial_idea": "Produce a decision-complete PRD for the first Omarketing marketing-flow UI slice in existing ComfyUI surfaces: typed fixture design-result ingest → mandatory human QA and selection → Auto publishing handoff → read-back. Preserve Comfy Queue/History/Assets authority and ordinary Run. Scope is a custom marketing Workflow node, Assets detail panel, and Queue/History status links only if confirmed; no sidebar, core mutations, endpoints, credentials, production publishing, or deployment. Record plan/spec only; do not edit product code or unowned dirty worktree files.",
+    "language": {
+      "instruction": "Korean; use plain language suitable for non-technical readers, short sentences, and explain technical terms when unavoidable."
+    },
+    "codebase_context": "Brownfield evidence: `src/extensions/core/omarketing/index.ts` Phase 1 registers only an Assets presentation provider and static About badge; `assetsPresentation.ts` is deliberately disconnected with no actions/metadata. `.hermes/plans/omarketing-full-replacement-plan.md` requires additive extension layers, no core Queue/History/Assets or Run changes, Assets detail-only actions, and existing Queue/History semantics. `.hermes/phase0/contracts/backend-package-and-templates.md` assigns optional node widgets and generic Assets presentation to `web/`, forbids alternate run state, and requires selection manifests with revalidated locators/checksums. Native trace summary was absent; no raw trace is relied on.",
+    "topology": {
+      "status": "confirmed",
+      "confirmed_at": "2026-09-01T12:32:00Z",
+      "components": [
+        {
+          "id": "marketing-workflow-entry",
+          "name": "Marketing workflow entry",
+          "description": "Custom Omarketing Workflow node exposes fixture-backed design-result-to-QA entry without altering normal Run or Comfy core.",
+          "status": "active",
+          "evidence": [
+            "user-confirmed Round 0",
+            "src/extensions/core/omarketing/index.ts"
+          ],
+          "clarity_scores": {
+            "goal": 0.98,
+            "constraints": 0.98,
+            "criteria": 0.98,
+            "context": 0.98
+          },
+          "weakest_dimension": "goal"
+        },
+        {
+          "id": "assets-qa-selection",
+          "name": "Assets QA and selection",
+          "description": "Assets detail panel presents design-result metadata, mandatory QA, candidate selection, and selection-handoff summary without changing cards or asset authority.",
+          "status": "active",
+          "evidence": [
+            "user-confirmed Round 0",
+            ".hermes/plans/omarketing-full-replacement-plan.md §3.10-3.12"
+          ],
+          "clarity_scores": {
+            "goal": 0.99,
+            "constraints": 0.99,
+            "criteria": 0.99,
+            "context": 0.98
+          },
+          "weakest_dimension": "context"
+        },
+        {
+          "id": "auto-handoff-readback",
+          "name": "Auto handoff and read-back",
+          "description": "Fixture-backed handoff/read-back states make publishing eligibility and receipt visible without provider calls or publishing.",
+          "status": "active",
+          "evidence": [
+            "user-confirmed Round 0",
+            ".hermes/phase0/contracts/backend-package-and-templates.md §Boundary ownership"
+          ],
+          "clarity_scores": {
+            "goal": 0.99,
+            "constraints": 0.99,
+            "criteria": 0.99,
+            "context": 0.98
+          },
+          "weakest_dimension": "context"
+        },
+        {
+          "id": "queue-history-links",
+          "name": "Queue/History lifecycle links",
+          "description": "Additive links expose existing Queue and History status without a parallel run state machine.",
+          "status": "active",
+          "evidence": [
+            "user-confirmed Round 0",
+            ".hermes/plans/omarketing-full-replacement-plan.md §3.12"
+          ],
+          "clarity_scores": {
+            "goal": 0.99,
+            "constraints": 0.99,
+            "criteria": 0.99,
+            "context": 0.98
+          },
+          "weakest_dimension": "context"
+        }
+      ],
+      "deferrals": [],
+      "last_targeted_component_id": "queue-history-links"
+    },
+    "ontology_snapshots": [
+      {
+        "round": 8,
+        "entities": [
+          {
+            "name": "Design result",
+            "type": "external fixture",
+            "fields": [
+              "preview",
+              "copy",
+              "QA-required status",
+              "asset reference",
+              "hash"
+            ],
+            "relationships": [
+              "is reviewed before selection"
+            ]
+          },
+          {
+            "name": "QA review",
+            "type": "core domain",
+            "fields": [
+              "pass/delete",
+              "fixture marker"
+            ],
+            "relationships": [
+              "reviews Design result"
+            ]
+          },
+          {
+            "name": "Selection handoff",
+            "type": "fixture state",
+            "fields": [
+              "selected output",
+              "fixture manifest hash"
+            ],
+            "relationships": [
+              "is created by one pass action and precedes fixture Auto handoff"
+            ]
+          },
+          {
+            "name": "Auto read-back receipt",
+            "type": "external fixture",
+            "fields": [
+              "handoff status",
+              "read-back status",
+              "simulated fixture marker"
+            ],
+            "relationships": [
+              "reports after Selection handoff"
+            ]
+          },
+          {
+            "name": "Queue/History link",
+            "type": "supporting view",
+            "fields": [
+              "existing job reference",
+              "opens existing unfiltered job-history panel"
+            ],
+            "relationships": [
+              "shows existing Comfy lifecycle"
+            ]
+          }
+        ],
+        "stability_ratio": 1,
+        "new": 0,
+        "changed": 0,
+        "stable": 5,
+        "removed": 0,
+        "matching_reasoning": "All entities matched by name; selection handoff was explicitly classified as fixture state."
+      }
+    ],
+    "auto_answered_rounds": [],
+    "lateral_reviews": [
+      {
+        "round": 7,
+        "trigger": "ready milestone and closure audit",
+        "personas": [
+          "closure-audit",
+          "freshness-audit",
+          "spec-coverage"
+        ],
+        "findings": "Closure blocker resolved: selection, queue, and read-back are explicitly simulated and non-authoritative. Audit flags only WATCH-level provenance/freshness follow-up; no source contradiction changes the first-slice scope.",
+        "source_citations": [
+          ".hermes/phase0/contracts/backend-package-and-templates.md:235-243",
+          "src/extensions/core/omarketing/assetsPresentation.ts:59-139",
+          ".hermes/plans/omarketing-full-replacement-plan.md:902-923"
+        ],
+        "folded_into": "Closure and restate gate."
+      }
+    ],
+    "lateral_panel_failures": 0,
+    "auto_answer_streak": 0,
+    "refined_rounds": [
+      1,
+      5
+    ],
+    "closure_overrides": [
+      {
+        "round": 7,
+        "gap": "Fixture pass/selection was not explicitly non-authoritative.",
+        "resolution_round": 8,
+        "resolution": "User confirmed all selection, queue, and read-back states are simulated fixtures and real persistence/publishing are deferred."
+      }
+    ],
+    "ambiguity_milestone": "ready",
+    "architect_failures": 1,
+    "ambiguity_floor": {
+      "floor": 0,
+      "disputed_fact_count": 0,
+      "unscored_active_component_count": 0,
+      "auto_answer_ratio": 0
+    },
+    "current_ambiguity": 0.02,
+    "restated_goal": "기존 ComfyUI 안에서, 사용자는 예시 디자인 결과의 미리보기와 문구를 확인하고 한 후보를 통과시키며, 이 통과는 예시 최종 선택과 예시 Auto 발행 대기열 진입을 표시하고, 예시 읽기 결과와 기존 작업 기록 화면으로의 링크를 확인한다."
+  },
+  "state_revision": 17,
+  "spec_slug": "omarketing-comfy-marketing-flow-ui-v1",
+  "spec_path": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing/.gjc/_session-01a05cf3-822d-7485-aba8-592c4f84fee1/specs/deep-interview-omarketing-comfy-marketing-flow-ui-v1.md",
+  "spec_sha256": "d1fbb6c6144a060f56c5f03000782df923273f7e6a17cc97e029ec0629f4a9bf",
+  "spec_stage": "final",
+  "spec_persisted_at": "2026-09-01T13:14:32.757Z"
+}

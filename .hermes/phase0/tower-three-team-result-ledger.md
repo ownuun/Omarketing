@@ -1,0 +1,26 @@
+## Worker Result — omarketing-three-team-gate-20260827
+| Field | Report |
+|---|---|
+| task-id | omarketing-three-team-gate-20260827 |
+| one-line result | 개발 Phase 0 PASS, Phase 1 foundation 제한 범위 GO; 자동화→Odesign 실제 schema handoff와 production 검증은 미완료 |
+| changed files/artifacts | uncommitted — `.hermes/plans/omarketing-full-replacement-plan.md`, `.hermes/phase0/tower-three-team-verdict.md`, `.hermes/phase0/tower-three-team-result-ledger.md` |
+| verification evidence | check-jsonschema metaschema/fixture PASS; screenshot 15개 hash/size/dimension PASS; Odesign AJV strict compile PASS; Odesign validator 12/12 PASS; handoff manifest 155개와 source-copy 146개 SHA-256 mismatch 0; 권리 slot 6개 교차검산 PASS; 한국어 WebM Opus packet warning 재현 |
+| scope compliance | 계약·evidence의 read-only 검증과 계획서 상태 통합만 수행; 제품 source, backend, provider, 배포, commit/push 미수정·미실행 |
+| risks/gaps/blockers | Odesign schema actual instance 없음; 실제 분석·제작·QA 미실행; 한국어 WebM audio decode warning; backend/gateway/provider/E2E/release receipt 없음 |
+| recommended next step | 자동화팀이 Odesign input schema v1 실제 instance를 만들고, Odesign이 read-back 및 6-slot capability preflight를 수행 |
+
+## Tool Evaluation — omarketing-three-team-gate-20260827
+| Field | Report |
+|---|---|
+| runtime/model family | Hermes Project Tower / OpenAI GPT family |
+| skills/plugins/tools actually used | read_file, search_files, execute_code, terminal, patch, write_file, todo, MonkeyTower `mt result`/`mt judge`; plan, cross-team-project-orchestration, grounded-citations, github-repo-management, hermes-agent, comfyui skills |
+| route mode | proven tower-owned evidence verification |
+| why this tool helped | 여러 팀의 선언 수치와 실제 파일·schema·hash·decoder 결과를 같은 기준으로 재검산하고 계획서 충돌을 즉시 고칠 수 있었다. |
+| friction or failure behavior | 첫 Python jsonschema 검사는 상대 `$ref` resolver 설정 때문에 실패했으나 팀이 사용한 exact check-jsonschema 명령으로 재실행해 PASS를 확인했다. `mt judge`는 자동 verdict가 아니라 필수 checklist를 출력하므로 Tower가 각 항목을 판정해야 한다. |
+| evidence quality | strong — 실제 schema validator, 전체 handoff manifest hash, source-copy hash, screenshot bytes/dimensions, decoder read-back을 직접 실행했다. 외부 법률 판단과 production 실행은 범위 밖이라 승인하지 않았다. |
+| would use again for this task type? | yes — cross-team handoff는 각 팀 보고서보다 공유 actual instance와 read-back을 우선 검증해야 한다. |
+| reusable lesson for MonkeyTower | 팀별 PASS가 모두 있어도 shared schema actual instance가 없으면 end-to-end handoff는 미완료다. 미디어 decode는 exit code뿐 아니라 stderr warning도 gate해야 한다. |
+| project-only facts to keep out of shared playbook | Omarketing allowlist, backend pin, specific handoff paths와 Opus 경고 자산 |
+| should tower run `mt learn <id>`? | yes — shared-instance handoff와 media stderr gate는 다른 프로젝트에도 재사용 가능하다. |
+
+━━━━━━━━━━ TASK-ID: omarketing-three-team-gate-20260827 ━━━━━━━━━━

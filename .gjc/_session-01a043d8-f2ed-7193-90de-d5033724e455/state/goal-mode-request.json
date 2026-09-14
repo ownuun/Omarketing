@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "kind": "goal_mode_request",
+  "source": "ultragoal",
+  "objective": "Complete the durable ultragoal plan in .gjc/ultragoal/goals.json, including later accepted/appended stories, under the original brief constraints; use .gjc/ultragoal/ledger.jsonl as the audit trail.",
+  "createdAt": "2026-08-30T07:50:18.546Z",
+  "goalsPath": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing/.gjc/_session-01a043d8-f2ed-7193-90de-d5033724e455/ultragoal/goals.json",
+  "provenance": {
+    "source": "ultragoal",
+    "runId": "01a043d8-f2ed-7193-90de-d5033724e455",
+    "goalId": "G001"
+  },
+  "sessionId": "01a043d8-f2ed-7193-90de-d5033724e455"
+}

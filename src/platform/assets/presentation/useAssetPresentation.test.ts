@@ -1,6 +1,6 @@
 import { fromPartial } from '@total-typescript/shoehorn'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import type { Ref } from 'vue'
 
 import type { AssetItem } from '@/platform/assets/schemas/assetSchema'
@@ -154,8 +154,718 @@ interface PresentationHarness {
   adjacentTargetsRef: Ref<readonly AssetPresentationTarget[]>
   environmentRef: Ref<PresentationEnvironment>
   scopeKeyRef: Ref<string | null>
+  workflowLocatorRef: Ref<string | null>
+  projectKeyRef: Ref<string | null>
+  runKeyRef: Ref<string | null>
   presentation: ReturnType<typeof useAssetPresentation>
 }
+
+describe('local selection host identity safety', () => {
+  describe.for([
+    'reopen',
+    'scope',
+    'workflow',
+    'environment',
+    'provider',
+    'retry'
+  ] as const)('publication boundary: %s', (boundary) => {
+    it.for(['pending', 'ready'] as const)(
+      'never publishes an obsolete success into %s replacement metadata',
+      async (replacement) => {
+        await checkObsoletePublication(boundary, replacement, false)
+      }
+    )
+    it.for(['pending', 'ready'] as const)(
+      'never publishes an obsolete rejection into %s replacement metadata',
+      async (replacement) => {
+        await checkObsoletePublication(boundary, replacement, true)
+      }
+    )
+  })
+
+  describe.for([
+    'retry',
+    'reopen',
+    'scope',
+    'workflow',
+    'environment',
+    'provider',
+    'project',
+    'run'
+  ] as const)('action ownership boundary: %s', (boundary) => {
+    describe.for(['select', 'fresh'] as const)(
+      'replacement action: %s',
+      (replacementId) => {
+        it.for(['success', 'unchanged', 'error', 'malformed'] as const)(
+          'keeps replacement pending after obsolete %s completion',
+          async (outcome) => {
+            const target = makeTarget(createOutputAsset())
+            const old = createDeferred<PresentationActionResult>()
+            const fresh = createDeferred<PresentationActionResult>()
+            const signals: AbortSignal[] = []
+            const execute = vi.fn(
+              (input: Parameters<PresentationAction['execute']>[0]) => {
+                signals.push(input.context.signal)
+                return signals.length === 1 ? old.promise : fresh.promise
+              }
+            )
+            const load = vi.fn(async () => [
+              readyEntry(target.assetId, makeDetail({ sections: [] }))
+            ])
+            const provider = makeProvider({
+              loadMetadataBatch: load,
+              actions: ['select', 'fresh'].map((id) => ({
+                id,
+                labelKey: 'test.select',
+                accessibleDescriptionKey: 'test.select',
+                intent: 'confirm',
+                requiresOutputLocator: false,
+                isAvailable: () => true,
+                execute
+              }))
+            })
+            const h = createHarness({
+              providers: [provider],
+              targets: [target],
+              activeTarget: target,
+              workflowLocator: 'workflow-a'
+            })
+            await vi.waitFor(() =>
+              expect(
+                h.presentation.metadataFor(provider.id, target.assetId).status
+              ).toBe('ready')
+            )
+            const oldRun = h.presentation.executeAction(provider.id, 'select')
+            const settledOld = oldRun.catch(() => undefined)
+            if (boundary === 'retry') h.presentation.retryProvider(provider.id)
+            else if (boundary === 'reopen') {
+              h.activeTargetRef.value = null
+              h.activeTargetRef.value = target
+            } else if (boundary === 'scope') {
+              h.scopeKeyRef.value = 'other'
+              h.scopeKeyRef.value = 'scope-1'
+            } else if (boundary === 'workflow') {
+              h.workflowLocatorRef.value = 'other'
+              h.workflowLocatorRef.value = 'workflow-a'
+            } else if (boundary === 'environment') {
+              h.environmentRef.value = 'cloud'
+              h.environmentRef.value = 'localhost'
+            } else if (boundary === 'project') {
+              h.projectKeyRef.value = 'other'
+              h.projectKeyRef.value = null
+            } else if (boundary === 'run') {
+              h.runKeyRef.value = 'other'
+              h.runKeyRef.value = null
+            } else {
+              h.registrations[0].unregister()
+              h.registry.register(provider)
+            }
+            await vi.waitFor(() =>
+              expect(
+                h.presentation.metadataFor(provider.id, target.assetId).status
+              ).toBe('ready')
+            )
+            const freshRun = h.presentation.executeAction(
+              provider.id,
+              replacementId
+            )
+            const settledFresh = freshRun.catch(() => undefined)
+            const state = () =>
+              h.presentation.lightboxProps.value.presentationActionStates.find(
+                (action) => action.actionId === replacementId
+              )
+            expect(execute).toHaveBeenCalledTimes(2)
+            expect(state()?.pending).toBe(true)
+            const publications: unknown[] = []
+            pendingDisposals.push(
+              watch(
+                h.presentation.lightboxProps,
+                (props) => {
+                  for (const action of props.presentationActionStates) {
+                    if (action.resultStatus || action.errorMessageKey)
+                      publications.push(action)
+                  }
+                },
+                { flush: 'sync' }
+              )
+            )
+            const loadsBefore = load.mock.calls.length
+            if (outcome === 'success')
+              old.resolve({ status: 'succeeded', safeMessageKey: 'test.old' })
+            else if (outcome === 'unchanged')
+              old.resolve({ status: 'unchanged', safeMessageKey: 'test.old' })
+            else if (outcome === 'malformed')
+              old.resolve({
+                status: 'invalid'
+              } as unknown as PresentationActionResult)
+            else old.reject(new Error('obsolete failure'))
+            await settledOld
+            await Promise.resolve()
+            expect(state()?.pending).toBe(true)
+            expect(state()?.resultStatus).toBeUndefined()
+            expect(state()?.errorMessageKey).toBeUndefined()
+            expect(publications).toEqual([])
+            expect(load).toHaveBeenCalledTimes(loadsBefore)
+            expect(
+              h.presentation.metadataFor(provider.id, target.assetId).status
+            ).toBe('ready')
+            expect(
+              h.presentation.executeAction(provider.id, replacementId)
+            ).toBe(freshRun)
+            expect(signals[1].aborted).toBe(false)
+            h.activeTargetRef.value = null
+            expect(signals[1].aborted).toBe(true)
+            fresh.resolve({ status: 'succeeded', safeMessageKey: 'test.fresh' })
+            await settledFresh
+          }
+        )
+      }
+    )
+  })
+
+  describe.for(['succeeded', 'unchanged', 'error', 'malformed'] as const)(
+    'settled-action invariant: %s',
+    (outcome) => {
+      describe.for(['ready', 'loading', 'error', 'not-applicable'] as const)(
+        'reload state: %s',
+        (reloadStatus) => {
+          it.for(['immediate', 'delayed'] as const)(
+            'settles only its own pending state with %s metadata completion',
+            async (order) => {
+              const target = makeTarget(createOutputAsset())
+              const own = createDeferred<PresentationActionResult>()
+              const driver = createDeferred<PresentationActionResult>()
+              const recovery = createDeferred<PresentationActionResult>()
+              const peer = createDeferred<PresentationActionResult>()
+              const reload = createDeferred<readonly MetadataBatchEntry[]>()
+              const ready = [readyEntry(target.assetId)]
+              const terminal: readonly MetadataBatchEntry[] =
+                reloadStatus === 'error'
+                  ? [
+                      {
+                        assetId: target.assetId,
+                        state: {
+                          status: 'error',
+                          safeMessageKey: 'auth.denied'
+                        }
+                      }
+                    ]
+                  : reloadStatus === 'not-applicable'
+                    ? [notApplicableEntry(target.assetId)]
+                    : ready
+              let loads = 0
+              const load = vi.fn(() => {
+                loads += 1
+                if (loads !== 2) return Promise.resolve(ready)
+                return order === 'immediate' && reloadStatus !== 'loading'
+                  ? Promise.resolve(terminal)
+                  : reload.promise
+              })
+              const executions = { own, driver, recovery, peer }
+              const provider = makeProvider({
+                loadMetadataBatch: load,
+                actions: (
+                  Object.keys(executions) as (keyof typeof executions)[]
+                ).map((id) => ({
+                  id,
+                  labelKey: 'test.action',
+                  accessibleDescriptionKey: 'test.action',
+                  intent: 'confirm',
+                  requiresOutputLocator: false,
+                  isAvailable: () => true,
+                  execute: () => executions[id].promise
+                }))
+              })
+              const { presentation } = createHarness({
+                providers: [provider],
+                targets: [target],
+                activeTarget: target
+              })
+              const state = (id: string) =>
+                presentation.lightboxProps.value.presentationActionStates.find(
+                  (action) => action.actionId === id
+                )
+              await vi.waitFor(() =>
+                expect(
+                  presentation.metadataFor(provider.id, target.assetId).status
+                ).toBe('ready')
+              )
+              const ownRun = presentation.executeAction(provider.id, 'own')
+              const settledOwn = ownRun.catch(() => undefined)
+              const driverRun = presentation.executeAction(
+                provider.id,
+                'driver'
+              )
+              const recoveryRun = presentation.executeAction(
+                provider.id,
+                'recovery'
+              )
+              const peerRun = presentation.executeAction(provider.id, 'peer')
+              const settledPeer = peerRun.catch(() => undefined)
+              expect(state('own')?.pending).toBe(true)
+              expect(state('peer')?.pending).toBe(true)
+              const successful =
+                outcome === 'succeeded' || outcome === 'unchanged'
+              const done = {
+                status: 'succeeded',
+                safeMessageKey: 'test.done'
+              } as const
+              // Invalid/rejected actions do not reload. A concurrent current
+              // action supplies the metadata transition without invalidation.
+              if (!successful) {
+                driver.resolve(done)
+                await driverRun
+              }
+              if (successful)
+                own.resolve({ status: outcome, safeMessageKey: 'test.own' })
+              else if (outcome === 'error')
+                own.reject(new Error('action failed'))
+              else
+                own.resolve({
+                  status: 'invalid'
+                } as unknown as PresentationActionResult)
+              await settledOwn
+              await Promise.resolve()
+              expect(load).toHaveBeenCalledTimes(2)
+              const initialStatus =
+                order === 'immediate' && reloadStatus !== 'loading'
+                  ? reloadStatus
+                  : 'loading'
+              expect(
+                presentation.metadataFor(provider.id, target.assetId).status
+              ).toBe(initialStatus)
+              if (initialStatus !== 'not-applicable') {
+                expect(state('own')?.pending).toBe(false)
+                expect(state('peer')?.pending).toBe(true)
+                expect(state('own')?.resultStatus).toBe(
+                  successful &&
+                    !(outcome === 'succeeded' && initialStatus === 'error')
+                    ? outcome
+                    : undefined
+                )
+                expect(state('own')?.errorMessageKey).toBe(
+                  successful ? undefined : 'assetPresentation.actions.failed'
+                )
+              } else
+                expect(
+                  presentation.lightboxProps.value.presentationActionStates
+                ).toEqual([])
+              reload.resolve(terminal)
+              await vi.waitFor(() =>
+                expect(
+                  presentation.metadataFor(provider.id, target.assetId).status
+                ).toBe(reloadStatus === 'loading' ? 'ready' : reloadStatus)
+              )
+              if (reloadStatus !== 'not-applicable') {
+                expect(state('own')?.pending).toBe(false)
+                expect(state('peer')?.pending).toBe(true)
+                expect(state('own')?.resultStatus).toBe(
+                  successful &&
+                    !(outcome === 'succeeded' && reloadStatus === 'error')
+                    ? outcome
+                    : undefined
+                )
+              }
+              // Reveal hidden not-applicable state WITHOUT an epoch reset.
+              // A zombie running entry would survive this action-owned reload.
+              recovery.resolve(done)
+              await recoveryRun
+              await vi.waitFor(() =>
+                expect(
+                  presentation.metadataFor(provider.id, target.assetId).status
+                ).toBe('ready')
+              )
+              expect(state('own')?.pending).toBe(false)
+              expect(state('own')?.resultStatus).toBeUndefined()
+              expect(state('peer')?.pending).toBe(true)
+              expect(presentation.executeAction(provider.id, 'peer')).toBe(
+                peerRun
+              )
+              if (successful) {
+                driver.resolve(done)
+                await driverRun
+              }
+              peer.reject(new Error('peer settled'))
+              await settledPeer
+              expect(state('peer')?.pending).toBe(false)
+              expect(state('peer')?.errorMessageKey).toBe(
+                'assetPresentation.actions.failed'
+              )
+            }
+          )
+        }
+      )
+    }
+  )
+
+  it('keeps another current action pending through an owned reload', async () => {
+    const target = makeTarget(createOutputAsset())
+    const first = createDeferred<PresentationActionResult>()
+    const second = createDeferred<PresentationActionResult>()
+    const provider = makeProvider({
+      loadMetadataBatch: async () => [readyEntry(target.assetId)],
+      actions: ['first', 'second'].map((id) => ({
+        id,
+        labelKey: 'test.action',
+        accessibleDescriptionKey: 'test.action',
+        intent: 'confirm',
+        requiresOutputLocator: false,
+        isAvailable: () => true,
+        execute: () => (id === 'first' ? first.promise : second.promise)
+      }))
+    })
+    const h = createHarness({
+      providers: [provider],
+      targets: [target],
+      activeTarget: target
+    })
+    await vi.waitFor(() =>
+      expect(
+        h.presentation.metadataFor(provider.id, target.assetId).status
+      ).toBe('ready')
+    )
+    const firstRun = h.presentation.executeAction(provider.id, 'first')
+    const secondRun = h.presentation.executeAction(provider.id, 'second')
+    first.resolve({ status: 'succeeded', safeMessageKey: 'test.first' })
+    await firstRun
+    expect(
+      h.presentation.lightboxProps.value.presentationActionStates.find(
+        (action) => action.actionId === 'second'
+      )?.pending
+    ).toBe(true)
+    second.resolve({ status: 'unchanged', safeMessageKey: 'test.second' })
+    await secondRun
+    expect(
+      h.presentation.lightboxProps.value.presentationActionStates.find(
+        (action) => action.actionId === 'second'
+      )
+    ).toMatchObject({ pending: false, resultStatus: 'unchanged' })
+  })
+
+  async function checkObsoletePublication(
+    boundary:
+      | 'reopen'
+      | 'scope'
+      | 'workflow'
+      | 'environment'
+      | 'provider'
+      | 'retry',
+    replacement: 'pending' | 'ready',
+    rejected: boolean
+  ) {
+    const target = makeTarget(createOutputAsset())
+    const oldAction = createDeferred<PresentationActionResult>()
+    const replacementRead = createDeferred<readonly MetadataBatchEntry[]>()
+    const ordinaryReady = [
+      readyEntry(target.assetId, makeDetail({ sections: [] }))
+    ]
+    let loads = 0
+    let invalidated = false
+    const publications: unknown[] = []
+    const provider = makeProvider({
+      loadMetadataBatch: () => {
+        loads += 1
+        if (loads === 1) return Promise.resolve(ordinaryReady)
+        // runProviderCycle starts synchronously inside reloadProvider; this
+        // microtask runs after the guarded action drops its controller but
+        // before its result handler can publish UI feedback.
+        if (loads === 2 && !rejected) queueMicrotask(invalidate)
+        return replacement === 'ready'
+          ? Promise.resolve(ordinaryReady)
+          : replacementRead.promise
+      },
+      actions: [
+        {
+          id: 'select',
+          labelKey: 'test.select',
+          accessibleDescriptionKey: 'test.select',
+          intent: 'confirm',
+          requiresOutputLocator: false,
+          isAvailable: () => true,
+          execute: () => oldAction.promise
+        }
+      ]
+    })
+    const h = createHarness({
+      providers: [provider],
+      targets: [target],
+      activeTarget: target,
+      workflowLocator: 'workflow-a'
+    })
+    const presentation = h.presentation
+    const workflow = h.workflowLocatorRef
+    function invalidate() {
+      invalidated = true
+      if (boundary === 'reopen') {
+        h.activeTargetRef.value = null
+        h.activeTargetRef.value = target
+      } else if (boundary === 'scope') {
+        h.scopeKeyRef.value = 'other'
+        h.scopeKeyRef.value = 'scope-1'
+      } else if (boundary === 'workflow') {
+        workflow.value = 'other'
+        workflow.value = 'workflow-a'
+      } else if (boundary === 'environment') {
+        h.environmentRef.value = 'cloud'
+        h.environmentRef.value = 'localhost'
+      } else if (boundary === 'provider') {
+        h.registrations[0].unregister()
+        h.registry.register(provider)
+      } else presentation.retryProvider(provider.id)
+    }
+    const stop = watch(
+      presentation.lightboxProps,
+      (props) => {
+        if (!invalidated) return
+        for (const action of props.presentationActionStates) {
+          if (action.resultStatus || action.errorMessageKey)
+            publications.push(action)
+        }
+      },
+      { flush: 'sync' }
+    )
+    pendingDisposals.push(stop)
+    await vi.waitFor(() =>
+      expect(presentation.metadataFor(provider.id, target.assetId).status).toBe(
+        'ready'
+      )
+    )
+    const run = presentation.executeAction(provider.id, 'select')
+    if (rejected) {
+      oldAction.reject(new Error('old action failed'))
+      queueMicrotask(invalidate)
+      await expect(run).rejects.toMatchObject({
+        safeMessageKey: 'assetPresentation.actions.failed'
+      })
+    } else {
+      oldAction.resolve({
+        status: 'succeeded',
+        safeMessageKey: 'omarketing.assets.selection.confirmed'
+      })
+      await expect(run).resolves.toMatchObject({ status: 'succeeded' })
+    }
+    await vi.waitFor(() => expect(invalidated).toBe(true))
+    expect(presentation.metadataFor(provider.id, target.assetId).status).toBe(
+      replacement === 'pending' ? 'loading' : 'ready'
+    )
+    expect(publications).toEqual([])
+    replacementRead.resolve(ordinaryReady)
+    await vi.waitFor(() =>
+      expect(presentation.metadataFor(provider.id, target.assetId).status).toBe(
+        'ready'
+      )
+    )
+    expect(
+      presentation.lightboxProps.value.presentationDetails[0].sections
+    ).toEqual([])
+    expect(
+      presentation.lightboxProps.value.presentationActionStates[0]
+    ).toMatchObject({ pending: false })
+    expect(
+      presentation.lightboxProps.value.presentationActionStates[0].resultStatus
+    ).toBeUndefined()
+    expect(
+      presentation.lightboxProps.value.presentationActionStates[0]
+        .errorMessageKey
+    ).toBeUndefined()
+    expect(publications).toEqual([])
+  }
+  it.for(['succeeded', 'unchanged'] as const)(
+    'preserves immediate %s results while reloading and handles late auth failure',
+    async (status) => {
+      const target = makeTarget(createOutputAsset())
+      const reload = createDeferred<readonly MetadataBatchEntry[]>()
+      let loads = 0
+      const message =
+        status === 'succeeded'
+          ? 'omarketing.assets.selection.confirmed'
+          : 'omarketing.assets.selection.authRequired'
+      const h = createHarness({
+        providers: [
+          makeProvider({
+            loadMetadataBatch: async () =>
+              ++loads === 1 ? [readyEntry(target.assetId)] : reload.promise,
+            actions: [
+              {
+                id: 'select',
+                labelKey: 'test.select',
+                accessibleDescriptionKey: 'test.select',
+                intent: 'confirm',
+                requiresOutputLocator: false,
+                isAvailable: () => true,
+                execute: async () => ({ status, safeMessageKey: message })
+              }
+            ]
+          })
+        ],
+        targets: [target],
+        activeTarget: target
+      })
+      await vi.waitFor(() =>
+        expect(
+          h.presentation.metadataFor('test.provider', target.assetId).status
+        ).toBe('ready')
+      )
+      await h.presentation.executeAction('test.provider', 'select')
+      await vi.waitFor(() =>
+        expect(
+          h.presentation.lightboxProps.value.presentationActionStates[0]
+        ).toMatchObject({ resultStatus: status, safeMessageKey: message })
+      )
+      reload.resolve([
+        {
+          assetId: target.assetId,
+          state: {
+            status: 'error',
+            safeMessageKey: 'omarketing.assets.selection.authRequired'
+          }
+        }
+      ])
+      await vi.waitFor(() =>
+        expect(
+          h.presentation.metadataFor('test.provider', target.assetId).status
+        ).toBe('error')
+      )
+      expect(
+        h.presentation.lightboxProps.value.presentationActionStates[0]
+          .resultStatus
+      ).toBe(status === 'succeeded' ? undefined : 'unchanged')
+    }
+  )
+  it.for(['reopen', 'scope', 'reload', 'action-reload'] as const)(
+    'discards stale confirmed feedback at the %s authority boundary',
+    async (boundary) => {
+      const target = makeTarget(createOutputAsset())
+      let denied = false
+      const load = vi.fn(async (request: MetadataBatchRequest) =>
+        request.targets.map(
+          (t): MetadataBatchEntry =>
+            denied
+              ? {
+                  assetId: t.assetId,
+                  state: {
+                    status: 'error',
+                    safeMessageKey: 'omarketing.assets.selection.authRequired'
+                  }
+                }
+              : readyEntry(t.assetId)
+        )
+      )
+      const h = createHarness({
+        providers: [
+          makeProvider({
+            loadMetadataBatch: load,
+            actions: [
+              {
+                id: 'select',
+                labelKey: 'test.select',
+                accessibleDescriptionKey: 'test.select',
+                intent: 'confirm',
+                requiresOutputLocator: false,
+                isAvailable: () => true,
+                execute: async () => {
+                  if (boundary === 'action-reload') denied = true
+                  return {
+                    status: 'succeeded',
+                    safeMessageKey: 'omarketing.assets.selection.confirmed'
+                  }
+                }
+              }
+            ]
+          })
+        ],
+        targets: [target],
+        activeTarget: target
+      })
+      await vi.waitFor(() =>
+        expect(
+          h.presentation.metadataFor('test.provider', target.assetId).status
+        ).toBe('ready')
+      )
+      await h.presentation.executeAction('test.provider', 'select')
+      if (boundary !== 'action-reload') {
+        await vi.waitFor(() =>
+          expect(
+            h.presentation.lightboxProps.value.presentationActionStates[0]
+              .resultStatus
+          ).toBe('succeeded')
+        )
+        denied = true
+        if (boundary === 'reopen') {
+          h.activeTargetRef.value = null
+          h.activeTargetRef.value = target
+        } else if (boundary === 'scope') {
+          const previous = h.scopeKeyRef.value
+          h.scopeKeyRef.value = 'another-owner'
+          h.scopeKeyRef.value = previous
+        } else h.presentation.retryProvider('test.provider')
+      }
+      await vi.waitFor(() =>
+        expect(
+          h.presentation.lightboxProps.value.presentationDetails[0]
+        ).toMatchObject({
+          status: 'error',
+          safeMessageKey: 'omarketing.assets.selection.authRequired'
+        })
+      )
+      expect(
+        h.presentation.lightboxProps.value.presentationActionStates[0]
+          .resultStatus
+      ).toBeUndefined()
+      expect(
+        h.presentation.lightboxProps.value.presentationActionStates[0]
+          .safeMessageKey
+      ).toBeUndefined()
+      denied = false
+      h.presentation.requestMetadataWindow()
+      await vi.waitFor(() =>
+        expect(
+          h.presentation.metadataFor('test.provider', target.assetId).status
+        ).toBe('ready')
+      )
+      expect(
+        h.presentation.lightboxProps.value.presentationActionStates[0]
+          .resultStatus
+      ).toBeUndefined()
+    }
+  )
+  it('does not choose first target when one assetId has two output identities', async () => {
+    const first = createAssetPresentationTarget(createOutputAsset(), 'output')
+    const second = createAssetPresentationTarget(
+      createOutputAsset({ name: 'different.png' }),
+      'output'
+    )
+    const load = vi.fn(async (request: MetadataBatchRequest) =>
+      request.targets.map((t) => readyEntry(t.assetId))
+    )
+    const h = createHarness({
+      providers: [makeProvider({ loadMetadataBatch: load })],
+      targets: [first, second],
+      activeTarget: first
+    })
+    await vi.waitFor(() =>
+      expect(
+        h.presentation.metadataFor('test.provider', first.assetId).status
+      ).toBe('error')
+    )
+    expect(load.mock.calls.flatMap((c) => c[0].targets)).toEqual([])
+  })
+  it('rereads detail on close and reopen instead of trusting old terminal cache', async () => {
+    const target = makeTarget(createOutputAsset())
+    const load = vi.fn(async (request: MetadataBatchRequest) =>
+      request.targets.map((t) => readyEntry(t.assetId))
+    )
+    const h = createHarness({
+      providers: [makeProvider({ loadMetadataBatch: load })],
+      targets: [target],
+      activeTarget: target
+    })
+    await vi.waitFor(() => expect(load).toHaveBeenCalledTimes(1))
+    h.activeTargetRef.value = null
+    h.activeTargetRef.value = target
+    await vi.waitFor(() => expect(load).toHaveBeenCalledTimes(2))
+  })
+})
 
 const pendingDisposals: Array<() => void> = []
 
@@ -184,16 +894,19 @@ function createHarness(options: HarnessOptions = {}): PresentationHarness {
     options.environment ?? 'localhost'
   )
   const scopeKeyRef = ref<string | null>(options.scopeKey ?? 'scope-1')
+  const workflowLocatorRef = ref<string | null>(options.workflowLocator ?? null)
 
+  const projectKeyRef = ref<string | null>(null)
+  const runKeyRef = ref<string | null>(null)
   const presentation = useAssetPresentation({
     registry,
     targets: targetsRef,
     activeTarget: activeTargetRef,
     adjacentTargets: adjacentTargetsRef,
     environment: environmentRef,
-    workflowLocator: () => options.workflowLocator ?? null,
-    projectKey: () => null,
-    runKey: () => null,
+    workflowLocator: workflowLocatorRef,
+    projectKey: projectKeyRef,
+    runKey: runKeyRef,
     scopeKey: scopeKeyRef
   })
   pendingDisposals.push(() => presentation.dispose())
@@ -206,6 +919,9 @@ function createHarness(options: HarnessOptions = {}): PresentationHarness {
     adjacentTargetsRef,
     environmentRef,
     scopeKeyRef,
+    workflowLocatorRef,
+    projectKeyRef,
+    runKeyRef,
     presentation
   }
 }

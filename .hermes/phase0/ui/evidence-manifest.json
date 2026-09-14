@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "captured_at": "2026-08-27T02:24:24+09:00",
+  "last_captured_at": "2026-08-27T02:49:12+09:00",
+  "viewport": {
+    "width": 1440,
+    "height": 1000,
+    "device_scale_factor": 1
+  },
+  "fixture_capture": {
+    "scope": "screenshots 13-15 only",
+    "method": "Puppeteer request interception for /api/jobs/** and /api/view in one isolated tab",
+    "job_shape": "one completed in-memory job with five image outputs",
+    "backend_mutated": false,
+    "proves": "existing Assets parent/output-stack/MediaLightbox host behavior",
+    "does_not_prove": "backend persistence, Omarketing provider integration, selection authority, or output-byte verification"
+  },
+  "screenshots": [
+    {
+      "file": "screenshots/01-workspace-initial.png",
+      "sha256": "04d5b323df62fd5380e3988e324e369c21aa6f291c30399cf5abe7f5262ed0b0",
+      "width": 1440,
+      "height": 1000,
+      "bytes": 173470
+    },
+    {
+      "file": "screenshots/02-main-menu.png",
+      "sha256": "f284600082b127834d279dfb617f3f7fb922ec07e6f5b905f1decd39ffef92b6",
+      "width": 1440,
+      "height": 1000,
+      "bytes": 183740
+    },
+    {
+      "file": "screenshots/03-assets-localhost.png",
+      "sha256": "e46b3c72f3b1c7f7476d55a06c3d78e0af57369fdcc77893de28afeb0abb7fbc",
+      "width": 1440,
+      "height": 1000,
+      "bytes": 173455
+    },
+    {
+      "file": "screenshots/04-node-library.png",
+      "sha256": "ebf4d04d18cbe260525fb07ec906cb58d517c9c2472eceb66ebe69e9ca2978dd",
+      "width": 1440,
+      "height": 1000,
+      "bytes": 181437
+    },
+    {
+      "file": "screenshots/05-workflows.png",
+      "sha256": "7a6d0eea0d1f457fa66415966e02546e832ae80a5ce652aa106714cb17dd9284",
+      "width": 1440,
+      "height": 1000,
+      "bytes": 165059
+    },
+    {
+      "file": "screenshots/06-templates-gallery.png",
+      "sha256": "af83f54f0c5fa099aad3fd6056838e025c7eb5ad3345eeb91a978ffa1e3a2809",
+      "width": 1440,
+      "height": 1000,
+      "bytes": 694882
+    },
+    {
+      "file": "screenshots/07-settings.png",
+      "sha256": "acc09bc35a502265044d3ad7ff5d89ef7ba75ee6f1f5d6e92c535641ec23553a",
+      "width": 1440,
+      "height": 1000,
+      "bytes": 78911
+    },
+    {
+      "file": "screenshots/08-queue-history-overlay.png",
+      "sha256": "6ffabe9fb5b05aee14813c9434c525553ada7981003b98bf164a0bb44a31e420",
+      "width": 1440,
+      "height": 1000,
+      "bytes": 161897
+    },
+    {
+      "file": "screenshots/09-run-mode-menu.png",
+      "sha256": "e0ea35190a7874192440f2acf8cada4d4f5a7d8df01a12f7c46c29827f19991c",
+      "width": 1440,
+      "height": 1000,
+      "bytes": 165686
+    },
+    {
+      "file": "screenshots/10-help-center.png",
+      "sha256": "6d7706027e535f9bec8c6d3f49a752cbbb789d0a8425c06a016378bd479badd3",
+      "width": 1440,
+      "height": 1000,
+      "bytes": 185591
+    },
+    {
+      "file": "screenshots/11-node-context-menu.png",
+      "sha256": "cdf8b14552e0059c1084be6e3b4134d32f313833d5a88a7ebff3578cf4db18f6",
+      "width": 1440,
+      "height": 1000,
+      "bytes": 183910
+    },
+    {
+      "file": "screenshots/12-canvas-context-menu.png",
+      "sha256": "9eb3bd2d325872388e650c1fae629269bae93c7801db7e6dc703e7b47ed4434c",
+      "width": 1440,
+      "height": 1000,
+      "bytes": 178223
+    },
+    {
+      "file": "screenshots/13-assets-five-output-fixture.png",
+      "sha256": "7969dcb2e75c6c962ba0829352d45ab16af8328bf4c1e654eb107cc50bae4d2c",
+      "width": 1440,
+      "height": 1000,
+      "bytes": 169476,
+      "captured_at": "2026-08-27T02:45:57+09:00",
+      "fixture_only": true,
+      "description": "Existing Assets parent card reports five outputs"
+    },
+    {
+      "file": "screenshots/14-assets-output-stack-fixture.png",
+      "sha256": "0ae0848117a1a4caf5cb7b2a020f55f07c5795102d5050ebc53b117c40eb66b4",
+      "width": 1440,
+      "height": 1000,
+      "bytes": 182997,
+      "captured_at": "2026-08-27T02:48:06+09:00",
+      "fixture_only": true,
+      "description": "Existing job output-stack view for the remaining four outputs"
+    },
+    {
+      "file": "screenshots/15-assets-lightbox-fixture.png",
+      "sha256": "39328b09c928b9ac64621f17057655103990797da23a2068c9bd26ff90d0cda8",
+      "width": 1440,
+      "height": 1000,
+      "bytes": 77418,
+      "captured_at": "2026-08-27T02:49:12+09:00",
+      "fixture_only": true,
+      "description": "Existing Gallery lightbox with close, previous, and next controls"
+    }
+  ]
+}

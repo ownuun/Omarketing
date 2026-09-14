@@ -51,6 +51,7 @@
     <template #header>
       <!-- Filter Bar -->
       <MediaAssetFilterBar
+        v-bind="filterBarProps"
         v-model:search-query="searchQuery"
         v-model:sort-by="sortBy"
         v-model:view-mode="viewMode"
@@ -58,6 +59,10 @@
         v-model:media-type-filters="mediaTypeFilters"
         bottom-divider
         :show-generation-time-sort="activeTab === 'output'"
+        @update:presentation-filter="handlePresentationFilterUpdate"
+        @reset:presentation-filter="handlePresentationFilterReset"
+        @clear:presentation-filters="presentation.clearAllFilters"
+        @retry:presentation-provider="presentation.retryProvider"
       />
       <!-- Tab list -->
       <div
@@ -86,6 +91,36 @@
             <Skeleton class="h-4 w-3/4" />
             <Skeleton class="h-3 w-1/2" />
           </div>
+        </div>
+      </div>
+      <div
+        v-else-if="showPresentationNoMatch"
+        role="status"
+        class="flex h-full flex-col items-center justify-center gap-3 p-8 text-center"
+      >
+        <h3 class="text-base font-semibold">
+          {{ $t('sideToolbar.mediaAssets.filterNoMatches') }}
+        </h3>
+        <p class="text-sm text-muted-foreground">
+          {{ $t('assetPresentation.noMatch.message') }}
+        </p>
+        <div class="flex flex-wrap justify-center gap-2">
+          <Button
+            v-for="providerId in activePresentationProviderIds"
+            :key="providerId"
+            variant="secondary"
+            size="sm"
+            @click="presentation.clearProviderFilters(providerId)"
+          >
+            {{
+              $t('assetPresentation.filters.clearProvider', {
+                provider: providerId
+              })
+            }}
+          </Button>
+          <Button variant="secondary" size="sm" @click="clearAllAssetFilters">
+            {{ $t('assetPresentation.filters.clearAll') }}
+          </Button>
         </div>
       </div>
       <div v-else-if="showEmptyState">
@@ -154,8 +189,11 @@
     />
   </Teleport>
   <MediaLightbox
+    v-bind="lightboxProps"
     v-model:active-index="galleryActiveIndex"
     :all-gallery-items="galleryItems"
+    @execute:presentation-action="handlePresentationAction"
+    @retry:presentation-provider="presentation.retryProvider"
   />
   <MediaAssetContextMenu
     v-if="contextMenuAsset"
@@ -193,6 +231,7 @@ import {
   onMounted,
   onUnmounted,
   ref,
+  shallowRef,
   useTemplateRef,
   watch
 } from 'vue'
@@ -225,6 +264,15 @@ import { useAssetSelection } from '@/platform/assets/composables/useAssetSelecti
 import { useMediaAssetActions } from '@/platform/assets/composables/useMediaAssetActions'
 import { useMediaAssetFiltering } from '@/platform/assets/composables/useMediaAssetFiltering'
 import { useOutputStacks } from '@/platform/assets/composables/useOutputStacks'
+import { assetPresentationRegistry } from '@/platform/assets/presentation/assetPresentationRegistry'
+import type {
+  AssetPresentationTarget,
+  FilterValue
+} from '@/platform/assets/presentation/assetPresentationRegistry'
+import {
+  createAssetPresentationTarget,
+  useAssetPresentation
+} from '@/platform/assets/presentation/useAssetPresentation'
 import type { OutputAssetMetadata } from '@/platform/assets/schemas/assetMetadataSchema'
 import { getOutputAssetMetadata } from '@/platform/assets/schemas/assetMetadataSchema'
 import type { AssetItem } from '@/platform/assets/schemas/assetSchema'
@@ -235,9 +283,11 @@ import {
 } from '@/platform/assets/utils/assetUrlUtil'
 import type { MediaKind } from '@/platform/assets/schemas/mediaAssetSchema'
 import { resolveOutputAssetItems } from '@/platform/assets/utils/outputAssetUtil'
-import { isCloud } from '@/platform/distribution/types'
+import { DISTRIBUTION, isCloud } from '@/platform/distribution/types'
+import { api } from '@/scripts/api'
 import { useDialogStore } from '@/stores/dialogStore'
 import { ResultItemImpl } from '@/stores/queueStore'
+import { useUserStore } from '@/stores/userStore'
 import {
   formatDuration,
   getMediaTypeFromFilename,
@@ -375,9 +425,75 @@ const baseAssets = computed(() => {
   return mediaAssets.value
 })
 
-// Use media asset filtering composable
-const { searchQuery, sortBy, dateFilter, mediaTypeFilters, filteredAssets } =
-  useMediaAssetFiltering(baseAssets)
+const presentationTargets = computed(() =>
+  baseAssets.value.map((asset) =>
+    createAssetPresentationTarget(asset, activeTab.value)
+  )
+)
+const presentationTargetById = computed(
+  () =>
+    new Map(
+      presentationTargets.value.map(
+        (target) => [target.assetId, target] as const
+      )
+    )
+)
+const metadataTargets = shallowRef<readonly AssetPresentationTarget[]>([])
+const adjacentPresentationTargets = shallowRef<
+  readonly AssetPresentationTarget[]
+>([])
+const activePresentationTarget = computed(
+  () =>
+    (currentGalleryAssetId.value
+      ? presentationTargetById.value.get(currentGalleryAssetId.value)
+      : null) ?? null
+)
+const userStore = useUserStore()
+const presentationScopeKey = computed(
+  () =>
+    `${api.api_base}\u0000${userStore.currentUser?.userId ?? api.user ?? ''}`
+)
+const presentation = useAssetPresentation({
+  registry: assetPresentationRegistry,
+  targets: metadataTargets,
+  activeTarget: activePresentationTarget,
+  adjacentTargets: adjacentPresentationTargets,
+  environment: () => DISTRIBUTION,
+  workflowLocator: () => null,
+  projectKey: () => null,
+  runKey: () => null,
+  scopeKey: presentationScopeKey
+})
+const { filterBarProps, lightboxProps } = presentation
+
+// Core filters run first, registered presentation predicates second, and the
+// existing sort remains last.
+const {
+  searchQuery,
+  sortBy,
+  dateFilter,
+  mediaTypeFilters,
+  coreFilteredAssets,
+  filteredAssets
+} = useMediaAssetFiltering(baseAssets, {
+  matchesPresentation: (asset) => {
+    const target = presentationTargetById.value.get(asset.id)
+    return target ? presentation.presentationDecision(target) : true
+  }
+})
+
+watch(
+  () =>
+    coreFilteredAssets.value
+      .map((asset) => presentationTargetById.value.get(asset.id))
+      .filter(
+        (target): target is AssetPresentationTarget => target !== undefined
+      ),
+  (targets) => {
+    metadataTargets.value = targets
+  },
+  { immediate: true }
+)
 
 const displayAssets = computed(() => {
   return filteredAssets.value
@@ -413,6 +529,37 @@ const previewableVisibleAssets = computed(() =>
   )
 )
 
+watch(
+  () =>
+    [
+      galleryActiveIndex.value,
+      previewableVisibleAssets.value,
+      presentationTargetById.value
+    ] as const,
+  ([index, assets, targetById]) => {
+    if (index < 0 || assets.length < 2) {
+      adjacentPresentationTargets.value = []
+      return
+    }
+    const activeAssetId = assets[index]?.id
+    const adjacentIds = new Set<string>()
+    const adjacentTargets: AssetPresentationTarget[] = []
+    for (const adjacentIndex of [
+      (index - 1 + assets.length) % assets.length,
+      (index + 1) % assets.length
+    ]) {
+      const asset = assets[adjacentIndex]
+      if (!asset || asset.id === activeAssetId) continue
+      const target = targetById.get(asset.id)
+      if (!target || adjacentIds.has(target.assetId)) continue
+      adjacentIds.add(target.assetId)
+      adjacentTargets.push(target)
+    }
+    adjacentPresentationTargets.value = adjacentTargets
+  },
+  { immediate: true }
+)
+
 const selectedAssets = computed(() => getSelectedAssets(visibleAssets.value))
 
 const totalOutputCount = computed(() =>
@@ -427,14 +574,53 @@ const isFolderLoading = computed(
   () => isInFolderView.value && folderLoading.value
 )
 
+const activePresentationProviderIds = computed(() => {
+  const providerIds = new Set<string>()
+  for (const key of Object.keys(
+    filterBarProps.value.presentationFilters ?? {}
+  )) {
+    const separator = key.lastIndexOf('/')
+    if (separator > 0) providerIds.add(key.slice(0, separator))
+  }
+  return [...providerIds]
+})
+
+const presentationLookupsSettledSuccessfully = computed(() => {
+  if (activePresentationProviderIds.value.length === 0) return false
+  const states = new Map(
+    (filterBarProps.value.presentationProviderStates ?? []).map((state) => [
+      state.providerId,
+      state.status
+    ])
+  )
+  return activePresentationProviderIds.value.every(
+    (providerId) => states.get(providerId) === 'ready'
+  )
+})
+
 const showLoadingState = computed(
   () =>
-    (loading.value || isFolderLoading.value) && displayAssets.value.length === 0
+    (loading.value || isFolderLoading.value) && baseAssets.value.length === 0
+)
+
+const showPresentationNoMatch = computed(
+  () =>
+    !loading.value &&
+    !isFolderLoading.value &&
+    baseAssets.value.length > 0 &&
+    displayAssets.value.length === 0 &&
+    (coreFilteredAssets.value.length === 0 ||
+      presentationLookupsSettledSuccessfully.value)
 )
 
 const showEmptyState = computed(
   () =>
-    !loading.value && !isFolderLoading.value && displayAssets.value.length === 0
+    !loading.value &&
+    !isFolderLoading.value &&
+    !showPresentationNoMatch.value &&
+    (baseAssets.value.length === 0 ||
+      (activePresentationProviderIds.value.length === 0 &&
+        displayAssets.value.length === 0))
 )
 
 watch(visibleAssets, (newAssets) => {
@@ -452,8 +638,64 @@ watch(visibleAssets, (newAssets) => {
 watch(galleryActiveIndex, (index) => {
   if (index === -1) {
     currentGalleryAssetId.value = null
+    return
   }
+  currentGalleryAssetId.value =
+    previewableVisibleAssets.value[index]?.id ?? null
 })
+
+function presentationFilterAddress(key: string): {
+  providerId: string
+  controlId: string
+} | null {
+  const separator = key.lastIndexOf('/')
+  if (separator <= 0 || separator === key.length - 1) return null
+  return {
+    providerId: key.slice(0, separator),
+    controlId: key.slice(separator + 1)
+  }
+}
+
+function handlePresentationFilterUpdate({
+  key,
+  value
+}: {
+  readonly key: string
+  readonly value: FilterValue
+}) {
+  const address = presentationFilterAddress(key)
+  if (!address) return
+  presentation.setFilter(address.providerId, address.controlId, value)
+}
+
+function handlePresentationFilterReset(key: string) {
+  const address = presentationFilterAddress(key)
+  if (!address) return
+  presentation.resetFilter(address.providerId, address.controlId)
+}
+
+function clearAllAssetFilters() {
+  searchQuery.value = ''
+  dateFilter.value = ''
+  mediaTypeFilters.value = []
+  presentation.clearAllFilters()
+}
+
+function handlePresentationAction({
+  assetId,
+  providerId,
+  actionId
+}: {
+  readonly assetId: string
+  readonly providerId: string
+  readonly actionId: string
+}) {
+  if (activePresentationTarget.value?.assetId !== assetId) return
+  void presentation.executeAction(providerId, actionId).catch(() => {
+    // The composable retains confirmed detail and exposes a localized action
+    // error in lightboxProps; the host must not close or optimistically mutate.
+  })
+}
 
 const galleryItems = computed(() => {
   return previewableVisibleAssets.value.map((asset) => {
@@ -468,7 +710,7 @@ const galleryItems = computed(() => {
 
     Object.defineProperty(resultItem, 'url', {
       get() {
-        return asset.preview_url || ''
+        return asset.preview_url || getAssetUrl(asset)
       },
       configurable: true
     })

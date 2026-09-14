@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "revision": 4,
+  "project_key": "5c814c1a-d883-4d7c-8f3f-a42b2107df19",
+  "workflow_locator": "workflows/summer-launch/instagram-carousel.json",
+  "run_key": "7e9256a8-a35e-47d3-9347-68f1718c685d",
+  "selections": {
+    "instagram:carousel:17893462150742103": {
+      "state": "stale",
+      "output": {
+        "job_id": "9a31c126-2563-4cb5-b892-6cb26e4c3b53",
+        "node_id": "42",
+        "directory_type": "output",
+        "subfolder": "omarketing/5c814c1a-d883-4d7c-8f3f-a42b2107df19/instagram-carousel/7e9256a8-a35e-47d3-9347-68f1718c685d/references/r-edcb529181aa6338499e84166fad9e2a703881bf54d27a392881342b8afaae19/candidates",
+        "filename": "carousel-cover-copy-03.png",
+        "media_type": "images",
+        "sha256": "8f4c2a1b6d9e0f3751ab82cde79034612fb5c8da97e14360bc2d5f8a01e67439",
+        "size_bytes": 2481937,
+        "mime_type": "image/png",
+        "asset_id": "backend-asset-01J7M9R6KQ3W2X8V4T5N0C1BDA"
+      },
+      "selected_at": "2026-08-26T09:14:32Z",
+      "updated_at": "2026-08-26T10:02:19Z",
+      "owner_user_id": "usr_01J7M7XQK9F3D6N2A8C4V5B0HE",
+      "stale_at": "2026-08-26T10:02:19Z",
+      "stale_reason": "Server checksum revalidation no longer matches the selected output.",
+      "observed_sha256": "3a71d9c4e0852fb694cb137df620a85e1d4793bcab56e2087f9c40da625be183"
+    },
+    "instagram:carousel:17894730528619942": {
+      "state": "selected",
+      "output": {
+        "job_id": "314df36e-2e5c-49dd-b837-c973442093fc",
+        "node_id": "42",
+        "directory_type": "output",
+        "subfolder": "omarketing/5c814c1a-d883-4d7c-8f3f-a42b2107df19/instagram-carousel/7e9256a8-a35e-47d3-9347-68f1718c685d/references/r-43599a0cc40258021caad986dbd3f69e5eeb82765ffc3cc7a7af79ba725ac688/candidates",
+        "filename": "carousel-cover-copy-05.png",
+        "media_type": "images",
+        "sha256": "d19f6e42a8c3057b4e91fd2063ba7c5840ed129fb7a4638c52de901af6843bc7",
+        "size_bytes": 2516074,
+        "mime_type": "image/png"
+      },
+      "selected_at": "2026-08-26T09:18:07Z",
+      "updated_at": "2026-08-26T10:02:19Z",
+      "owner_user_id": "usr_01J7M7XQK9F3D6N2A8C4V5B0HE"
+    }
+  }
+}

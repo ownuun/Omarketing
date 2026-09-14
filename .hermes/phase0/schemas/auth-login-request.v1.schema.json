@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.omarketing.invalid/auth/auth-login-request.v1.schema.json",
+  "title": "Omarketing auth login request v1",
+  "description": "The only JSON credential-bearing request accepted by the owner authentication gateway.",
+  "$comment": "Unknown URL, token, API-key, owner, role, and privilege fields are rejected by additionalProperties. The password is transported only inside this TLS request and must never be logged.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "username",
+    "password"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "username": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^(?!\\s)[^\\u0000-\\u001F\\u007F]*\\S$"
+    },
+    "password": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    }
+  }
+}

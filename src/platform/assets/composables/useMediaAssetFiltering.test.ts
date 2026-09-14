@@ -403,6 +403,110 @@ describe('useMediaAssetFiltering', () => {
     })
   })
 
+  describe('registered presentation predicate', () => {
+    const now = new Date(2026, 6, 27, 12).getTime()
+
+    beforeEach(() => {
+      vi.setSystemTime(now)
+    })
+
+    it('runs the registered predicate only after the core media-type and date filters', () => {
+      const assets = ref<AssetItem[]>([
+        makeAsset({ id: 'today-img', name: 'a.png', createTime: now }),
+        makeAsset({
+          id: 'old-img',
+          name: 'b.png',
+          createTime: now - 40 * 86_400_000
+        }),
+        makeAsset({ id: 'today-vid', name: 'c.mp4', createTime: now })
+      ])
+      const inspected: string[] = []
+      const filtering = useMediaAssetFiltering(assets, {
+        matchesPresentation: (asset) => {
+          inspected.push(asset.id)
+          return true
+        }
+      })
+
+      filtering.mediaTypeFilters.value = ['image']
+      filtering.dateFilter.value = 'month'
+
+      const result = filtering.filteredAssets.value
+      // Only the asset that survives both core filters reaches the predicate,
+      // and it is kept because the predicate accepts it.
+      expect(inspected).toEqual(['today-img'])
+      expect(ids(result)).toEqual(['today-img'])
+    })
+
+    it('represents pending metadata and provider failure as a true decision that keeps every asset visible', () => {
+      const assets = ref<AssetItem[]>([
+        makeAsset({ id: 'kept-new', name: 'a.png', createTime: 3_000_000 }),
+        makeAsset({ id: 'kept-old', name: 'b.png', createTime: 1_000_000 })
+      ])
+      // `true` is the fail-open representation the host passes while a
+      // provider predicate is pending or has failed.
+      const { filteredAssets } = useMediaAssetFiltering(assets, {
+        matchesPresentation: () => true
+      })
+
+      expect(ids(filteredAssets.value)).toEqual(['kept-new', 'kept-old'])
+    })
+
+    it('excludes an asset only when the registered predicate returns false', () => {
+      const assets = ref<AssetItem[]>([
+        makeAsset({ id: 'visible', name: 'a.png', createTime: 2_000_000 }),
+        makeAsset({ id: 'hidden', name: 'b.png', createTime: 3_000_000 })
+      ])
+      const { filteredAssets } = useMediaAssetFiltering(assets, {
+        matchesPresentation: (asset) => asset.id !== 'hidden'
+      })
+
+      expect(ids(filteredAssets.value)).toEqual(['visible'])
+    })
+
+    it('applies the registered predicate before the existing sorting', () => {
+      const assets = ref<AssetItem[]>([
+        makeAsset({ id: 'newest', name: 'c.png', createTime: 3_000_000 }),
+        makeAsset({ id: 'oldest', name: 'a.png', createTime: 1_000_000 }),
+        makeAsset({ id: 'middle', name: 'b.png', createTime: 2_000_000 })
+      ])
+      const inspectionOrder: string[] = []
+      const { sortBy, filteredAssets } = useMediaAssetFiltering(assets, {
+        matchesPresentation: (asset) => {
+          inspectionOrder.push(asset.id)
+          return asset.id !== 'oldest'
+        }
+      })
+
+      sortBy.value = 'newest'
+      const result = filteredAssets.value
+      // The predicate sees the source order, not the sorted order…
+      expect(inspectionOrder).toEqual(['newest', 'oldest', 'middle'])
+      // …and the surviving set is still handed to the existing sort.
+      expect(ids(result)).toEqual(['newest', 'middle'])
+    })
+
+    it('leaves the input array and its assets unchanged', () => {
+      const sourceAssets = [
+        makeAsset({ id: 'a', name: 'a.png', createTime: 1_000_000 }),
+        makeAsset({ id: 'b', name: 'b.png', createTime: 2_000_000 })
+      ]
+      const assets = ref<AssetItem[]>(sourceAssets)
+      const firstReactiveAsset = assets.value[0]
+      const { filteredAssets } = useMediaAssetFiltering(assets, {
+        matchesPresentation: (asset) => asset.id !== 'b'
+      })
+
+      const result = filteredAssets.value
+
+      // Same object references, no clones; the input keeps its order and items.
+      expect(result).toEqual([sourceAssets[0]])
+      expect(result[0]).toBe(firstReactiveAsset)
+      expect(assets.value).toEqual(sourceAssets)
+      expect(assets.value.map((asset) => asset.id)).toEqual(['a', 'b'])
+    })
+  })
+
   describe('state lifetime', () => {
     it('preserves applied filters across consumer remounts', () => {
       const assets = ref<AssetItem[]>([

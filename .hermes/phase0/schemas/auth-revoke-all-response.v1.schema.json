@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.omarketing.invalid/auth/auth-revoke-all-response.v1.schema.json",
+  "title": "Omarketing auth revoke-all response v1",
+  "description": "The only response that confirms an owner-wide session revocation.",
+  "$comment": "The positive count includes the authenticated caller. A lost response, 401, 429, or 5xx is never substituted for this document.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "revoked",
+    "revoked_session_count"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "revoked": {
+      "type": "boolean",
+      "const": true
+    },
+    "revoked_session_count": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    }
+  }
+}

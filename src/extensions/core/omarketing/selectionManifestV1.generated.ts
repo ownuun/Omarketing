@@ -1,5 +1,5 @@
 // Source schema: .hermes/phase0/schemas/selection-manifest.v1.schema.json
-// Schema SHA-256: dd2ec20de553ba7a9b323b237bfdc16cbd10bd1dfe07124ec9491fe456452712
+// Schema SHA-256: 55f100c8221e174a445c699b43cedc918f3df12b3c9100749905c0a6ae907cd5
 // Generator: generate-contracts.ts v1.0.0 (keyword map v1)
 // DO NOT EDIT — regenerate with `pnpm exec tsx .hermes/phase0/tools/generate-contracts.ts`
 /* eslint-disable no-control-regex -- source schema rejects control characters by matching their ranges */

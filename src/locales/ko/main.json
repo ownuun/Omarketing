@@ -212,6 +212,38 @@
     "uploadSuccess": "모델이 성공적으로 가져와졌습니다!",
     "uploadingModel": "모델 가져오는 중..."
   },
+  "assetPresentation": {
+    "loading": "에셋 상세 정보를 불러오는 중...",
+    "retry": "다시 시도",
+    "providerLoading": "확장 필터를 불러오는 중...",
+    "providerError": "에셋 상세 정보를 불러오지 못했습니다.",
+    "retryProvider": "확장 다시 시도",
+    "provider": {
+      "error": "에셋 상세 정보를 불러오지 못했습니다.",
+      "retry": "다시 시도"
+    },
+    "noMatch": {
+      "title": "일치 항목 없음",
+      "message": "현재 필터와 일치하는 에셋이 없습니다. 필터를 조정하거나 지우면 더 많은 결과를 볼 수 있습니다."
+    },
+    "filters": {
+      "groupLabel": "필터",
+      "any": "전체",
+      "clearProvider": "{provider} 필터 지우기",
+      "clearAll": "모든 필터 지우기"
+    },
+    "details": {
+      "heading": "상세 정보"
+    },
+    "actions": {
+      "unavailable": "이 에셋에는 이 작업을 사용할 수 없습니다.",
+      "locatorRequired": "이 작업을 사용하려면 먼저 출력이 확인되어야 합니다.",
+      "succeeded": "작업이 성공적으로 완료되었습니다.",
+      "unchanged": "변경된 내용이 없습니다.",
+      "failed": "작업에 실패했습니다. 다시 시도해 주세요."
+    },
+    "providerDisconnected": "확장 백엔드가 연결되지 않았습니다."
+  },
   "auth": {
     "apiKey": {
       "cleared": "API 키 삭제됨",
@@ -5031,5 +5063,101 @@
     "label": "줌 컨트롤",
     "showMinimap": "미니맵 표시",
     "zoomToFit": "화면에 맞추기"
+  },
+  "omarketing": {
+    "assets": {
+      "statusChip": {
+        "label": "Omarketing",
+        "disconnected": "백엔드 미연결"
+      },
+      "disconnected": {
+        "message": "Omarketing 백엔드가 연결되지 않아 아직 Omarketing 정보를 표시할 수 없습니다."
+      },
+      "detail": {
+        "heading": "Omarketing",
+        "statusLabel": "백엔드",
+        "statusDisconnected": "연결 안 됨"
+      },
+      "fixture": {
+        "state": {
+          "heading": "테스트 데이터 상태"
+        },
+        "marker": {
+          "label": "출처"
+        },
+        "selection": {
+          "label": "선택된 후보"
+        },
+        "handoff": {
+          "label": "테스트 데이터 인계"
+        },
+        "candidates": {
+          "heading": "테스트 데이터 후보",
+          "preview": {
+            "label": "미리보기"
+          },
+          "copy": {
+            "label": "카피"
+          },
+          "qa": {
+            "label": "품질 검토"
+          }
+        },
+        "actions": {
+          "pass": {
+            "label": "테스트 데이터 후보 통과 처리",
+            "description": "선택된 테스트 데이터 후보를 통과 상태로 표시합니다.",
+            "succeeded": "테스트 데이터 후보를 통과 처리했습니다.",
+            "unchanged": "통과 처리된 테스트 데이터 후보가 없습니다."
+          },
+          "delete": {
+            "label": "테스트 데이터 후보 삭제",
+            "description": "선택된 테스트 데이터 후보를 로컬에서만 삭제합니다.",
+            "succeeded": "테스트 데이터 후보를 로컬에서만 삭제했습니다.",
+            "unchanged": "삭제된 테스트 데이터 후보가 없습니다."
+          }
+        }
+      },
+      "selection": {
+        "heading": "최종 선택",
+        "ready": "선택 가능",
+        "confirmed": "서버 저장·확인 완료",
+        "stale": "저장된 선택이 오래됨",
+        "unavailable": "저장 기록 있음·현재 확인 불가",
+        "project": "프로젝트",
+        "workflow": "워크플로",
+        "reference": "레퍼런스",
+        "candidate": "후보",
+        "select": "최종 선택",
+        "reselect": "이 후보로 변경",
+        "refresh": "선택 상태 다시 확인",
+        "checking": "서버 선택 상태 확인 중",
+        "conflict": "다른 곳에서 선택이 변경됐습니다. 최신 상태를 확인 후 다시 선택하세요.",
+        "outcome_unknown": "결과 확인 필요. 저장을 반복하지 말고 선택 상태를 다시 확인하세요.",
+        "authRequired": "인증 필요",
+        "ambiguous": "출력 귀속이 모호하여 선택할 수 없습니다"
+      },
+      "testHandoff": {
+        "heading": "로컬 모의 TEST",
+        "action": "로컬 모의 TEST 만들기",
+        "description": "확인된 선택으로 로컬 TEST 요청 하나를 만듭니다. 외부 전송이나 게시는 하지 않습니다.",
+        "current": "현재 선택의 TEST",
+        "history": "이전 선택의 TEST 기록",
+        "fixtureCopy": "고정 테스트 카피 (읽기 전용)",
+        "noCurrent": "현재 선택의 TEST 요청 없음",
+        "noHistory": "이전 TEST 요청 없음",
+        "selectionRequired": "현재 선택을 확인한 뒤 TEST 요청을 만들 수 있습니다",
+        "checking": "로컬 TEST 기록 확인 중",
+        "accepted": "로컬 모의 TEST 수락됨 · 게시되지 않음",
+        "failed_hold": "로컬 모의 TEST 실패 후 보류 · 원본 요청 보존",
+        "outcome_unknown": "요청 확인됨 · 수신 확인 결과 불명. 다시 전송하지 마세요.",
+        "authRequired": "TEST 기록을 읽으려면 인증이 필요합니다",
+        "forbidden": "이 TEST 기록에 대한 접근이 거부되었습니다",
+        "unavailable": "TEST 요청 맥락이 없거나 유효하지 않습니다. 요청을 재시도하지 않았습니다",
+        "conflict": "TEST 기록 충돌 · 원본 기록 보존",
+        "request": "TEST 요청",
+        "candidate": "요청 당시 선택 후보"
+      }
+    }
   }
 }

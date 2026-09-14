@@ -1,0 +1,126 @@
+{
+  "schema_version": "omarketing.release-source-topology.snapshot.v1",
+  "scenario": "current",
+  "observed_at": "2026-08-27T17:59:59+09:00",
+  "control": {
+    "state": "unverified",
+    "origin_url": null,
+    "package_name": null,
+    "homepage_url": null,
+    "source_url": null,
+    "issues_url": null,
+    "evidence": null
+  },
+  "git": {
+    "origin": {
+      "fetch_urls": [
+        "https://github.com/Comfy-Org/ComfyUI_frontend.git"
+      ],
+      "explicit_push_urls": [],
+      "effective_push_urls": [
+        "https://github.com/Comfy-Org/ComfyUI_frontend.git"
+      ]
+    },
+    "upstream": {
+      "fetch_urls": [],
+      "explicit_push_urls": [],
+      "effective_push_urls": []
+    }
+  },
+  "branding": {
+    "index_title": "Omarketing",
+    "splash_aria_label": "Loading Omarketing",
+    "app_title": "Omarketing",
+    "tab_default_title": "Omarketing",
+    "tab_title_suffix": " - Omarketing",
+    "sidebar_logo_component": "ComfyLogo",
+    "sidebar_logo_alt": "Omarketing Logo",
+    "manifest": {
+      "name": "Omarketing",
+      "short_name": "Omarketing",
+      "description": "Omarketing: AI image generation platform"
+    },
+    "package": {
+      "name": "@comfyorg/comfyui-frontend",
+      "description": "Omarketing front end, a modified ComfyUI Frontend distribution for marketing workflows",
+      "homepage": "https://comfy.org",
+      "repository": "https://github.com/Comfy-Org/ComfyUI_frontend"
+    },
+    "source_links": {
+      "package_homepage": "https://comfy.org",
+      "package_repository": "https://github.com/Comfy-Org/ComfyUI_frontend",
+      "external_frontend_source": "https://github.com/Comfy-Org/ComfyUI_frontend",
+      "external_issues": "https://github.com/Comfy-Org/ComfyUI/issues",
+      "help_source": "https://github.com/Comfy-Org/ComfyUI"
+    }
+  },
+  "observation": {
+    "changed_branding_paths": [
+      "index.html",
+      "manifest.json",
+      "package.json",
+      "src/components/sidebar/ComfyMenuButton.vue",
+      "src/composables/useBrowserTabTitle.test.ts",
+      "src/composables/useBrowserTabTitle.ts",
+      "src/config.ts"
+    ],
+    "commands": [
+      {
+        "command": "git -C \"$REPO\" config --local --get-all remote.origin.url",
+        "exit_code": 0,
+        "stdout": [
+          "https://github.com/Comfy-Org/ComfyUI_frontend.git"
+        ],
+        "stderr": []
+      },
+      {
+        "command": "git -C \"$REPO\" config --local --get-all remote.origin.pushurl",
+        "exit_code": 1,
+        "stdout": [],
+        "stderr": []
+      },
+      {
+        "command": "git -C \"$REPO\" remote get-url --push --all origin",
+        "exit_code": 0,
+        "stdout": [
+          "https://github.com/Comfy-Org/ComfyUI_frontend.git"
+        ],
+        "stderr": []
+      },
+      {
+        "command": "git -C \"$REPO\" config --local --get-all remote.upstream.url",
+        "exit_code": 1,
+        "stdout": [],
+        "stderr": []
+      },
+      {
+        "command": "git -C \"$REPO\" config --local --get-all remote.upstream.pushurl",
+        "exit_code": 1,
+        "stdout": [],
+        "stderr": []
+      },
+      {
+        "command": "git -C \"$REPO\" remote get-url --push --all upstream",
+        "exit_code": 2,
+        "stdout": [],
+        "stderr": [
+          "error: No such remote 'upstream'"
+        ]
+      },
+      {
+        "command": "git -C \"$REPO\" status --porcelain=v1 --untracked-files=all -- index.html manifest.json package.json src/components/helpcenter/HelpCenterMenuContent.vue src/components/sidebar/ComfyMenuButton.vue src/composables/useBrowserTabTitle.test.ts src/composables/useBrowserTabTitle.ts src/composables/useExternalLink.ts src/config.ts",
+        "exit_code": 0,
+        "stdout": [
+          " M index.html",
+          " M manifest.json",
+          " M package.json",
+          " M src/components/sidebar/ComfyMenuButton.vue",
+          " M src/composables/useBrowserTabTitle.test.ts",
+          " M src/composables/useBrowserTabTitle.ts",
+          " M src/config.ts"
+        ],
+        "stderr": []
+      }
+    ]
+  }
+}

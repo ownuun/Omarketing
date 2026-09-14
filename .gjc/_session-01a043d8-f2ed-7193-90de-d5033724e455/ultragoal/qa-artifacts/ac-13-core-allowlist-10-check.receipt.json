@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "baseline": "f8db605df6c7a3fb1a936f17806e42ea2d76fe05",
+  "frozen_diff_id": "omarketing-phase1-foundation-ultragoal-v1/G008",
+  "checks": [
+    {
+      "check_id": "path-allowlist",
+      "status": "PASS",
+      "evidence_pointer": "Files this run modified beyond the frozen W0 baseline: src/components/TopMenuSection.test.ts, src/components/TopMenuSection.vue, src/components/dialog/content/setting/UserPanel.vue, src/components/topbar/WorkflowTabs.vue, src/extensions/core/index.ts, src/renderer/extensions/linearMode/MobileDisplay.vue, src/services/dialogService.ts. New product files: browser_tests/tests/omarketing/phase1-additive.spec.ts, src/components/dialog/content/setting/UserPanel.test.ts, src/extensions/core/omarketing/assetsPresentation.test.ts, src/extensions/core/omarketing/assetsPresentation.ts, src/extensions/core/omarketing/authSession.test.ts, src/extensions/core/omarketing/authSession.ts, src/extensions/core/omarketing/index.test.ts, src/extensions/core/omarketing/index.ts, src/extensions/core/omarketing/projectContext.test.ts, src/extensions/core/omarketing/projectContext.ts, src/extensions/core/omarketing/referenceFanout.test.ts, src/extensions/core/omarketing/referenceFanout.ts, src/extensions/core/omarketing/selectionManifestV1.generated.ts, src/platform/assets/presentation/AssetPresentationDetails.test.ts, src/platform/assets/presentation/AssetPresentationDetails.vue, src/platform/assets/presentation/AssetPresentationFilterControls.test.ts, src/platform/assets/presentation/AssetPresentationFilterControls.vue, src/platform/assets/presentation/assetPresentationRegistry.test.ts, src/platform/assets/presentation/assetPresentationRegistry.ts, src/platform/assets/presentation/outputLocatorV1.generated.ts, src/platform/assets/presentation/useAssetPresentation.test.ts, src/platform/assets/presentation/useAssetPresentation.ts, src/renderer/extensions/linearMode/MobileDisplay.test.ts, src/services/dialogService.test.ts. Every one appears verbatim in an allowed table of core-file-allowlist.md, including the five CR-1 auth sources and the CR-1 generator source. No rename, no incidental formatting change outside those paths.",
+      "reviewer": "ultragoal-leader (omarketing-phase1-foundation-ultragoal-v1)",
+      "reviewed_at": "2026-08-30T21:50:55+09:00"
+    },
+    {
+      "check_id": "bootstrap-ceiling",
+      "status": "PASS",
+      "evidence_pointer": "git diff HEAD -- src/extensions/core/index.ts shows exactly three added lines: one unconditional side-effect import of ./omarketing plus a two-line comment. Zero existing lines modified, zero reordered, no condition and no distribution branch.",
+      "reviewer": "ultragoal-leader (omarketing-phase1-foundation-ultragoal-v1)",
+      "reviewed_at": "2026-08-30T21:50:55+09:00"
+    },
+    {
+      "check_id": "branding-scope",
+      "status": "PASS",
+      "evidence_pointer": "Branding remains name-only. public/ and src/assets/ have no diff, so upstream logo and icon bytes are byte-identical. All five controlled-origin points keep upstream values: package.json homepage is comfy.org and repository is Comfy-Org/ComfyUI_frontend, and README.md, THIRD_PARTY_NOTICES.md, useExternalLink.ts and HelpCenterMenuContent.vue have no diff. No branding edit touched commands, telemetry, auth, routing, settings or dependencies.",
+      "reviewer": "ultragoal-leader (omarketing-phase1-foundation-ultragoal-v1)",
+      "reviewed_at": "2026-08-30T21:50:55+09:00"
+    },
+    {
+      "check_id": "generic-dependency",
+      "status": "PASS",
+      "evidence_pointer": "grep over src/platform/assets and src/components/sidebar/tabs finds zero imports of extensions/core/omarketing and zero Omarketing-conditional branches. The Omarketing provider registers through the generic registry only. The generated manifest module imports the generated locator module, which is the permitted Omarketing-to-generic direction.",
+      "reviewer": "ultragoal-leader (omarketing-phase1-foundation-ultragoal-v1)",
+      "reviewed_at": "2026-08-30T21:50:55+09:00"
+    },
+    {
+      "check_id": "assets-integrity",
+      "status": "PASS",
+      "evidence_pointer": "No diff in existing provider, store, schema, card, context-menu or selection files. No Omarketing store, index, card badge, context-menu entry or bulk authority action was added. The disconnected provider registers zero actions and its predicate always returns match, so it cannot hide or fabricate an asset.",
+      "reviewer": "ultragoal-leader (omarketing-phase1-foundation-ultragoal-v1)",
+      "reviewed_at": "2026-08-30T21:50:55+09:00"
+    },
+    {
+      "check_id": "queue-integrity",
+      "status": "PASS",
+      "evidence_pointer": "No diff in prompt, API, Queue, execution, jobs, Run, Shift+Run or Auto Queue files. ComfyApp.queuePrompt is not patched and is not called by this change set. Fan-out remains widget-scoped and inactive: applyConfirmedReferenceFanout ends server_unavailable because no backend exists, and Batch Count is never read or multiplied.",
+      "reviewer": "ultragoal-leader (omarketing-phase1-foundation-ultragoal-v1)",
+      "reviewed_at": "2026-08-30T21:50:55+09:00"
+    },
+    {
+      "check_id": "workflow-integrity",
+      "status": "PASS",
+      "evidence_pointer": "No diff in workflow management, persistence or user-file store files. Save completion is not intercepted and no path or folder became a new identity model.",
+      "reviewer": "ultragoal-leader (omarketing-phase1-foundation-ultragoal-v1)",
+      "reviewed_at": "2026-08-30T21:50:55+09:00"
+    },
+    {
+      "check_id": "litegraph-integrity",
+      "status": "PASS",
+      "evidence_pointer": "No diff under src/lib/litegraph/** and no change to widget or extension type declarations. No core class, type or callback semantics changed.",
+      "reviewer": "ultragoal-leader (omarketing-phase1-foundation-ultragoal-v1)",
+      "reviewed_at": "2026-08-30T21:50:55+09:00"
+    },
+    {
+      "check_id": "dependency-lock-integrity",
+      "status": "PASS",
+      "evidence_pointer": "package.json scripts, dependencies and devDependencies are unchanged and pnpm-lock.yaml has no diff. The generator uses the existing zod and tsx only. The AC-5 receipt records package_mutations scripts 0, dependencies 0, lockfiles 0.",
+      "reviewer": "ultragoal-leader (omarketing-phase1-foundation-ultragoal-v1)",
+      "reviewed_at": "2026-08-30T21:50:55+09:00"
+    },
+    {
+      "check_id": "operational-integrity",
+      "status": "PASS",
+      "evidence_pointer": "No migration, server start, deploy, commit, tag or push was performed. One environment side effect is recorded rather than hidden: the repository's own package.json prepare script re-applied git config blame.ignoreRevsFile pointing at the repository's own tracked file when pnpm exec ran. The entry is single and non-duplicated, .git/config is untracked and therefore outside this change set, and later commands used ./node_modules/.bin/tsx to avoid re-triggering it.",
+      "reviewer": "ultragoal-leader (omarketing-phase1-foundation-ultragoal-v1)",
+      "reviewed_at": "2026-08-30T21:50:55+09:00"
+    }
+  ],
+  "reviewer": "ultragoal-leader (omarketing-phase1-foundation-ultragoal-v1)",
+  "reviewed_at": "2026-08-30T21:50:55+09:00",
+  "change_set": {
+    "modified_beyond_baseline": [
+      "src/components/TopMenuSection.test.ts",
+      "src/components/TopMenuSection.vue",
+      "src/components/dialog/content/setting/UserPanel.vue",
+      "src/components/topbar/WorkflowTabs.vue",
+      "src/extensions/core/index.ts",
+      "src/renderer/extensions/linearMode/MobileDisplay.vue",
+      "src/services/dialogService.ts"
+    ],
+    "new_product_files": [
+      "browser_tests/tests/omarketing/phase1-additive.spec.ts",
+      "src/components/dialog/content/setting/UserPanel.test.ts",
+      "src/extensions/core/omarketing/assetsPresentation.test.ts",
+      "src/extensions/core/omarketing/assetsPresentation.ts",
+      "src/extensions/core/omarketing/authSession.test.ts",
+      "src/extensions/core/omarketing/authSession.ts",
+      "src/extensions/core/omarketing/index.test.ts",
+      "src/extensions/core/omarketing/index.ts",
+      "src/extensions/core/omarketing/projectContext.test.ts",
+      "src/extensions/core/omarketing/projectContext.ts",
+      "src/extensions/core/omarketing/referenceFanout.test.ts",
+      "src/extensions/core/omarketing/referenceFanout.ts",
+      "src/extensions/core/omarketing/selectionManifestV1.generated.ts",
+      "src/platform/assets/presentation/AssetPresentationDetails.test.ts",
+      "src/platform/assets/presentation/AssetPresentationDetails.vue",
+      "src/platform/assets/presentation/AssetPresentationFilterControls.test.ts",
+      "src/platform/assets/presentation/AssetPresentationFilterControls.vue",
+      "src/platform/assets/presentation/assetPresentationRegistry.test.ts",
+      "src/platform/assets/presentation/assetPresentationRegistry.ts",
+      "src/platform/assets/presentation/outputLocatorV1.generated.ts",
+      "src/platform/assets/presentation/useAssetPresentation.test.ts",
+      "src/platform/assets/presentation/useAssetPresentation.ts",
+      "src/renderer/extensions/linearMode/MobileDisplay.test.ts",
+      "src/services/dialogService.test.ts"
+    ]
+  }
+}

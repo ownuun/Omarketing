@@ -16,7 +16,7 @@
         class="col-span-full row-span-full icon-[lucide--chevron-down] size-3 translate-x-4 text-muted-foreground"
       />
       <ComfyLogo
-        alt="ComfyUI Logo"
+        alt="Omarketing Logo"
         class="comfyui-logo col-span-full row-span-full size-4.5"
         mode="fill"
       />

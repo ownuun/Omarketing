@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "omarketing-release-receipt/v1",
+  "receiptId": "missing-nested-fields",
+  "artifactSpecific": true,
+  "release": {},
+  "source": {},
+  "build": {
+    "toolchain": {},
+    "environment": {},
+    "commands": [],
+    "lockfiles": [],
+    "inputs": [],
+    "outputs": []
+  },
+  "artifact": {},
+  "legalPayload": {},
+  "sbom": {},
+  "publisher": {},
+  "reviewer": {}
+}

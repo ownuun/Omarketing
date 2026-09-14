@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.omarketing.invalid/auth/auth-session-response.v1.schema.json",
+  "title": "Omarketing auth session response v1",
+  "description": "The success response shared by owner login and the non-touch session observation.",
+  "$comment": "The server derives owner_user_id from the session. Both deadlines are UTC and the observation route must return them without changing session activity.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "owner_user_id",
+    "idle_expires_at",
+    "absolute_expires_at"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "owner_user_id": {
+      "type": "string",
+      "minLength": 16,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{15,127}$"
+    },
+    "idle_expires_at": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 35,
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "absolute_expires_at": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 35,
+      "format": "date-time",
+      "pattern": "Z$"
+    }
+  }
+}

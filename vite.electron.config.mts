@@ -84,6 +84,11 @@ const mockElectronAPI: Plugin = {
 export default mergeConfig(
   baseConfig,
   defineConfig({
-    plugins: [mockElectronAPI]
+    plugins: [mockElectronAPI],
+    server: {
+      host: '127.0.0.1',
+      port: 5190,
+      strictPort: true
+    }
   })
 )

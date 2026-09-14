@@ -14,7 +14,7 @@ test(
     await comfyPage.menu.topbar.saveWorkflow(workflowName)
     await expect
       .poll(() => comfyPage.page.title())
-      .toBe(`${workflowName} - ComfyUI`)
+      .toBe(`${workflowName} - Omarketing`)
 
     const legacyApi = new BAD_DO_NOT_DO_THIS_LegacyApiHelper(comfyPage.page)
     await legacyApi.moveFirstNodeByMutatingPositionX(toNodeId(3), 50)
@@ -25,7 +25,7 @@ test(
     })
     await expect
       .poll(() => comfyPage.page.title())
-      .toBe(`*${workflowName} - ComfyUI`)
+      .toBe(`*${workflowName} - Omarketing`)
 
     await comfyPage.page.evaluate(async () => {
       return (

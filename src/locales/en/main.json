@@ -3824,6 +3824,38 @@
       "failed": "Could not rename asset."
     }
   },
+  "assetPresentation": {
+    "loading": "Loading asset details...",
+    "retry": "Retry",
+    "providerLoading": "Loading extension filters...",
+    "providerError": "Asset details failed to load.",
+    "retryProvider": "Retry extension",
+    "provider": {
+      "error": "Asset details failed to load.",
+      "retry": "Retry"
+    },
+    "noMatch": {
+      "title": "No matches",
+      "message": "No assets match the current filters. Adjust or clear the filters to see more results."
+    },
+    "filters": {
+      "groupLabel": "Filters",
+      "any": "Any",
+      "clearProvider": "Clear {provider} filters",
+      "clearAll": "Clear all filters"
+    },
+    "details": {
+      "heading": "Details"
+    },
+    "actions": {
+      "unavailable": "This action is not available for this asset.",
+      "locatorRequired": "This action needs a verified output first.",
+      "succeeded": "The action completed successfully.",
+      "unchanged": "No changes were needed.",
+      "failed": "The action failed. Please try again."
+    },
+    "providerDisconnected": "Extension backend not connected."
+  },
   "mediaAsset": {
     "deleteAssetTitle": "Delete this asset?",
     "deleteAssetDescription": "This asset will be permanently removed.",
@@ -5032,6 +5064,102 @@
         },
         "dismiss": "Not now",
         "explore": "Explore templates"
+      }
+    }
+  },
+  "omarketing": {
+    "assets": {
+      "statusChip": {
+        "label": "Omarketing",
+        "disconnected": "Backend not connected"
+      },
+      "disconnected": {
+        "message": "The Omarketing backend is not connected, so no Omarketing details are available yet."
+      },
+      "detail": {
+        "heading": "Omarketing",
+        "statusLabel": "Backend",
+        "statusDisconnected": "Not connected"
+      },
+      "fixture": {
+        "state": {
+          "heading": "Fixture state"
+        },
+        "marker": {
+          "label": "Source"
+        },
+        "selection": {
+          "label": "Selected candidate"
+        },
+        "handoff": {
+          "label": "Fixture handoff"
+        },
+        "candidates": {
+          "heading": "Fixture candidates",
+          "preview": {
+            "label": "Preview"
+          },
+          "copy": {
+            "label": "Copy"
+          },
+          "qa": {
+            "label": "QA"
+          }
+        },
+        "actions": {
+          "pass": {
+            "label": "Pass fixture candidate",
+            "description": "Mark the selected fixture candidate as passed.",
+            "succeeded": "Fixture candidate passed.",
+            "unchanged": "No fixture candidate was passed."
+          },
+          "delete": {
+            "label": "Delete fixture candidate",
+            "description": "Delete the selected fixture candidate locally.",
+            "succeeded": "Fixture candidate deleted locally.",
+            "unchanged": "No fixture candidate was deleted."
+          }
+        }
+      },
+      "selection": {
+        "heading": "Final selection",
+        "ready": "Ready to select",
+        "confirmed": "Saved and checked on server",
+        "stale": "Saved selection is stale",
+        "unavailable": "Saved status cannot currently be verified",
+        "project": "Project",
+        "workflow": "Workflow",
+        "reference": "Reference",
+        "candidate": "Candidate",
+        "select": "Select final",
+        "reselect": "Change to this candidate",
+        "refresh": "Check selection again",
+        "checking": "Checking server selection",
+        "conflict": "Selection changed elsewhere. Review latest state before selecting again.",
+        "outcome_unknown": "Result needs confirmation. Check selection again; do not retry blindly.",
+        "authRequired": "Authentication required",
+        "ambiguous": "Ambiguous output identity; selection disabled"
+      },
+      "testHandoff": {
+        "heading": "Local simulated TEST",
+        "action": "Create local simulated TEST",
+        "description": "Create one local TEST request for the confirmed selection. No external delivery or publication.",
+        "current": "Current selection TEST",
+        "history": "Previous selection TEST history",
+        "fixtureCopy": "Fixed fixture copy (read-only)",
+        "noCurrent": "No TEST request for the current selection",
+        "noHistory": "No previous TEST requests",
+        "selectionRequired": "Confirm the current selection before creating a TEST request",
+        "checking": "Checking local TEST records",
+        "accepted": "Local simulated TEST accepted; not published",
+        "failed_hold": "Local simulated TEST held after failure; original request preserved",
+        "outcome_unknown": "Request verified; acknowledgement unconfirmed. Do not resend.",
+        "authRequired": "Authentication required to read TEST records",
+        "forbidden": "Access to these TEST records is denied",
+        "unavailable": "TEST request context is unavailable or invalid; no request was retried",
+        "conflict": "TEST record conflict; the original record is preserved",
+        "request": "TEST request",
+        "candidate": "Request selection candidate"
       }
     }
   }

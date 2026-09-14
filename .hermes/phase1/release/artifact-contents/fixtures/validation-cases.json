@@ -1,0 +1,114 @@
+{
+  "requiredPayloadCases": [
+    {
+      "name": "missing LICENSE",
+      "removeRole": "license",
+      "expectedCode": "LICENSE_REQUIRED"
+    },
+    {
+      "name": "missing complete notices",
+      "removeRole": "notices",
+      "expectedCode": "NOTICES_REQUIRED"
+    },
+    {
+      "name": "missing SPDX/CycloneDX SBOM",
+      "removeRole": "sbom",
+      "expectedCode": "SBOM_REQUIRED"
+    },
+    {
+      "name": "missing source/build receipt",
+      "removeRole": "source-build-receipt",
+      "expectedCode": "SOURCE_BUILD_RECEIPT_REQUIRED"
+    },
+    {
+      "name": "missing immutable source directions",
+      "removeRole": "source-directions",
+      "expectedCode": "SOURCE_DIRECTIONS_REQUIRED"
+    },
+    {
+      "name": "missing backend bridge receipt",
+      "removeRole": "backend-bridge-receipt",
+      "expectedCode": "BACKEND_BRIDGE_RECEIPT_REQUIRED"
+    }
+  ],
+  "componentFieldCases": [
+    {
+      "name": "component name",
+      "componentIndex": 0,
+      "deleteField": "name",
+      "expectedCode": "COMPONENT_NAME_REQUIRED"
+    },
+    {
+      "name": "component version",
+      "componentIndex": 0,
+      "deleteField": "version",
+      "expectedCode": "COMPONENT_VERSION_REQUIRED"
+    },
+    {
+      "name": "component source",
+      "componentIndex": 0,
+      "deleteField": "source",
+      "expectedCode": "COMPONENT_SOURCE_REQUIRED"
+    },
+    {
+      "name": "component digest",
+      "componentIndex": 0,
+      "deleteField": "digest",
+      "expectedCode": "COMPONENT_DIGEST_INVALID"
+    },
+    {
+      "name": "component concluded license",
+      "componentIndex": 0,
+      "deleteField": "concludedLicense",
+      "expectedCode": "COMPONENT_LICENSE_REQUIRED"
+    },
+    {
+      "name": "component relationship",
+      "componentIndex": 0,
+      "deleteField": "relationship",
+      "expectedCode": "COMPONENT_RELATIONSHIP_INVALID"
+    },
+    {
+      "name": "component unknown disposition",
+      "componentIndex": 0,
+      "deleteField": "unknownDisposition",
+      "expectedCode": "COMPONENT_UNKNOWN_DISPOSITION_REQUIRED"
+    },
+    {
+      "name": "unknown component reviewer",
+      "componentIndex": 1,
+      "deleteNestedField": "unknownDisposition.reviewer",
+      "expectedCode": "COMPONENT_UNKNOWN_DISPOSITION_INCOMPLETE"
+    }
+  ],
+  "contentCases": [
+    {
+      "name": "incomplete notices",
+      "targetRole": "notices",
+      "setField": "complete",
+      "value": false,
+      "expectedCode": "NOTICES_INCOMPLETE"
+    },
+    {
+      "name": "unsupported SBOM format",
+      "targetRole": "sbom",
+      "setField": "format",
+      "value": "unsupported",
+      "expectedCode": "SBOM_FORMAT_INVALID"
+    },
+    {
+      "name": "moving source directions",
+      "targetRole": "source-directions",
+      "setField": "immutable",
+      "value": false,
+      "expectedCode": "SOURCE_DIRECTIONS_NOT_IMMUTABLE"
+    },
+    {
+      "name": "invalid backend bridge digest",
+      "targetRole": "backend-bridge-receipt",
+      "setField": "artifactDigest",
+      "value": "sha256:not-a-digest",
+      "expectedCode": "BACKEND_BRIDGE_DIGEST_INVALID"
+    }
+  ]
+}

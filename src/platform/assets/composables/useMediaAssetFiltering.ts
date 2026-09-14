@@ -8,10 +8,15 @@ import type { Ref } from 'vue'
 import { useMediaAssetFilterStore } from '@/platform/assets/composables/useMediaAssetFilterStore'
 import type { MediaAssetDateFilter } from '@/platform/assets/mediaAssetFilterOptions'
 import type { AssetItem } from '@/platform/assets/schemas/assetSchema'
+import { reportError } from '@/platform/telemetry/reportError'
 import { getAssetDisplayName } from '@/platform/assets/utils/assetMetadataUtils'
 import { getMediaTypeFromFilename } from '@/utils/formatUtil'
 
 type SortOption = 'newest' | 'oldest' | 'az' | 'za' | 'longest' | 'fastest'
+
+export interface MediaAssetFilteringOptions {
+  readonly matchesPresentation?: (asset: AssetItem) => boolean
+}
 
 /**
  * Get timestamp from asset (either create_time or created_at)
@@ -60,7 +65,10 @@ const compareAssetNames = (a: AssetItem, b: AssetItem): number =>
  * Media Asset Filtering composable
  * Manages search, filter, and sort for media assets
  */
-export function useMediaAssetFiltering(assets: Ref<AssetItem[]>) {
+export function useMediaAssetFiltering(
+  assets: Ref<AssetItem[]>,
+  { matchesPresentation }: MediaAssetFilteringOptions = {}
+) {
   const searchQuery = ref('')
   const debouncedSearchQuery = refDebounced(searchQuery, 50)
   const sortBy = ref<SortOption>('newest')
@@ -85,9 +93,9 @@ export function useMediaAssetFiltering(assets: Ref<AssetItem[]>) {
     return results.map((result) => result.item)
   })
 
-  const filteredAssets = computed(() => {
+  const coreFilteredAssets = computed(() => {
     const threshold = getDateThreshold(dateFilter.value)
-    const filtered = searchFiltered.value.filter((asset) => {
+    return searchFiltered.value.filter((asset) => {
       const matchesMediaType =
         mediaTypeFilters.value.length === 0 ||
         mediaTypeFilters.value.includes(
@@ -97,7 +105,24 @@ export function useMediaAssetFiltering(assets: Ref<AssetItem[]>) {
 
       return matchesMediaType && matchesDate
     })
+  })
 
+  const presentationFilteredAssets = computed(() => {
+    if (!matchesPresentation) return coreFilteredAssets.value
+    return coreFilteredAssets.value.filter((asset) => {
+      try {
+        return matchesPresentation(asset)
+      } catch (error) {
+        reportError(error, {
+          errorType: 'assets_presentation_filtering_failure'
+        })
+        return true
+      }
+    })
+  })
+
+  const filteredAssets = computed(() => {
+    const filtered = presentationFilteredAssets.value
     // Sort by create_time (output assets) or created_at (input assets)
     switch (sortBy.value) {
       case 'oldest':
@@ -125,6 +150,7 @@ export function useMediaAssetFiltering(assets: Ref<AssetItem[]>) {
     sortBy,
     mediaTypeFilters,
     dateFilter,
+    coreFilteredAssets,
     filteredAssets
   }
 }

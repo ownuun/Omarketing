@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.omarketing.invalid/external/external-job-error.v1.schema.json",
+  "title": "Omarketing external job safe error v1",
+  "description": "Allowlisted error code and safe identifiers for existing Comfy error and output metadata paths.",
+  "$comment": "A server-owned registry keyed only by code derives category, retryability, fixed localized message key, and remediation actions. Provider prose, derived-field overrides, stacks, credentials, signed URLs, private endpoints, local paths, and workflow content cannot be represented.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "code",
+    "node_id",
+    "item_id",
+    "prompt_id",
+    "external_job_locator",
+    "diagnostic_id"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "omarketing.external-job-error.v1"
+    },
+    "code": {
+      "type": "string",
+      "enum": [
+        "APPROVAL_REQUIRED_IN_ODDESIGN",
+        "CONFIGURATION_INVALID",
+        "INPUT_INVALID",
+        "PROVIDER_AUTH_FAILED",
+        "PROVIDER_PERMISSION_DENIED",
+        "PROVIDER_POLICY_REJECTED",
+        "PROVIDER_UNAVAILABLE",
+        "RATE_LIMITED",
+        "TIMEOUT",
+        "QUOTA_EXCEEDED",
+        "IDEMPOTENCY_CONFLICT",
+        "IDEMPOTENCY_KEY_UNRECOVERABLE",
+        "IDEMPOTENCY_JOURNAL_INTEGRITY_FAILURE",
+        "IDEMPOTENCY_JOURNAL_INVALID",
+        "SUBMISSION_RETRY_NOT_AUTHORIZED",
+        "SUBMISSION_BEFORE_JOURNAL_COMMIT",
+        "TERMINAL_NOT_POLL_CONFIRMED",
+        "EXTERNAL_TERMINAL_CONFLICT",
+        "PROVIDER_PROTOCOL_ERROR",
+        "ARTIFACT_VALIDATION_FAILED",
+        "ARTIFACT_LIMIT_EXCEEDED",
+        "PROVIDER_PROCESSING_FAILED",
+        "ORPHAN_RECONCILIATION_TIMEOUT",
+        "CALLBACK_REJECTED",
+        "CANCEL_UNCONFIRMED",
+        "UNKNOWN"
+      ]
+    },
+    "node_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "item_id": {
+      "oneOf": [
+        {"type": "null"},
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+        }
+      ]
+    },
+    "prompt_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"
+    },
+    "external_job_locator": {
+      "oneOf": [
+        {"type": "null"},
+        {"$ref": "external-job-locator.v1.schema.json"}
+      ]
+    },
+    "diagnostic_id": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{7,127}$"
+    }
+  }
+}

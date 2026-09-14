@@ -1,0 +1,111 @@
+{
+  "schemaVersion": "omarketing-artifact-contents-fixture/v1",
+  "fixtureOnly": true,
+  "artifact": {
+    "name": "omarketing-frontend",
+    "version": "0.0.0-fixture",
+    "digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "files": [
+    {
+      "path": "LICENSE",
+      "role": "license",
+      "complete": true,
+      "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "role": "notices",
+      "complete": true,
+      "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "componentCount": 2,
+      "reviewStatus": "synthetic-fixture-only"
+    },
+    {
+      "path": "sbom.spdx.json",
+      "role": "sbom",
+      "complete": true,
+      "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "format": "SPDX",
+      "specVersion": "2.3",
+      "artifactDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "componentCount": 2
+    },
+    {
+      "path": "SOURCE_BUILD_RECEIPT.json",
+      "role": "source-build-receipt",
+      "complete": true,
+      "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "sourceCommit": "0123456789abcdef0123456789abcdef01234567",
+      "sourceTag": "refs/tags/v0.0.0-fixture",
+      "sourceUrl": "https://example.invalid/omarketing/archive/0123456789abcdef0123456789abcdef01234567.tar.gz",
+      "build": {
+        "os": "fixture-linux@sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "architecture": "arm64",
+        "nodeVersion": "25.0.0",
+        "pnpmVersion": "11.3.0",
+        "environment": "synthetic fixture; no release build occurred",
+        "commands": ["pnpm install --frozen-lockfile", "pnpm build"],
+        "outputDigest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      }
+    },
+    {
+      "path": "SOURCE_DIRECTIONS.md",
+      "role": "source-directions",
+      "complete": true,
+      "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+      "sourceUrl": "https://example.invalid/omarketing/archive/0123456789abcdef0123456789abcdef01234567.tar.gz",
+      "sourceCommit": "0123456789abcdef0123456789abcdef01234567",
+      "immutable": true,
+      "noAdditionalCharge": true,
+      "sourceBuildReceiptPath": "SOURCE_BUILD_RECEIPT.json",
+      "installBuildReplaceSteps": [
+        "Install the exact lockfile dependencies.",
+        "Build the frontend using the recorded commands.",
+        "Replace the distributed object code with the modified build."
+      ]
+    },
+    {
+      "path": "BACKEND_BRIDGE_RECEIPT.json",
+      "role": "backend-bridge-receipt",
+      "complete": true,
+      "digest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "name": "comfyui-omarketing",
+      "version": "0.0.0-fixture",
+      "sourceUrl": "https://example.invalid/comfyui-omarketing/archive/89abcdef0123456789abcdef0123456789abcdef.tar.gz",
+      "sourceCommit": "89abcdef0123456789abcdef0123456789abcdef",
+      "artifactDigest": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+      "license": "GPL-3.0-only",
+      "sbomPath": "backend-bridge.spdx.json",
+      "backendCommit": "b08e6cf35fac50d3ca8470dffb3f9a1fbb7187d2"
+    }
+  ],
+  "components": [
+    {
+      "name": "vue",
+      "version": "3.5.0-fixture",
+      "source": "pkg:npm/vue@3.5.0-fixture",
+      "digest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+      "concludedLicense": "MIT",
+      "relationship": "DEPENDS_ON",
+      "unknownDisposition": {
+        "status": "not-required",
+        "reason": "The synthetic component has a concluded SPDX license."
+      }
+    },
+    {
+      "name": "unknown-license-fixture",
+      "version": "1.0.0-fixture",
+      "source": "pkg:generic/unknown-license-fixture@1.0.0-fixture",
+      "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+      "concludedLicense": "NOASSERTION",
+      "relationship": "CONTAINS",
+      "unknownDisposition": {
+        "status": "synthetic-reviewed",
+        "reason": "Synthetic-only disposition exercises the unknown-license gate; it is not a legal review.",
+        "reviewer": "fixture-reviewer",
+        "evidence": "fixture://unknown-license-disposition"
+      }
+    }
+  ]
+}

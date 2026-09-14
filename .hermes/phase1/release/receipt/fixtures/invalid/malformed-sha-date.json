@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "omarketing-release-receipt/v1",
+  "receiptId": "malformed-sha-date",
+  "artifactSpecific": true,
+  "release": {
+    "version": "1.0.0-synthetic.1",
+    "status": "BLOCKED",
+    "modificationDate": "2026-02-30",
+    "buildCompletedAt": "2026-08-27T17:00:00+09:00"
+  },
+  "source": {
+    "url": "https://github.com/omarketing-synthetic/frontend/archive/not-a-commit.tar.gz",
+    "tag": "refs/tags/v1.0.0-synthetic.1",
+    "commit": "abc123",
+    "archiveSha256": "sha256:1234",
+    "frontendBaseCommit": "f8db605df6c7a3fb1a936f17806e42ea2d76fe05",
+    "backendCompatibilityCommit": "b08e6cf35fac50d3ca8470dffb3f9a1fbb7187d2"
+  },
+  "build": {
+    "toolchain": {},
+    "environment": {},
+    "commands": [],
+    "lockfiles": [
+      {
+        "path": "pnpm-lock.yaml",
+        "manager": "pnpm",
+        "sha256": "not-a-sha256"
+      }
+    ],
+    "inputs": [],
+    "outputs": []
+  },
+  "artifact": {
+    "name": "omarketing-frontend",
+    "version": "1.0.0-synthetic.1",
+    "path": "dist/omarketing.zip",
+    "mediaType": "application/zip",
+    "sha256": "sha256:xyz"
+  },
+  "legalPayload": {},
+  "sbom": {
+    "artifactSha256": "SHA256:5067441A137A9BE376CB0AF506889D8007B5F92E66E3E68F429325593FD0D2B0"
+  },
+  "publisher": {
+    "attestedAt": "2026-08-27 08:30:00Z"
+  },
+  "reviewer": {
+    "reviewedAt": "2026-08-27T09:00:00"
+  }
+}

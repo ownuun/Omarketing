@@ -504,6 +504,8 @@ export function useAssetPresentation(
     { readonly providerId: string; readonly assetId: string }
   >()
   let generation = 0
+  let actionVisitGeneration = 0
+  const providerActionGenerations = new Map<string, number>()
   let disposed = false
   let previousProviderIds = new Set<string>()
 
@@ -725,6 +727,9 @@ export function useAssetPresentation(
   }
 
   function abortActions(): void {
+    actionVisitGeneration += 1
+    // Terminal feedback belongs to this detail/scope visit, not its identity.
+    actionUiStates.value = {}
     let invalidatedMetadata = false
     for (const [controller, target] of actionControllers) {
       controller.abort()
@@ -750,7 +755,23 @@ export function useAssetPresentation(
     if (invalidatedMetadata) metadataVersion.value += 1
   }
 
-  function dropProvider(providerId: string, clearFilters: boolean): void {
+  function dropProvider(
+    providerId: string,
+    clearFilters: boolean,
+    invalidateActions = true
+  ): void {
+    if (invalidateActions)
+      providerActionGenerations.set(
+        providerId,
+        (providerActionGenerations.get(providerId) ?? 0) + 1
+      )
+    actionUiStates.value = Object.fromEntries(
+      Object.entries(actionUiStates.value).filter(
+        ([key, state]) =>
+          !key.startsWith(`${providerId}/`) ||
+          (!invalidateActions && state.status === 'running')
+      )
+    )
     const cycle = cycles.get(providerId)
     if (cycle) {
       cycles.delete(providerId)
@@ -791,6 +812,16 @@ export function useAssetPresentation(
     target: AssetPresentationTarget,
     state: MetadataState
   ): void {
+    if (state.status === 'error' || state.status === 'not-applicable') {
+      const provider = providers.value.find(
+        (candidate) => candidate.id === providerId
+      )
+      for (const action of provider?.actions ?? []) {
+        const key = actionExecutionKey(providerId, action.id, target)
+        if (actionUiStates.value[key]?.status === 'succeeded')
+          setActionUiState(key, null)
+      }
+    }
     let entries = metadataCache.get(providerId)
     if (!entries) {
       entries = new Map()
@@ -1007,8 +1038,31 @@ export function useAssetPresentation(
     setProviderState(provider.id, { status: 'loading' })
 
     const pending: AssetPresentationTarget[] = []
+    const identities = new Map<string, string>()
+    const ambiguous = new Set<string>()
+    for (const candidate of [
+      toValue(options.activeTarget),
+      ...toValue(options.adjacentTargets),
+      ...toValue(options.targets)
+    ]) {
+      if (!candidate) continue
+      const identity = targetIdentityKey(candidate)
+      if (
+        identities.has(candidate.assetId) &&
+        identities.get(candidate.assetId) !== identity
+      )
+        ambiguous.add(candidate.assetId)
+      identities.set(candidate.assetId, identity)
+    }
     let valid = true
     for (const target of window) {
+      // The batch contract is keyed by assetId, so ambiguous identities cannot
+      // be represented safely. Never pick the first/last output implicitly.
+      if (ambiguous.has(target.assetId)) {
+        setCacheError(provider.id, target, PROVIDER_ENTRY_ERROR_KEY)
+        valid = false
+        continue
+      }
       const applicability = appliesToSafely(provider, target)
       if (applicability === 'not-applicable') {
         setCacheEntry(provider.id, target, { status: 'not-applicable' })
@@ -1114,19 +1168,23 @@ export function useAssetPresentation(
     return { status: 'idle' }
   }
 
-  function reloadProvider(providerId: string): void {
+  function reloadProvider(
+    providerId: string,
+    preserveActionVisit = false
+  ): void {
     if (disposed) return
     const provider = providers.value.find(
       (candidate) => candidate.id === providerId
     )
-    dropProvider(providerId, false)
+    dropProvider(providerId, false, !preserveActionVisit)
     if (!provider) return
     startProviderCycle(provider, computeWindow())
   }
 
   function executeActionGuarded(
     providerId: string,
-    actionId: string
+    actionId: string,
+    isCurrentAction: () => boolean
   ): Promise<PresentationActionResult> {
     return (async (): Promise<PresentationActionResult> => {
       const provider = providers.value.find(
@@ -1141,7 +1199,6 @@ export function useAssetPresentation(
 
       const activeTarget = toValue(options.activeTarget)
       if (!activeTarget) throw actionError(ACTION_UNAVAILABLE_KEY)
-      const activeIdentity = targetIdentityKey(activeTarget)
 
       const metadata = resolveMetadataForTarget(providerId, activeTarget)
       if (metadata.status !== 'ready') {
@@ -1175,28 +1232,18 @@ export function useAssetPresentation(
           })
           throw actionError(ACTION_UNAVAILABLE_KEY)
         }
-        if (!available) throw actionError(ACTION_UNAVAILABLE_KEY)
+        if (!available || !isCurrentAction())
+          throw actionError(ACTION_UNAVAILABLE_KEY)
 
         try {
           const result = await action.execute(input)
           if (!isActionResult(result)) {
             throw new Error('Presentation action returned an invalid result')
           }
-          const currentActiveTarget = toValue(options.activeTarget)
-          if (
-            controller.signal.aborted ||
-            !currentActiveTarget ||
-            targetIdentityKey(currentActiveTarget) !== activeIdentity
-          ) {
-            if (
-              metadataCache.get(providerId)?.delete(activeTarget.assetId) ===
-              true
-            ) {
-              metadataVersion.value += 1
-            }
+          if (controller.signal.aborted || !isCurrentAction())
             throw actionError(ACTION_FAILED_KEY)
-          }
-          reloadProvider(providerId)
+          // The action owns this refresh; it must retain immediate feedback.
+          reloadProvider(providerId, true)
           return result
         } catch (error) {
           reportError(error, {
@@ -1275,8 +1322,13 @@ export function useAssetPresentation(
     )
     watch(
       () => toValue(options.activeTarget),
-      () => {
+      (target) => {
         abortActions()
+        // Detail re-entry is an authoritative read boundary, not proof that a
+        // previously cached server selection remains current.
+        if (target)
+          for (const cache of metadataCache.values())
+            cache.delete(target.assetId)
         restartCycles(false)
       },
       { flush: 'sync' }
@@ -1486,7 +1538,8 @@ export function useAssetPresentation(
           ...(execution?.status === 'error' && execution.safeMessageKey
             ? { errorMessageKey: execution.safeMessageKey }
             : {}),
-          ...(execution?.status === 'succeeded' ||
+          ...((execution?.status === 'succeeded' &&
+            metadata.status !== 'error') ||
           execution?.status === 'unchanged'
             ? {
                 resultStatus: execution.status,
@@ -1558,35 +1611,73 @@ export function useAssetPresentation(
       restartCycles(false)
     },
     executeAction(providerId, actionId) {
+      const visitGeneration = actionVisitGeneration
+      const providerGeneration = providerActionGenerations.get(providerId) ?? 0
       const activeTarget = toValue(options.activeTarget)
       const key = activeTarget
         ? actionExecutionKey(providerId, actionId, activeTarget)
         : `${getPresentationActionKey(providerId, actionId)}/none`
+      const inFlightKey = JSON.stringify([
+        key,
+        visitGeneration,
+        providerGeneration
+      ])
       const canCommitUiState = () => {
         const currentTarget = toValue(options.activeTarget)
         return (
           !disposed &&
+          visitGeneration === actionVisitGeneration &&
+          providerGeneration ===
+            (providerActionGenerations.get(providerId) ?? 0) &&
           currentTarget !== null &&
           providers.value.some((provider) => provider.id === providerId) &&
           actionExecutionKey(providerId, actionId, currentTarget) === key
         )
       }
-      const inFlight = inFlightActions.get(key)
+      const inFlight = inFlightActions.get(inFlightKey)
       if (inFlight) return inFlight
+      if (
+        activeTarget &&
+        resolveMetadataForTarget(providerId, activeTarget).status !== 'ready'
+      ) {
+        for (const [pendingKey, pendingRun] of inFlightActions) {
+          if (pendingKey.startsWith(`[${JSON.stringify(key)},`))
+            return pendingRun
+        }
+      }
       setActionUiState(key, { status: 'running' })
-      const run = executeActionGuarded(providerId, actionId)
-      inFlightActions.set(key, run)
+      const run = executeActionGuarded(providerId, actionId, canCommitUiState)
+      inFlightActions.set(inFlightKey, run)
       void run
         .then(
           (result) => {
-            if (!canCommitUiState()) return
+            if (!canCommitUiState() || inFlightActions.get(inFlightKey) !== run)
+              return
+            // An immediate reload can fail before the action promise settles.
+            // Do not reintroduce success after that authoritative failure.
+            if (result.status === 'succeeded' && activeTarget) {
+              const metadata = resolveMetadataForTarget(
+                providerId,
+                activeTarget
+              )
+              if (
+                metadata.status === 'error' ||
+                metadata.status === 'not-applicable'
+              ) {
+                // Reload retains unresolved peers, but this owned execution
+                // has settled even when its success cannot be published.
+                setActionUiState(key, null)
+                return
+              }
+            }
             setActionUiState(key, {
               status: result.status,
               safeMessageKey: result.safeMessageKey
             })
           },
           (error: unknown) => {
-            if (!canCommitUiState()) return
+            if (!canCommitUiState() || inFlightActions.get(inFlightKey) !== run)
+              return
             const safeMessageKey =
               isPlainObject(error) && typeof error.safeMessageKey === 'string'
                 ? error.safeMessageKey
@@ -1598,8 +1689,8 @@ export function useAssetPresentation(
           }
         )
         .finally(() => {
-          if (inFlightActions.get(key) === run) inFlightActions.delete(key)
-          if (!canCommitUiState()) setActionUiState(key, null)
+          if (inFlightActions.get(inFlightKey) === run)
+            inFlightActions.delete(inFlightKey)
         })
       return run
     },

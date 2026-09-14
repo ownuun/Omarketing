@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "generator": {
+    "path": ".hermes/phase0/tools/generate-contracts.ts",
+    "version": "1.0.0"
+  },
+  "inputs": [
+    {
+      "path": ".hermes/phase0/schemas/output-locator.v1.schema.json",
+      "sha256": "194e06f4a1658962c8e394b8f90c26b8ab5261ab2d2fa1bdf805019cdb1978f0"
+    },
+    {
+      "path": ".hermes/phase0/schemas/selection-manifest.v1.schema.json",
+      "sha256": "dd2ec20de553ba7a9b323b237bfdc16cbd10bd1dfe07124ec9491fe456452712"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "src/extensions/core/omarketing/selectionManifestV1.generated.ts",
+      "sha256": "f4fd0fba7f4f71001f9ebff2fa8c559835347220dc8773d03196cade08c4d35e"
+    },
+    {
+      "path": "src/platform/assets/presentation/outputLocatorV1.generated.ts",
+      "sha256": "2194ec8532db7749912d2ba00724da6845f595e4463e4d3f7241afd39c3ef198"
+    }
+  ],
+  "supported_keyword_map_version": "1",
+  "parity": [
+    {
+      "schema_path": ".hermes/phase0/schemas/output-locator.v1.schema.json",
+      "positive_passes": 1,
+      "negative_rejections": 14
+    },
+    {
+      "schema_path": ".hermes/phase0/schemas/selection-manifest.v1.schema.json",
+      "positive_passes": 2,
+      "negative_rejections": 11
+    }
+  ],
+  "prepublish": {
+    "validated_outputs": 2,
+    "published_outputs": 2
+  },
+  "second_run": {
+    "changed_outputs": 0
+  },
+  "package_mutations": {
+    "scripts": 0,
+    "dependencies": 0,
+    "lockfiles": 0
+  },
+  "reviewer": "ultragoal-leader (omarketing-phase1-foundation-ultragoal-v1, G003)",
+  "reviewed_at": "2026-08-30T21:50:55+09:00",
+  "commands": [
+    "./node_modules/.bin/tsx .hermes/phase0/tools/generate-contracts.ts",
+    "./node_modules/.bin/tsx --test .hermes/phase0/tools/generate-contracts.test.ts",
+    "./node_modules/.bin/vue-tsc --noEmit -p tsconfig.json"
+  ],
+  "test_summary": {
+    "tests": 32,
+    "pass": 32,
+    "fail": 0,
+    "skipped": 0
+  },
+  "typecheck": {
+    "command": "vue-tsc --noEmit",
+    "exit_code": 0,
+    "diagnostics": 0
+  },
+  "notes": [
+    "The selection manifest schema uses an external $ref to output-locator.v1.schema.json, so the generated manifest module imports the generated locator module. That direction (Omarketing extension -> generic presentation) is the one the allowlist permits; the generic registry never imports an Omarketing module.",
+    "Conditional presence (allOf/if/then/else/not/anyOf) is materialized as a Zod superRefine rather than trusted to digest equality: a stale selection requires stale_at and stale_reason, and a selected selection forbids stale_at, stale_reason and observed_sha256.",
+    "propertyNames subschemas carry string constraints without an explicit type; the generator treats that single position as a string and never infers a type from constraints elsewhere.",
+    "Observed environment side effect: the repository's own package.json prepare script runs on `pnpm exec` and re-applies `git config blame.ignoreRevsFile .git-blame-ignore-revs`. The value is the repository's own tracked file, the entry is single and non-duplicated, and .git/config is untracked so it never enters the implementation diff or the AC-13 review. Later runs use ./node_modules/.bin/tsx to avoid re-triggering the prepare lifecycle.",
+    "Formatting is part of publishing. The generator writes both outputs and then runs the repository formatter over them, so `oxfmt --check` passes without any hand edit to a DO NOT EDIT file. The formatter is deterministic: three consecutive runs produced byte-identical outputs. Reported digests are therefore post-format digests, and a dry run reports pre-format digests and is not substitute evidence for what was published.",
+    "The generator emits a file-scoped `eslint-disable no-control-regex` only when the source schema actually matches control-character ranges. Those ranges are a security property of the contract because they reject control characters in paths, filenames, and identifiers, so the rule is narrowed for the generated file rather than weakened repository-wide."
+  ]
+}

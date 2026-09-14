@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.omarketing.invalid/auth/auth-error-response.v1.schema.json",
+  "title": "Omarketing auth error response v1",
+  "description": "A fixed, non-secret-bearing JSON error response for gateway-owned authentication routes.",
+  "$comment": "Messages are fixed per code so malformed, expired, revoked, and missing sessions cannot create a distinguishing error body.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "error"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "INVALID_REQUEST",
+            "INVALID_CREDENTIALS",
+            "AUTH_REQUIRED",
+            "CSRF_REJECTED",
+            "RATE_LIMITED",
+            "SERVICE_UNAVAILABLE"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "minLength": 18,
+          "maxLength": 64,
+          "enum": [
+            "The request is invalid.",
+            "Invalid username or password.",
+            "Authentication is required.",
+            "The request origin is not allowed.",
+            "Too many requests.",
+            "The authentication service is unavailable."
+          ]
+        },
+        "retry_after_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 86400
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "code": {
+                "const": "INVALID_REQUEST"
+              }
+            },
+            "required": [
+              "code"
+            ]
+          },
+          "then": {
+            "properties": {
+              "message": {
+                "const": "The request is invalid."
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "code": {
+                "const": "INVALID_CREDENTIALS"
+              }
+            },
+            "required": [
+              "code"
+            ]
+          },
+          "then": {
+            "properties": {
+              "message": {
+                "const": "Invalid username or password."
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "code": {
+                "const": "AUTH_REQUIRED"
+              }
+            },
+            "required": [
+              "code"
+            ]
+          },
+          "then": {
+            "properties": {
+              "message": {
+                "const": "Authentication is required."
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "code": {
+                "const": "CSRF_REJECTED"
+              }
+            },
+            "required": [
+              "code"
+            ]
+          },
+          "then": {
+            "properties": {
+              "message": {
+                "const": "The request origin is not allowed."
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "code": {
+                "const": "RATE_LIMITED"
+              }
+            },
+            "required": [
+              "code"
+            ]
+          },
+          "then": {
+            "required": [
+              "retry_after_seconds"
+            ],
+            "properties": {
+              "message": {
+                "const": "Too many requests."
+              },
+              "retry_after_seconds": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 86400
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "retry_after_seconds": false
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "code": {
+                "const": "SERVICE_UNAVAILABLE"
+              }
+            },
+            "required": [
+              "code"
+            ]
+          },
+          "then": {
+            "properties": {
+              "message": {
+                "const": "The authentication service is unavailable."
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

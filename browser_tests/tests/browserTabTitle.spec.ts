@@ -12,7 +12,7 @@ test.describe('Browser tab title', { tag: '@smoke' }, () => {
       })
       await expect
         .poll(() => comfyPage.page.title())
-        .toBe(`*${workflowName} - ComfyUI`)
+        .toBe(`*${workflowName} - Omarketing`)
     })
   })
 
@@ -22,7 +22,7 @@ test.describe('Browser tab title', { tag: '@smoke' }, () => {
     })
 
     test('Can display default title', async ({ comfyPage }) => {
-      await expect.poll(() => comfyPage.page.title()).toBe('ComfyUI')
+      await expect.poll(() => comfyPage.page.title()).toBe('Omarketing')
     })
   })
 })

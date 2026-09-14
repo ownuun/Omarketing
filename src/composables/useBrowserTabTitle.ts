@@ -7,8 +7,8 @@ import { useWorkflowStore } from '@/platform/workflow/management/stores/workflow
 import { useExecutionStore } from '@/stores/executionStore'
 import { useWorkspaceStore } from '@/stores/workspaceStore'
 
-const DEFAULT_TITLE = 'ComfyUI'
-const TITLE_SUFFIX = ' - ComfyUI'
+const DEFAULT_TITLE = 'Omarketing'
+const TITLE_SUFFIX = ' - Omarketing'
 
 export const useBrowserTabTitle = () => {
   const executionStore = useExecutionStore()

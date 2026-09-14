@@ -1,0 +1,99 @@
+{
+  "skill": "ultragoal",
+  "status": "complete",
+  "current_phase": "complete",
+  "active": false,
+  "goals": [
+    {
+      "id": "G001",
+      "title": "W0 scope freeze와 모순 감사 영속화",
+      "status": "complete"
+    },
+    {
+      "id": "G002",
+      "title": "CR-1 계약 개정 두 문서와 신규 Architect·Critic 검토",
+      "status": "complete"
+    },
+    {
+      "id": "G003",
+      "title": "W6.2 SchemaGenerator와 두 generated 계약 출력",
+      "status": "complete"
+    },
+    {
+      "id": "G004",
+      "title": "W3.1 generic Assets presentation registry와 host 결속",
+      "status": "complete"
+    },
+    {
+      "id": "G005",
+      "title": "W3.2·W4.1·W5·W2 병렬 기여 lane",
+      "status": "complete"
+    },
+    {
+      "id": "G006",
+      "title": "W4.2 auth reachability 차단 다섯 소스",
+      "status": "complete"
+    },
+    {
+      "id": "G007",
+      "title": "W1 sole-writer 부트스트랩 통합",
+      "status": "complete"
+    },
+    {
+      "id": "G008",
+      "title": "W7 closeout 전체 검증과 실제 브라우저 QA",
+      "status": "superseded"
+    }
+  ],
+  "counts": {
+    "pending": 0,
+    "active": 0,
+    "complete": 7,
+    "failed": 0,
+    "blocked": 0,
+    "review_blocked": 0,
+    "superseded": 1
+  },
+  "ledger_path": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing/.gjc/_session-01a043d8-f2ed-7193-90de-d5033724e455/ultragoal/ledger.jsonl",
+  "brief_path": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing/.gjc/_session-01a043d8-f2ed-7193-90de-d5033724e455/ultragoal/brief.md",
+  "goals_path": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing/.gjc/_session-01a043d8-f2ed-7193-90de-d5033724e455/ultragoal/goals.json",
+  "gjc_objective": "Complete the durable ultragoal plan in .gjc/ultragoal/goals.json, including later accepted/appended stories, under the original brief constraints; use .gjc/ultragoal/ledger.jsonl as the audit trail.",
+  "nudge_budget": 10,
+  "nudge_count": 0,
+  "nudge_remaining": 10,
+  "nudge_goal_id": "G007",
+  "nudge_target_kind": "final_aggregate_receipt",
+  "latestLedgerEvent": {
+    "event": "steering_accepted",
+    "goalId": "G008",
+    "timestamp": "2026-08-30T13:29:59.312Z",
+    "kind": "mark_blocked_superseded",
+    "evidence": "G008을 blocked로 만든 사유가 사실이 아니었고 이후 그 일이 전부 실제로 완료됐다. 차단 사유는 'AC-1/AC-2/AC-4 live 검증에 ComfyUI 백엔드가 필요하나 이 머신에 부재'였는데, terminal critic이 REJECT로 반증했고 진본 설치가 design/1. 영상:사진/tools/comfyui에 실재했다. 리더의 find가 한글과 콜론이 든 경로를 놓친 탐색 오류였다. 이후 사용자 데이터를 --base-directory로 격리한 채 백엔드를 기동해 live 브라우저 검증을 마쳤고, E2E 스펙을 17/17(stats expected 17 unexpected 0)로 실행했으며, 사용자 user/·output/ 해시 5건 전후 동일과 custom_nodes/ 무변경을 확인하고 서버를 종료했다. 정적 게이트 전수 통과(typecheck·browser tc·eslint·oxfmt exit 0, generator 35/35, 13개 스위트 292/292), AC 13/13 충족, AC-13 receipt 10행 PASS, boundary cohort 세 lane 청정 join(architect APPROVE 전축 CLEAR, QA passed/E2E passed/red-team passed, cleaner OKAY 0/0), terminal critic OKAY."
+  },
+  "version": 2,
+  "updated_at": "2026-08-30T13:29:59.737Z",
+  "receipt": {
+    "version": 1,
+    "skill": "ultragoal",
+    "owner": "gjc-runtime",
+    "command": "gjc ultragoal (reconcile)",
+    "state_path": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing/.gjc/_session-01a043d8-f2ed-7193-90de-d5033724e455/state/skill-active-state.json",
+    "storage_path": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing/.gjc/_session-01a043d8-f2ed-7193-90de-d5033724e455/state/ultragoal-state.json",
+    "mutated_at": "2026-08-30T13:29:59.737Z",
+    "fresh_until": "2026-08-30T13:59:59.737Z",
+    "status": "fresh",
+    "mutation_id": "ultragoal:reconcile:2026-08-30T13:29:59.737Z",
+    "verb": "reconcile",
+    "from_phase": "complete",
+    "to_phase": "complete",
+    "forced": true,
+    "content_sha256": {
+      "algorithm": "sha256",
+      "value": "0aeefdfed4bbe52251cbbb0b8dd63df7562076e8c14e903e53be48a0df977ed1",
+      "covered_path": "/Users/ownuun/Documents/1. 개인문서/marketing/Omarketing/.gjc/_session-01a043d8-f2ed-7193-90de-d5033724e455/state/ultragoal-state.json",
+      "computed_at": "2026-08-30T13:29:59.737Z"
+    }
+  },
+  "session_id": "01a043d8-f2ed-7193-90de-d5033724e455",
+  "state_revision": 26
+}

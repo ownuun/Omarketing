@@ -1,0 +1,26 @@
+OMARKETING_RELEASE_SOURCE_TOPOLOGY_V1
+scenario=desired-synthetic
+observed_at=2026-08-27T17:55:00+09:00
+observed_branding_changes=<none>
+verdict=PASS_SYNTHETIC
+source_url_state=CONTROLLED
+check=PASS|control.omarketing_destinations|actual="verified"|expected="verified local control assertion with evidence reference"|detail="local assertion present; no external URL check performed"
+check=PASS|git.origin.fetch_controlled|actual="https://code.omarketing.example.invalid/omarketing/Omarketing"|expected="https://code.omarketing.example.invalid/omarketing/Omarketing"|detail="origin fetch is the asserted controlled Omarketing repository"
+check=PASS|git.origin.push_controlled|actual="https://code.omarketing.example.invalid/omarketing/Omarketing"|expected="https://code.omarketing.example.invalid/omarketing/Omarketing"|detail="origin push is confined to the asserted controlled repository"
+check=PASS|git.upstream.fetch_canonical|actual="https://github.com/Comfy-Org/ComfyUI_frontend"|expected="https://github.com/Comfy-Org/ComfyUI_frontend"|detail="upstream fetch is canonical"
+check=PASS|git.upstream.push_absent|actual="<none>"|expected="<none>"|detail="no effective upstream push URL is present"
+check=PASS|branding.index_title|actual="Omarketing"|expected="Omarketing"|detail="exact match"
+check=PASS|branding.splash_accessible_name|actual="Loading Omarketing"|expected="Loading Omarketing"|detail="exact match"
+check=PASS|branding.app_title|actual="Omarketing"|expected="Omarketing"|detail="exact match"
+check=PASS|branding.tab_default_title|actual="Omarketing"|expected="Omarketing"|detail="exact match"
+check=PASS|branding.tab_title_suffix|actual=" - Omarketing"|expected=" - Omarketing"|detail="exact match"
+check=PASS|branding.sidebar_accessible_name|actual="Omarketing Logo"|expected="Omarketing Logo"|detail="exact match"
+check=PASS|branding.logo_component_preserved|actual="ComfyLogo"|expected="ComfyLogo"|detail="exact match"
+check=PASS|branding.manifest_name|actual="Omarketing"|expected="Omarketing"|detail="exact match"
+check=PASS|branding.manifest_short_name|actual="Omarketing"|expected="Omarketing"|detail="exact match"
+check=PASS|branding.manifest_description|actual="Omarketing: AI image generation platform"|expected="Omarketing-prefixed non-official description"|detail="name-only product identity is explicit"
+check=PASS|branding.package_description|actual="Omarketing front end, a modified ComfyUI Frontend distribution for marketing workflows"|expected="Omarketing front end, a modified ComfyUI Frontend distribution for marketing workflows"|detail="exact match"
+check=PASS|branding.package_name_controlled|actual="@omarketing/comfyui-frontend"|expected="@omarketing/comfyui-frontend"|detail="package name matches the asserted controlled namespace"
+check=PASS|source.links_control_state|actual="package_homepage=https://omarketing.example.invalid;package_repository=https://code.omarketing.example.invalid/omarketing/Omarketing.git;external_frontend_source=https://code.omarketing.example.invalid/omarketing/Omarketing;external_issues=https://code.omarketing.example.invalid/omarketing/Omarketing/issues;help_source=https://code.omarketing.example.invalid/omarketing/Omarketing"|expected="package_homepage=https://omarketing.example.invalid;package_repository=https://code.omarketing.example.invalid/omarketing/Omarketing.git;external_frontend_source=https://code.omarketing.example.invalid/omarketing/Omarketing;external_issues=https://code.omarketing.example.invalid/omarketing/Omarketing/issues;help_source=https://code.omarketing.example.invalid/omarketing/Omarketing"|detail="all release source destinations match the asserted controlled values"
+blockers=0
+exit_code=0

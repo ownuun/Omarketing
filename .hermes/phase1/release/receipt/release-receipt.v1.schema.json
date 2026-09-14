@@ -1,0 +1,516 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:omarketing:schema:release-receipt:v1",
+  "title": "Omarketing artifact-specific release receipt v1",
+  "description": "Fail-closed structural contract binding one Omarketing release artifact to immutable source, exact build materials and outputs, legal payload, SBOM, publisher, and reviewer evidence. Build environment entries are exact public, non-secret build inputs only. Actual runtime/deployment secrets are outside this receipt and must not be requested, read, or recorded. A release build must not bake owner access passwords or provider credentials into frontend artifacts. Secret presence and configuration must be proven separately by redacted operational evidence, never by a value or hash in this receipt. Secret values must never be serialized, hashed as a substitute, logged, or stored here.",
+  "$comment": "Schema or fixture validation establishes structure only. It does not establish production readiness, publication authorization, legal approval, source availability, identity control, or artifact authenticity.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "receiptId",
+    "artifactSpecific",
+    "release",
+    "source",
+    "build",
+    "artifact",
+    "legalPayload",
+    "sbom",
+    "publisher",
+    "reviewer"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "omarketing-release-receipt/v1"
+    },
+    "receiptId": {
+      "type": "string",
+      "minLength": 32,
+      "maxLength": 256,
+      "pattern": "^\\S+(?![\\s\\S])",
+      "$comment": "The local validator binds this value to artifact name, version, and SHA-256."
+    },
+    "artifactSpecific": {
+      "const": true
+    },
+    "release": {
+      "$ref": "#/$defs/release"
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "build": {
+      "$ref": "#/$defs/build"
+    },
+    "artifact": {
+      "$ref": "#/$defs/artifact"
+    },
+    "legalPayload": {
+      "$ref": "#/$defs/legalPayload"
+    },
+    "sbom": {
+      "$ref": "#/$defs/sbom"
+    },
+    "publisher": {
+      "$ref": "#/$defs/publisher"
+    },
+    "reviewer": {
+      "$ref": "#/$defs/reviewer"
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^\\S(?:[^\\u0000-\\u001F\\u007F\\u2028\\u2029]*\\S)?(?![\\s\\S])"
+    },
+    "longString": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2048,
+      "pattern": "^\\S(?:[^\\u0000-\\u001F\\u007F\\u2028\\u2029]*\\S)?(?![\\s\\S])"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 128,
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?(?:\\+[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?(?![\\s\\S])"
+    },
+    "toolVersion": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 64,
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?(?![\\s\\S])"
+    },
+    "gitCommit": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}(?![\\s\\S])"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}(?![\\s\\S])"
+    },
+    "utcDate": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}(?![\\s\\S])"
+    },
+    "utcDateTime": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\\.[0-9]{1,9})?Z(?![\\s\\S])"
+    },
+    "httpsUrl": {
+      "type": "string",
+      "format": "uri",
+      "minLength": 16,
+      "maxLength": 2048,
+      "pattern": "^https://(?:github\\.com|codeload\\.github\\.com|gitlab\\.com)/",
+      "$comment": "Receipt v1 accepts only canonical GitHub, GitHub codeload, or GitLab source archive routes; the local validator binds the exact commit to the provider-specific selector."
+    },
+    "relativePath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*//)(?!.*\\\\)[^\\u0000-\\u001F\\u007F\\u2028\\u2029]+(?![\\s\\S])"
+    },
+    "evidenceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "release": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "status", "modificationDate", "buildCompletedAt"],
+      "properties": {
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "status": {
+          "enum": ["BLOCKED", "PASS"]
+        },
+        "modificationDate": {
+          "$ref": "#/$defs/utcDate"
+        },
+        "buildCompletedAt": {
+          "$ref": "#/$defs/utcDateTime"
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "url",
+        "tag",
+        "commit",
+        "archiveSha256",
+        "frontendBaseCommit",
+        "backendCompatibilityCommit"
+      ],
+      "properties": {
+        "url": {
+          "$ref": "#/$defs/httpsUrl"
+        },
+        "tag": {
+          "type": "string",
+          "minLength": 12,
+          "maxLength": 137,
+          "pattern": "^refs/tags/[A-Za-z0-9][A-Za-z0-9._+-]{0,126}(?![\\s\\S])"
+        },
+        "commit": {
+          "$ref": "#/$defs/gitCommit"
+        },
+        "archiveSha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "frontendBaseCommit": {
+          "const": "f8db605df6c7a3fb1a936f17806e42ea2d76fe05"
+        },
+        "backendCompatibilityCommit": {
+          "const": "b08e6cf35fac50d3ca8470dffb3f9a1fbb7187d2"
+        }
+      }
+    },
+    "toolchain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operatingSystem",
+        "operatingSystemVersion",
+        "architecture",
+        "nodeVersion",
+        "pnpmVersion",
+        "packageManager"
+      ],
+      "properties": {
+        "operatingSystem": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "operatingSystemVersion": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "architecture": {
+          "enum": ["arm64", "x64"]
+        },
+        "nodeVersion": {
+          "$ref": "#/$defs/toolVersion"
+        },
+        "pnpmVersion": {
+          "$ref": "#/$defs/toolVersion"
+        },
+        "packageManager": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 80,
+          "pattern": "^pnpm@[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z]+(?:[.-][0-9A-Za-z]+)*)?(?![\\s\\S])"
+        }
+      }
+    },
+    "environmentVariable": {
+      "type": "object",
+      "description": "One exact public, non-secret variable that affects public frontend build output. Runtime/deployment secret values and hashes are forbidden.",
+      "additionalProperties": false,
+      "required": ["classification", "name", "value"],
+      "properties": {
+        "classification": {
+          "const": "public-build-input"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Z_][A-Z0-9_]*(?![\\s\\S])"
+        },
+        "value": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "description": "Public build environment evidence only; secret presence or configuration belongs in separate redacted operational evidence.",
+      "additionalProperties": false,
+      "required": ["distribution", "variables"],
+      "properties": {
+        "distribution": {
+          "const": "production"
+        },
+        "variables": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/environmentVariable"
+          }
+        }
+      }
+    },
+    "lockfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "manager", "sha256"],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "manager": {
+          "enum": ["pnpm", "npm", "yarn", "uv", "pip", "other"]
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "buildInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "role", "sha256"],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "role": {
+          "enum": [
+            "source-archive",
+            "configuration",
+            "generated-input",
+            "patch",
+            "template",
+            "other"
+          ]
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "buildOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "role", "sha256"],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "role": {
+          "enum": ["release-artifact", "source-map", "metadata", "other"]
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "toolchain",
+        "environment",
+        "commands",
+        "lockfiles",
+        "inputs",
+        "outputs"
+      ],
+      "properties": {
+        "toolchain": {
+          "$ref": "#/$defs/toolchain"
+        },
+        "environment": {
+          "$ref": "#/$defs/environment"
+        },
+        "commands": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/longString"
+          }
+        },
+        "lockfiles": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 32,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/lockfile"
+          }
+        },
+        "inputs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4096,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/buildInput"
+          }
+        },
+        "outputs": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 4096,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/buildOutput"
+          }
+        }
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "path", "mediaType", "sha256"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 128,
+          "pattern": "^[a-z0-9][a-z0-9._-]*(?![\\s\\S])"
+        },
+        "version": {
+          "$ref": "#/$defs/version"
+        },
+        "path": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "mediaType": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 128,
+          "pattern": "^[a-z0-9!#$&^_.+-]+/[a-z0-9!#$&^_.+-]+(?![\\s\\S])"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "legalPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "license",
+        "thirdPartyNotices",
+        "complianceChecklist",
+        "sourceDirections"
+      ],
+      "properties": {
+        "license": {
+          "$ref": "#/$defs/evidenceRef"
+        },
+        "thirdPartyNotices": {
+          "$ref": "#/$defs/evidenceRef"
+        },
+        "complianceChecklist": {
+          "$ref": "#/$defs/evidenceRef"
+        },
+        "sourceDirections": {
+          "$ref": "#/$defs/evidenceRef"
+        }
+      }
+    },
+    "sbom": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "specVersion", "path", "sha256", "artifactSha256"],
+      "properties": {
+        "format": {
+          "enum": ["SPDX", "CycloneDX"]
+        },
+        "specVersion": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "path": {
+          "$ref": "#/$defs/relativePath"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "artifactSha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "publisher": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "organization",
+        "identity",
+        "attestedAt",
+        "evidence"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "organization": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "identity": {
+          "type": "string",
+          "format": "uri",
+          "minLength": 3,
+          "maxLength": 512
+        },
+        "attestedAt": {
+          "$ref": "#/$defs/utcDateTime"
+        },
+        "evidence": {
+          "$ref": "#/$defs/evidenceRef"
+        }
+      }
+    },
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "organization",
+        "identity",
+        "reviewedAt",
+        "decision",
+        "scope",
+        "evidence"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "organization": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "identity": {
+          "type": "string",
+          "format": "uri",
+          "minLength": 3,
+          "maxLength": 512
+        },
+        "reviewedAt": {
+          "$ref": "#/$defs/utcDateTime"
+        },
+        "decision": {
+          "enum": ["BLOCKED", "PASS"]
+        },
+        "scope": {
+          "$ref": "#/$defs/longString"
+        },
+        "evidence": {
+          "$ref": "#/$defs/evidenceRef"
+        }
+      }
+    }
+  }
+}

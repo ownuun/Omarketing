@@ -1,0 +1,33 @@
+OMARKETING_RELEASE_SOURCE_TOPOLOGY_V1
+scenario=current
+observed_at=2026-08-27T17:59:59+09:00
+observed_branding_changes=index.html,manifest.json,package.json,src/components/sidebar/ComfyMenuButton.vue,src/composables/useBrowserTabTitle.test.ts,src/composables/useBrowserTabTitle.ts,src/config.ts
+verdict=BLOCKED
+source_url_state=UPSTREAM_PRESERVED_CONTROL_UNVERIFIED
+command_exit=0|git -C "$REPO" config --local --get-all remote.origin.url
+command_exit=1|git -C "$REPO" config --local --get-all remote.origin.pushurl
+command_exit=0|git -C "$REPO" remote get-url --push --all origin
+command_exit=1|git -C "$REPO" config --local --get-all remote.upstream.url
+command_exit=1|git -C "$REPO" config --local --get-all remote.upstream.pushurl
+command_exit=2|git -C "$REPO" remote get-url --push --all upstream
+command_exit=0|git -C "$REPO" status --porcelain=v1 --untracked-files=all -- index.html manifest.json package.json src/components/helpcenter/HelpCenterMenuContent.vue src/components/sidebar/ComfyMenuButton.vue src/composables/useBrowserTabTitle.test.ts src/composables/useBrowserTabTitle.ts src/composables/useExternalLink.ts src/config.ts
+check=DEFERRED|control.omarketing_destinations|actual="unverified"|expected="verified local control assertion with evidence reference"|detail="control is unverified; release remains blocked"
+check=BLOCKED|git.origin.fetch_controlled|actual="https://github.com/Comfy-Org/ComfyUI_frontend"|expected="verified Omarketing origin"|detail="origin currently has the canonical Comfy upstream role"
+check=BLOCKED|git.origin.push_controlled|actual="https://github.com/Comfy-Org/ComfyUI_frontend"|expected="verified Omarketing origin"|detail="origin push currently targets the canonical Comfy upstream"
+check=BLOCKED|git.upstream.fetch_canonical|actual="<none>"|expected="https://github.com/Comfy-Org/ComfyUI_frontend"|detail="upstream remote is missing or not canonical"
+check=BLOCKED|git.upstream.push_absent|actual="<none>"|expected="<none>"|detail="upstream remote is missing or invalid"
+check=PASS|branding.index_title|actual="Omarketing"|expected="Omarketing"|detail="exact match"
+check=PASS|branding.splash_accessible_name|actual="Loading Omarketing"|expected="Loading Omarketing"|detail="exact match"
+check=PASS|branding.app_title|actual="Omarketing"|expected="Omarketing"|detail="exact match"
+check=PASS|branding.tab_default_title|actual="Omarketing"|expected="Omarketing"|detail="exact match"
+check=PASS|branding.tab_title_suffix|actual=" - Omarketing"|expected=" - Omarketing"|detail="exact match"
+check=PASS|branding.sidebar_accessible_name|actual="Omarketing Logo"|expected="Omarketing Logo"|detail="exact match"
+check=PASS|branding.logo_component_preserved|actual="ComfyLogo"|expected="ComfyLogo"|detail="exact match"
+check=PASS|branding.manifest_name|actual="Omarketing"|expected="Omarketing"|detail="exact match"
+check=PASS|branding.manifest_short_name|actual="Omarketing"|expected="Omarketing"|detail="exact match"
+check=PASS|branding.manifest_description|actual="Omarketing: AI image generation platform"|expected="Omarketing-prefixed non-official description"|detail="name-only product identity is explicit"
+check=PASS|branding.package_description|actual="Omarketing front end, a modified ComfyUI Frontend distribution for marketing workflows"|expected="Omarketing front end, a modified ComfyUI Frontend distribution for marketing workflows"|detail="exact match"
+check=DEFERRED|branding.package_name_controlled|actual="@comfyorg/comfyui-frontend"|expected="verified controlled package name"|detail="upstream name is retained instead of claiming an uncontrolled namespace; release remains blocked"
+check=DEFERRED|source.links_control_state|actual="package_homepage=https://comfy.org;package_repository=https://github.com/Comfy-Org/ComfyUI_frontend;external_frontend_source=https://github.com/Comfy-Org/ComfyUI_frontend;external_issues=https://github.com/Comfy-Org/ComfyUI/issues;help_source=https://github.com/Comfy-Org/ComfyUI"|expected="verified controlled Omarketing destinations"|detail="safe upstream retention avoids a false ownership claim; release remains blocked"
+blockers=7
+exit_code=2
