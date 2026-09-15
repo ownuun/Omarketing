@@ -138,7 +138,7 @@ catalog:
   uuid: ^11.1.1
   vee-validate: ^4.15.1
   vite: ^8.2.0
-  vite-plugin-dts: ^5.0.3
+  vite-plugin-dts: ^5.1.0
   vite-plugin-html: ^3.2.2
   vite-plugin-vue-devtools: ^8.2.1
   vitest: ^4.1.10
