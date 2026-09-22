@@ -63,7 +63,7 @@ catalog:
   '@types/three': ^0.184.1
   '@vee-validate/zod': ^4.15.1
   '@vercel/analytics': ^2.0.1
-  '@vitejs/plugin-vue': ^6.0.8
+  '@vitejs/plugin-vue': ^6.0.9
   '@vitest/coverage-v8': ^4.1.10
   '@vitest/ui': ^4.1.10
   '@vueuse/core': ^14.4.0
@@ -137,8 +137,8 @@ catalog:
   unplugin-vue-components: ^32.1.0
   uuid: ^11.1.1
   vee-validate: ^4.15.1
-  vite: ^8.2.0
-  vite-plugin-dts: ^5.0.3
+  vite: ^8.3.0
+  vite-plugin-dts: ^5.1.0
   vite-plugin-html: ^3.2.2
   vite-plugin-vue-devtools: ^8.2.1
   vitest: ^4.1.10
