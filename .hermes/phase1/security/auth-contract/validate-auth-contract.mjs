@@ -518,7 +518,10 @@ export function loadAuthContract() {
 export function collectFixtureIds(fixture) {
   const ids = []
   for (const collection of fixtureCollections) {
-    assert.ok(Array.isArray(fixture[collection]), `${collection} must be an array`)
+    assert.ok(
+      Array.isArray(fixture[collection]),
+      `${collection} must be an array`
+    )
     for (const fixtureCase of fixture[collection]) {
       assert.equal(
         typeof fixtureCase.id,
@@ -609,12 +612,32 @@ export function validateDeploymentProfiles(deploymentProfiles) {
     profile.staging_origin,
     `${profile.id} staging must use separate origin`
   )
-  assert.equal(profile.production_effective_port, 443, `${profile.id} production port`)
-  assert.equal(profile.staging_effective_port, 8443, `${profile.id} staging port`)
-  assert.equal(profile.concurrent_activation, false, `${profile.id} concurrent activation`)
-  assert.equal(profile.session_non_interference_claim, false, `${profile.id} session isolation claim`)
+  assert.equal(
+    profile.production_effective_port,
+    443,
+    `${profile.id} production port`
+  )
+  assert.equal(
+    profile.staging_effective_port,
+    8443,
+    `${profile.id} staging port`
+  )
+  assert.equal(
+    profile.concurrent_activation,
+    false,
+    `${profile.id} concurrent activation`
+  )
+  assert.equal(
+    profile.session_non_interference_claim,
+    false,
+    `${profile.id} session isolation claim`
+  )
   assert.equal(profile.tailscale_only, true, `${profile.id} Tailscale-only`)
-  assert.equal(profile.credential_action_authorized_now, false, `${profile.id} credential authorization`)
+  assert.equal(
+    profile.credential_action_authorized_now,
+    false,
+    `${profile.id} credential authorization`
+  )
   return { caseCount: deploymentProfiles.length }
 }
 
@@ -652,7 +675,8 @@ export function validateStagingProfileCases(stagingProfileCases) {
       `${fixtureCase.id} profile`
     )
     assert.equal(
-      fixtureCase.implementation_proven ?? fixtureCase.expected.implementation_proven,
+      fixtureCase.implementation_proven ??
+        fixtureCase.expected.implementation_proven,
       false,
       `${fixtureCase.id} implementation claim`
     )
@@ -686,7 +710,11 @@ export function validateStagingProfileCases(stagingProfileCases) {
 
   const active = stagingProfileCases[1]
   assert.equal(active.kind, 'preflight_rejection', `${active.id} kind`)
-  assert.equal(active.preflight.active_production_sessions, 1, `${active.id} active session`)
+  assert.equal(
+    active.preflight.active_production_sessions,
+    1,
+    `${active.id} active session`
+  )
   assert.deepEqual(
     active.expected,
     {
@@ -702,7 +730,11 @@ export function validateStagingProfileCases(stagingProfileCases) {
 
   const unknown = stagingProfileCases[2]
   assert.equal(unknown.kind, 'preflight_rejection', `${unknown.id} kind`)
-  assert.equal(unknown.preflight.external_provider_work, 'unknown', `${unknown.id} unknown count`)
+  assert.equal(
+    unknown.preflight.external_provider_work,
+    'unknown',
+    `${unknown.id} unknown count`
+  )
   assert.deepEqual(
     unknown.expected,
     {
@@ -752,12 +784,20 @@ export function validateStagingProfileCases(stagingProfileCases) {
   )
 
   const failure = stagingProfileCases[4]
-  assert.equal(failure.kind, 'failure_or_unknown_restoration', `${failure.id} kind`)
+  assert.equal(
+    failure.kind,
+    'failure_or_unknown_restoration',
+    `${failure.id} kind`
+  )
   assert.deepEqual(
     failure.failure,
     {
       step: 'staging_test',
-      outcomes_blocking_promotion: ['failure', 'interruption', 'outcome_unknown'],
+      outcomes_blocking_promotion: [
+        'failure',
+        'interruption',
+        'outcome_unknown'
+      ],
       outcome: 'outcome_unknown'
     },
     `${failure.id} failure outcomes`
@@ -778,7 +818,10 @@ export function validateStagingProfileCases(stagingProfileCases) {
     `${failure.id} restoration outcome`
   )
 
-  return { caseCount: stagingProfileCases.length, stepCount: happy.steps.length }
+  return {
+    caseCount: stagingProfileCases.length,
+    stepCount: happy.steps.length
+  }
 }
 
 export function validateDurableStoreCases(durableStoreCases) {
@@ -1069,10 +1112,7 @@ export function validateRawJsonCases(rawJsonCases, validators) {
     let document
     let parseError
     try {
-      document = parseJsonDocument(
-        fixtureCase.document_json,
-        fixtureCase.id
-      )
+      document = parseJsonDocument(fixtureCase.document_json, fixtureCase.id)
     } catch (error) {
       parseError = error
     }
@@ -1099,7 +1139,11 @@ export function validateRawJsonCases(rawJsonCases, validators) {
 }
 
 function assertExpectedSubset(actual, expected, label) {
-  if (Array.isArray(expected) || expected === null || typeof expected !== 'object') {
+  if (
+    Array.isArray(expected) ||
+    expected === null ||
+    typeof expected !== 'object'
+  ) {
     assert.deepEqual(actual, expected, label)
     return
   }
@@ -1326,7 +1370,10 @@ export function evaluateClockCase(fixtureCase, activityPolicy) {
     websocketOpen: false
   }
 
-  assert.ok(state.createdAt <= state.lastSeenAt, `${fixtureCase.id} last_seen_at`)
+  assert.ok(
+    state.createdAt <= state.lastSeenAt,
+    `${fixtureCase.id} last_seen_at`
+  )
   assert.ok(
     state.lastSeenAt <= state.idleExpiresAt,
     `${fixtureCase.id} idle_expires_at`
@@ -1353,7 +1400,10 @@ export function evaluateClockCase(fixtureCase, activityPolicy) {
   const observations = []
 
   for (const event of fixtureCase.events) {
-    const eventAt = parseTimestamp(event.at, `${fixtureCase.id}.${event.kind}.at`)
+    const eventAt = parseTimestamp(
+      event.at,
+      `${fixtureCase.id}.${event.kind}.at`
+    )
     assert.ok(
       eventAt >= previousEventAt,
       `${fixtureCase.id} events must be chronological`
@@ -1369,7 +1419,10 @@ export function evaluateClockCase(fixtureCase, activityPolicy) {
       assert.ok(!expired, `${fixtureCase.id} cannot open an expired socket`)
       state.websocketOpen = true
     } else if (event.kind === 'websocket_frame') {
-      assert.ok(state.websocketOpen, `${fixtureCase.id} frame needs a live socket`)
+      assert.ok(
+        state.websocketOpen,
+        `${fixtureCase.id} frame needs a live socket`
+      )
       assert.ok(!expired, `${fixtureCase.id} frame arrived after expiry`)
     }
 
@@ -1418,12 +1471,20 @@ export function validateClockCases(clockCases, activityPolicy) {
 
 function validateRevokeResponse(step, validators) {
   if (step.transport !== 'response_delivered') {
-    assert.equal(step.status, undefined, 'Lost responses cannot expose a status')
+    assert.equal(
+      step.status,
+      undefined,
+      'Lost responses cannot expose a status'
+    )
     assert.equal(step.body, undefined, 'Lost responses cannot expose a body')
     return false
   }
 
-  assert.equal(typeof step.status, 'number', 'Delivered responses need a status')
+  assert.equal(
+    typeof step.status,
+    'number',
+    'Delivered responses need a status'
+  )
   const schemaName =
     step.status === 200
       ? 'auth-revoke-all-response.v1.schema.json'
@@ -1596,15 +1657,9 @@ export function validateAll() {
     fixture.websocket_sla_cases
   )
   const validators = compileSchemas(schemas)
-  const routeCases = validateRouteCases(
-    fixture.cases,
-    fixture.canonical_origin
-  )
+  const routeCases = validateRouteCases(fixture.cases, fixture.canonical_origin)
   const schemaCases = validateSchemaCases(fixture.schema_cases, validators)
-  const rawJsonCases = validateRawJsonCases(
-    fixture.raw_json_cases,
-    validators
-  )
+  const rawJsonCases = validateRawJsonCases(fixture.raw_json_cases, validators)
   const clockCases = validateClockCases(
     fixture.session_clock_cases,
     fixture.activity_policy
@@ -1621,8 +1676,7 @@ export function validateAll() {
     durableStoreCaseCount: durableStoreCases.caseCount,
     firstReleaseAuthPolicyCaseCount: firstReleaseAuthPolicyCases.caseCount,
     fixtureIdCount: ids.length,
-    localCoreSurfaceCount:
-      firstReleaseAuthPolicyCases.localCoreSurfaceCount,
+    localCoreSurfaceCount: firstReleaseAuthPolicyCases.localCoreSurfaceCount,
     maintenanceRestoreCaseCount: maintenanceRestoreCases.caseCount,
     negativeSchemaCaseCount: schemaCases.negativeCount,
     positiveSchemaCaseCount: schemaCases.positiveCount,
@@ -1640,7 +1694,9 @@ export function validateAll() {
   }
 }
 
-const invokedPath = process.argv[1] ? pathToFileURL(resolve(process.argv[1])).href : ''
+const invokedPath = process.argv[1]
+  ? pathToFileURL(resolve(process.argv[1])).href
+  : ''
 if (invokedPath === import.meta.url) {
   try {
     const result = validateAll()

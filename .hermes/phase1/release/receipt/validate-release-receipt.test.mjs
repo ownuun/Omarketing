@@ -42,10 +42,7 @@ const SECRET_ENVIRONMENT_VALUE_CASES = [
   ],
   ['sk- token prefix', 'sk-synthetic-do-not-store-1234567890'],
   ['ghp_ token prefix', 'ghp_syntheticDoNotStore1234567890'],
-  [
-    'github_pat_ token prefix',
-    'github_pat_synthetic_do_not_store_1234567890'
-  ],
+  ['github_pat_ token prefix', 'github_pat_synthetic_do_not_store_1234567890'],
   [
     'URL userinfo credentials',
     'https://fixture-user:fixture-password@build.omarketing.dev/input'
@@ -280,8 +277,8 @@ describe('public build environment secret boundary', () => {
     ].join(' ')
 
     assert.equal(
-      RELEASE_RECEIPT_SCHEMA.$defs.environmentVariable.properties
-        .classification.const,
+      RELEASE_RECEIPT_SCHEMA.$defs.environmentVariable.properties.classification
+        .const,
       'public-build-input'
     )
     assert.match(contractText, /runtime\/deployment secrets are outside/i)
