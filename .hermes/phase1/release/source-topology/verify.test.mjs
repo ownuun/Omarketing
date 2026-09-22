@@ -16,12 +16,17 @@ const verifier = path.join(directory, 'verify.mjs')
 const fixturePath = (name) => path.join(directory, 'fixtures', name)
 const expectedPath = (name) => path.join(directory, 'expected', name)
 
-const readJson = async (filePath) => JSON.parse(await readFile(filePath, 'utf8'))
+const readJson = async (filePath) =>
+  JSON.parse(await readFile(filePath, 'utf8'))
 
 const runFixture = (name) =>
-  spawnSync(process.execPath, [verifier, 'verify', '--input', fixturePath(name)], {
-    encoding: 'utf8'
-  })
+  spawnSync(
+    process.execPath,
+    [verifier, 'verify', '--input', fixturePath(name)],
+    {
+      encoding: 'utf8'
+    }
+  )
 
 test('current snapshot is an exact deterministic expected failure', async () => {
   const result = runFixture('current.snapshot.json')
