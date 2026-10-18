@@ -17,7 +17,9 @@ import {
   mkdtempSync,
   renameSync,
   rmSync,
-  unlinkSync,readFileSync,writeFileSync
+  unlinkSync,
+  readFileSync,
+  writeFileSync
 } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, resolve } from 'node:path'
