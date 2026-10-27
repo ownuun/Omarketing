@@ -855,8 +855,7 @@ function isJwtLike(value) {
   return (
     segments.length === 3 &&
     segments.every(
-      (segment) =>
-        segment.length > 0 && BASE64URL_SEGMENT_PATTERN.test(segment)
+      (segment) => segment.length > 0 && BASE64URL_SEGMENT_PATTERN.test(segment)
     ) &&
     segments[0].startsWith('eyJ') &&
     segments[1].startsWith('eyJ') &&

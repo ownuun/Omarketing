@@ -57,10 +57,10 @@ test('S2 deployment profile and staging window remain contract-only', () => {
   assert.deepEqual(validateDeploymentProfiles(fixture.deployment_profiles), {
     caseCount: 1
   })
-  assert.deepEqual(
-    validateStagingProfileCases(fixture.staging_profile_cases),
-    { caseCount: 5, stepCount: 9 }
-  )
+  assert.deepEqual(validateStagingProfileCases(fixture.staging_profile_cases), {
+    caseCount: 5,
+    stepCount: 9
+  })
 
   const concurrent = structuredClone(fixture.deployment_profiles)
   concurrent[0].concurrent_activation = true
@@ -154,8 +154,7 @@ test('durable auth state is one SQLite behind the gateway boundary', () => {
   )
 
   const wrongPeerUid = structuredClone(fixture.durable_store_cases)
-  wrongPeerUid[0].expected.running_gateway_operator_cli.channel.peer_credentials.requires_exact_configured_operator_uid =
-    false
+  wrongPeerUid[0].expected.running_gateway_operator_cli.channel.peer_credentials.requires_exact_configured_operator_uid = false
   assert.throws(
     () => validateDurableStoreCases(wrongPeerUid),
     /topology-one-process-one-sqlite/
@@ -199,10 +198,10 @@ test('maintenance restore ordering, invalidation, credential version, and cooldo
 })
 
 test('websocket revocation and natural-expiry SLAs start at the right boundary', () => {
-  assert.deepEqual(
-    validateWebsocketSlaCases(fixture.websocket_sla_cases),
-    { caseCount: 2, eventCount: 4 }
-  )
+  assert.deepEqual(validateWebsocketSlaCases(fixture.websocket_sla_cases), {
+    caseCount: 2,
+    eventCount: 4
+  })
 
   const lateDrop = structuredClone(fixture.websocket_sla_cases)
   lateDrop[0].events[0].expected.frames_dropped_immediately = false
@@ -232,9 +231,7 @@ test('first-release H2 policy is strict and contract-only', () => {
   )
   delete missingProperty[0].policy.single_owner
 
-  const extraProperty = structuredClone(
-    fixture.first_release_auth_policy_cases
-  )
+  const extraProperty = structuredClone(fixture.first_release_auth_policy_cases)
   extraProperty[0].policy.visible_comfy_control_acceptable = true
 
   const reversedPolicy = structuredClone(
@@ -242,9 +239,7 @@ test('first-release H2 policy is strict and contract-only', () => {
   )
   reversedPolicy[0].policy.comfy_signin_ui = true
 
-  const driftedPolicy = structuredClone(
-    fixture.first_release_auth_policy_cases
-  )
+  const driftedPolicy = structuredClone(fixture.first_release_auth_policy_cases)
   driftedPolicy[0].policy.local_core_surfaces[0] = 'Projects'
 
   for (const invalidCases of [
@@ -314,8 +309,14 @@ test('positive and hostile schema fixtures validate as declared', () => {
     const cases = fixture.schema_cases.filter(
       (fixtureCase) => fixtureCase.schema === schemaName
     )
-    assert.ok(cases.some((fixtureCase) => fixtureCase.valid), schemaName)
-    assert.ok(cases.some((fixtureCase) => !fixtureCase.valid), schemaName)
+    assert.ok(
+      cases.some((fixtureCase) => fixtureCase.valid),
+      schemaName
+    )
+    assert.ok(
+      cases.some((fixtureCase) => !fixtureCase.valid),
+      schemaName
+    )
   }
 
   const hostileIds = new Set(
@@ -370,10 +371,7 @@ test('fake clock enforces non-touch idle and immutable absolute expiry', () => {
     'policy_rejected_request'
   ])
   assert.deepEqual(
-    validateClockCases(
-      fixture.session_clock_cases,
-      fixture.activity_policy
-    ),
+    validateClockCases(fixture.session_clock_cases, fixture.activity_policy),
     { caseCount: 6, eventCount: 17 }
   )
 
@@ -385,8 +383,7 @@ test('fake clock enforces non-touch idle and immutable absolute expiry', () => {
 
   const activityCase = fixture.session_clock_cases.find(
     (fixtureCase) =>
-      fixtureCase.id ===
-      'clock-allowlisted-application-request-refreshes-idle'
+      fixtureCase.id === 'clock-allowlisted-application-request-refreshes-idle'
   )
   assert.equal(activityCase.events[0].expected.activity_refreshed, true)
 
@@ -428,9 +425,7 @@ test('revoke-all unknown, rate-limit, and duplicate outcomes converge', () => {
   ])
   assert.deepEqual(
     new Set(
-      fixture.revoke_all_convergence_cases.map(
-        (fixtureCase) => fixtureCase.id
-      )
+      fixture.revoke_all_convergence_cases.map((fixtureCase) => fixtureCase.id)
     ),
     requiredIds
   )

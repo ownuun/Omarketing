@@ -5,8 +5,7 @@ import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-export const SNAPSHOT_SCHEMA =
-  'omarketing.release-source-topology.snapshot.v1'
+export const SNAPSHOT_SCHEMA = 'omarketing.release-source-topology.snapshot.v1'
 export const CANONICAL_UPSTREAM_URL =
   'https://github.com/Comfy-Org/ComfyUI_frontend'
 export const EXIT_CODES = Object.freeze({
@@ -31,10 +30,7 @@ const BRANDING_PATHS = Object.freeze([
 ])
 
 const UPSTREAM_LINKS = Object.freeze({
-  package_homepage: new Set([
-    'https://comfy.org',
-    'https://www.comfy.org'
-  ]),
+  package_homepage: new Set(['https://comfy.org', 'https://www.comfy.org']),
   package_repository: new Set([CANONICAL_UPSTREAM_URL]),
   external_frontend_source: new Set([CANONICAL_UPSTREAM_URL]),
   external_issues: new Set([
@@ -59,9 +55,7 @@ const emptyControl = () => ({
 
 const splitLines = (value) => {
   const withoutFinalNewline = value.replace(/\r?\n$/, '')
-  return withoutFinalNewline === ''
-    ? []
-    : withoutFinalNewline.split(/\r?\n/)
+  return withoutFinalNewline === '' ? [] : withoutFinalNewline.split(/\r?\n/)
 }
 
 const shellQuote = (value) => {
@@ -145,8 +139,7 @@ const captureRemote = (repo, name, commands) => {
 
   return {
     fetch_urls: fetch.exit_code === 0 ? fetch.stdout : [],
-    explicit_push_urls:
-      explicitPush.exit_code === 0 ? explicitPush.stdout : [],
+    explicit_push_urls: explicitPush.exit_code === 0 ? explicitPush.stdout : [],
     effective_push_urls:
       effectivePush.exit_code === 0 ? effectivePush.stdout : []
   }
@@ -228,17 +221,25 @@ export const captureSnapshot = async ({
   ])
   commands.push(status)
 
-  const [indexHtml, manifestText, packageText, sidebar, tabTitle, config, links, help] =
-    await Promise.all([
-      readOptional(repo, 'index.html'),
-      readOptional(repo, 'manifest.json'),
-      readOptional(repo, 'package.json'),
-      readOptional(repo, 'src/components/sidebar/ComfyMenuButton.vue'),
-      readOptional(repo, 'src/composables/useBrowserTabTitle.ts'),
-      readOptional(repo, 'src/config.ts'),
-      readOptional(repo, 'src/composables/useExternalLink.ts'),
-      readOptional(repo, 'src/components/helpcenter/HelpCenterMenuContent.vue')
-    ])
+  const [
+    indexHtml,
+    manifestText,
+    packageText,
+    sidebar,
+    tabTitle,
+    config,
+    links,
+    help
+  ] = await Promise.all([
+    readOptional(repo, 'index.html'),
+    readOptional(repo, 'manifest.json'),
+    readOptional(repo, 'package.json'),
+    readOptional(repo, 'src/components/sidebar/ComfyMenuButton.vue'),
+    readOptional(repo, 'src/composables/useBrowserTabTitle.ts'),
+    readOptional(repo, 'src/config.ts'),
+    readOptional(repo, 'src/composables/useExternalLink.ts'),
+    readOptional(repo, 'src/components/helpcenter/HelpCenterMenuContent.vue')
+  ])
 
   const manifest = manifestText === null ? {} : JSON.parse(manifestText)
   const packageJson = packageText === null ? {} : JSON.parse(packageText)
@@ -301,7 +302,9 @@ const assertObservedAt = (value) => {
     !/(?:Z|[+-]\d{2}:\d{2})$/.test(value) ||
     Number.isNaN(Date.parse(value))
   ) {
-    throw new Error('--observed-at must be an RFC 3339 timestamp with a timezone')
+    throw new Error(
+      '--observed-at must be an RFC 3339 timestamp with a timezone'
+    )
   }
 }
 
@@ -314,15 +317,20 @@ const assertSnapshot = (snapshot) => {
   }
   assertObservedAt(snapshot.observed_at)
   if (!snapshot.git?.origin || !snapshot.git?.upstream) {
-    throw new Error('snapshot must contain origin and upstream Git observations')
+    throw new Error(
+      'snapshot must contain origin and upstream Git observations'
+    )
   }
   if (!snapshot.branding?.manifest || !snapshot.branding?.package) {
-    throw new Error('snapshot must contain manifest and package branding observations')
+    throw new Error(
+      'snapshot must contain manifest and package branding observations'
+    )
   }
 }
 
 const valueText = (value) => {
-  if (Array.isArray(value)) return value.length === 0 ? '<none>' : value.join(',')
+  if (Array.isArray(value))
+    return value.length === 0 ? '<none>' : value.join(',')
   if (value === null || value === undefined || value === '') return '<missing>'
   return String(value)
 }
@@ -419,7 +427,9 @@ export const verifySnapshot = (snapshot) => {
     originFetchPass ? 'PASS' : 'BLOCKED',
     'git.origin.fetch_controlled',
     originFetch,
-    controlVerified ? normalizeUrl(control.origin_url) : 'verified Omarketing origin',
+    controlVerified
+      ? normalizeUrl(control.origin_url)
+      : 'verified Omarketing origin',
     originFetch.some(isCanonicalUpstream)
       ? 'origin currently has the canonical Comfy upstream role'
       : originFetchPass
@@ -436,7 +446,9 @@ export const verifySnapshot = (snapshot) => {
     originPushPass ? 'PASS' : 'BLOCKED',
     'git.origin.push_controlled',
     originPush,
-    controlVerified ? normalizeUrl(control.origin_url) : 'verified Omarketing origin',
+    controlVerified
+      ? normalizeUrl(control.origin_url)
+      : 'verified Omarketing origin',
     originPush.some(isCanonicalUpstream)
       ? 'origin push currently targets the canonical Comfy upstream'
       : originPushPass
@@ -570,7 +582,10 @@ export const verifySnapshot = (snapshot) => {
       sourceSummary(controlledSourceExpectations(control)),
       'all release source destinations match the asserted controlled values'
     )
-  } else if (!controlVerified && upstreamLinksArePreserved(branding.source_links)) {
+  } else if (
+    !controlVerified &&
+    upstreamLinksArePreserved(branding.source_links)
+  ) {
     sourceUrlState = 'UPSTREAM_PRESERVED_CONTROL_UNVERIFIED'
     addCheck(
       checks,
@@ -648,7 +663,8 @@ const parseOptions = (args) => {
   for (let index = 0; index < args.length; index += 1) {
     const name = args[index]
     if (!name.startsWith('--')) throw new Error(`unexpected argument: ${name}`)
-    if (Object.hasOwn(options, name)) throw new Error(`duplicate option: ${name}`)
+    if (Object.hasOwn(options, name))
+      throw new Error(`duplicate option: ${name}`)
     const value = args[index + 1]
     if (value === undefined || value.startsWith('--')) {
       throw new Error(`missing value for ${name}`)
@@ -707,7 +723,9 @@ export const runCli = async (
     stderr.write(usage)
     return EXIT_CODES.INPUT_ERROR
   } catch (error) {
-    stderr.write(`INPUT_ERROR ${error instanceof Error ? error.message : String(error)}\n`)
+    stderr.write(
+      `INPUT_ERROR ${error instanceof Error ? error.message : String(error)}\n`
+    )
     return EXIT_CODES.INPUT_ERROR
   }
 }
