@@ -125,7 +125,10 @@ test('Draft 2020-12 external schemas compile as closed versioned objects', () =>
       'https://json-schema.org/draft/2020-12/schema',
       name
     )
-    assert.match(schema.$id, /^https:\/\/schemas\.omarketing\.invalid\/external\//)
+    assert.match(
+      schema.$id,
+      /^https:\/\/schemas\.omarketing\.invalid\/external\//
+    )
     assert.equal(schemaIds.has(schema.$id), false, schema.$id)
     schemaIds.add(schema.$id)
     assert.ok(schema.required.includes('schema_version'), name)
@@ -189,9 +192,7 @@ test('Draft 2020-12 external schemas compile as closed versioned objects', () =>
   )
   assert.equal('request_id' in acceptance.properties, false)
 
-  const artifact = schemas.get(
-    'external-job-artifact-handle.v1.schema.json'
-  )
+  const artifact = schemas.get('external-job-artifact-handle.v1.schema.json')
   assert.deepEqual(Object.keys(artifact.properties).sort(), [
     'expires_at',
     'handle_id',
@@ -231,27 +232,26 @@ test('positive schema documents pass and hostile documents are rejected', () => 
     const cases = fixture.schema_cases.filter(
       (fixtureCase) => fixtureCase.schema === schemaName
     )
-    assert.ok(cases.some((fixtureCase) => fixtureCase.valid), schemaName)
-    assert.ok(cases.some((fixtureCase) => !fixtureCase.valid), schemaName)
+    assert.ok(
+      cases.some((fixtureCase) => fixtureCase.valid),
+      schemaName
+    )
+    assert.ok(
+      cases.some((fixtureCase) => !fixtureCase.valid),
+      schemaName
+    )
   }
 
-  const errorValidator = validators.get(
-    'external-job-error.v1.schema.json'
-  )
+  const errorValidator = validators.get('external-job-error.v1.schema.json')
   const approvalCase = fixture.schema_cases.find(
     (fixtureCase) => fixtureCase.id === 'schema-error-approval-required-valid'
   )
   assert.ok(approvalCase)
   assert.equal(
-    errorValidator(
-      materializeSchemaCase(fixture, approvalCase)
-    ),
+    errorValidator(materializeSchemaCase(fixture, approvalCase)),
     true
   )
-  const unsupportedApprovalCode = materializeSchemaCase(
-    fixture,
-    approvalCase
-  )
+  const unsupportedApprovalCode = materializeSchemaCase(fixture, approvalCase)
   unsupportedApprovalCode.code = 'APPROVAL_REQUIRED'
   assert.equal(errorValidator(unsupportedApprovalCode), false)
 
@@ -341,17 +341,13 @@ test('idempotency derivation vectors survive every crash and key rotation', () =
   assert.deepEqual(
     deriveIdempotencyVector(fixture.idempotency_policy, 'k2026a'),
     {
-      idempotencyKey:
-        'oj1.k2026a.JF4cZWKXOM0hkM42pq6a_ScDgVWjgVhnk5dWrLIiE0c',
+      idempotencyKey: 'oj1.k2026a.JF4cZWKXOM0hkM42pq6a_ScDgVWjgVhnk5dWrLIiE0c',
       idempotencyKeyHash:
         'sha256:b630a7476c0946afc319d0046016cf24fb09c005d752e26f230c1e7b879bccbc'
     }
   )
   assert.deepEqual(
-    validateRecoveryCases(
-      fixture.recovery_cases,
-      fixture.idempotency_policy
-    ),
+    validateRecoveryCases(fixture.recovery_cases, fixture.idempotency_policy),
     { caseCount: 12 }
   )
 
@@ -381,8 +377,7 @@ test('idempotency derivation vectors survive every crash and key rotation', () =
   )
   const retired = fixture.recovery_cases.find(
     (fixtureCase) =>
-      fixtureCase.id ===
-      'recovery-key-version-retired-too-early-fails-closed'
+      fixtureCase.id === 'recovery-key-version-retired-too-early-fails-closed'
   )
   assert.equal(
     evaluateRecoveryCase(retired, fixture.idempotency_policy).safe_code,
@@ -390,10 +385,7 @@ test('idempotency derivation vectors survive every crash and key rotation', () =
   )
 
   for (const fixtureCase of fixture.recovery_cases) {
-    const actual = evaluateRecoveryCase(
-      fixtureCase,
-      fixture.idempotency_policy
-    )
+    const actual = evaluateRecoveryCase(fixtureCase, fixture.idempotency_policy)
     assert.equal(actual.new_key_minted, false, fixtureCase.id)
     const evidence = fixtureCase.execution_evidence ?? {}
     const ownsActiveAuthority =
@@ -410,8 +402,7 @@ test('idempotency derivation vectors survive every crash and key rotation', () =
   }
   const activeRetry = fixture.recovery_cases.find(
     (fixtureCase) =>
-      fixtureCase.id ===
-      'recovery-active-invocation-not-found-retries-same-key'
+      fixtureCase.id === 'recovery-active-invocation-not-found-retries-same-key'
   )
   const activeRetryResult = evaluateRecoveryCase(
     activeRetry,
@@ -432,10 +423,7 @@ test('idempotency derivation vectors survive every crash and key rotation', () =
     fixture.idempotency_policy
   )
   assert.equal(mismatchedInvocation.retry_performed, false)
-  assert.equal(
-    mismatchedInvocation.safe_code,
-    'IDEMPOTENCY_JOURNAL_INVALID'
-  )
+  assert.equal(mismatchedInvocation.safe_code, 'IDEMPOTENCY_JOURNAL_INVALID')
   assert.equal(mismatchedInvocation.quarantine_required, true)
 
   for (const hostile of [
@@ -453,10 +441,7 @@ test('idempotency derivation vectors survive every crash and key rotation', () =
       missing_journal_fields: ['node_id']
     }
   ]) {
-    const result = evaluateRecoveryCase(
-      hostile,
-      fixture.idempotency_policy
-    )
+    const result = evaluateRecoveryCase(hostile, fixture.idempotency_policy)
     assert.equal(result.publication_allowed, false)
     assert.equal(result.retry_performed, false)
     assert.equal(result.quarantine_required, true)
@@ -464,8 +449,7 @@ test('idempotency derivation vectors survive every crash and key rotation', () =
 
   const startupNotFound = fixture.recovery_cases.find(
     (fixtureCase) =>
-      fixtureCase.id ===
-      'recovery-crash-during-submit-before-provider-commit'
+      fixtureCase.id === 'recovery-crash-during-submit-before-provider-commit'
   )
   const relabeledStartup = evaluateRecoveryCase(
     { ...startupNotFound, recovery_mode: 'active_invocation' },
@@ -507,18 +491,11 @@ test('idempotency derivation vectors survive every crash and key rotation', () =
     },
     fixture.idempotency_policy
   )
-  assert.equal(
-    missingWorkflowLocator.authoritative_status_by_locator,
-    false
-  )
-  assert.equal(
-    missingWorkflowLocator.safe_code,
-    'IDEMPOTENCY_JOURNAL_INVALID'
-  )
+  assert.equal(missingWorkflowLocator.authoritative_status_by_locator, false)
+  assert.equal(missingWorkflowLocator.safe_code, 'IDEMPOTENCY_JOURNAL_INVALID')
 
   const committedLocator = fixture.recovery_cases.find(
-    (fixtureCase) =>
-      fixtureCase.id === 'recovery-crash-after-locator-commit'
+    (fixtureCase) => fixtureCase.id === 'recovery-crash-after-locator-commit'
   )
   const activeLocatorResult = evaluateRecoveryCase(
     {
@@ -606,21 +583,18 @@ test('status destinations reject redirects rebinding private IP and proxy inject
   const proxyCase = fixture.network_cases.find(
     (fixtureCase) => fixtureCase.id === 'network-proxy-environment-ignored'
   )
-  assert.deepEqual(
-    evaluateNetworkCase(proxyCase, fixture.network_profiles),
-    {
-      allowed: true,
-      reason: undefined,
-      socket_connects: 1,
-      failed_connect_attempt: undefined,
-      redirects_followed: 0,
-      proxy_environment_used: false,
-      proxy_attack_effect: false,
-      credentials_forwarded: true,
-      credentials_forwarded_to_redirect: false,
-      credentials_forwarded_on_failed_attempt: false
-    }
-  )
+  assert.deepEqual(evaluateNetworkCase(proxyCase, fixture.network_profiles), {
+    allowed: true,
+    reason: undefined,
+    socket_connects: 1,
+    failed_connect_attempt: undefined,
+    redirects_followed: 0,
+    proxy_environment_used: false,
+    proxy_attack_effect: false,
+    credentials_forwarded: true,
+    credentials_forwarded_to_redirect: false,
+    credentials_forwarded_on_failed_attempt: false
+  })
 })
 
 test('artifact handles validate destinations and enforce bounded streaming', () => {
@@ -692,8 +666,7 @@ test('artifact handles validate destinations and enforce bounded streaming', () 
   )
 
   const checksumMismatch = fixture.artifact_cases.find(
-    (fixtureCase) =>
-      fixtureCase.id === 'artifact-checksum-validation-rejected'
+    (fixtureCase) => fixtureCase.id === 'artifact-checksum-validation-rejected'
   )
   const attackerReadback = {
     ...fixture.artifact_readback_observations.valid,
@@ -732,17 +705,13 @@ test('artifact handles validate destinations and enforce bounded streaming', () 
         }
       }
     }
-    const result = evaluateArtifactCase(
-      identity,
-      mutatedFixture
-    )
+    const result = evaluateArtifactCase(identity, mutatedFixture)
     assert.equal(result.reason, 'handle_resolution_failed', field)
     assert.equal(result.socket_connects, 0, field)
   }
 
   const gzipSuccess = fixture.artifact_cases.find(
-    (fixtureCase) =>
-      fixtureCase.id === 'artifact-valid-bounded-gzip-stream'
+    (fixtureCase) => fixtureCase.id === 'artifact-valid-bounded-gzip-stream'
   )
   const gzipSuccessResult = evaluateArtifactCase(gzipSuccess, fixture)
   assert.equal(gzipSuccessResult.accepted, true)
@@ -772,14 +741,11 @@ test('artifact handles validate destinations and enforce bounded streaming', () 
 
   const closedPublication = fixture.artifact_cases.find(
     (fixtureCase) =>
-      fixtureCase.id ===
-      'artifact-closed-publication-gate-quarantines'
+      fixtureCase.id === 'artifact-closed-publication-gate-quarantines'
   )
-  const attemptedOverride = evaluateArtifactCase(
-    closedPublication,
-    fixture,
-    { publication_allowed: true }
-  )
+  const attemptedOverride = evaluateArtifactCase(closedPublication, fixture, {
+    publication_allowed: true
+  })
   assert.equal(attemptedOverride.accepted, false)
   assert.equal(attemptedOverride.reason, 'publication_closed')
 })
@@ -835,8 +801,7 @@ test('callback remains default-off and rejects replay stale mutated oversized in
     }
   }
   const validSignature = fixture.callback_cases.find(
-    (fixtureCase) =>
-      fixtureCase.id === 'callback-valid-raw-signature-accepted'
+    (fixtureCase) => fixtureCase.id === 'callback-valid-raw-signature-accepted'
   )
   assert.equal(
     deriveCallbackSignature(
@@ -925,8 +890,7 @@ test('callback remains default-off and rejects replay stale mutated oversized in
   }
 
   const validMtls = fixture.callback_cases.find(
-    (fixtureCase) =>
-      fixtureCase.id === 'callback-valid-mtls-accepted'
+    (fixtureCase) => fixtureCase.id === 'callback-valid-mtls-accepted'
   )
   const wrongTrustFixture = {
     ...fixture,
@@ -943,11 +907,7 @@ test('callback remains default-off and rejects replay stale mutated oversized in
     }
   }
   assert.equal(
-    evaluateCallbackCase(
-      validMtls,
-      wrongTrustFixture,
-      validators
-    ).reason,
+    evaluateCallbackCase(validMtls, wrongTrustFixture, validators).reason,
     'mtls_identity_rejected'
   )
   assert.equal(
@@ -1008,26 +968,18 @@ test('terminal and progress evaluator preserves poll authority and immutability'
     'terminal_content_mutation'
   )
   const identityDrift = fixture.status_sequence_cases.find(
-    (fixtureCase) =>
-      fixtureCase.id === 'status-item-identity-drift-rejected'
+    (fixtureCase) => fixtureCase.id === 'status-item-identity-drift-rejected'
   )
   assert.equal(
-    evaluateStatusSequenceCase(
-      identityDrift,
-      fixture,
-      validators
-    ).reason,
+    evaluateStatusSequenceCase(identityDrift, fixture, validators).reason,
     'item_identity_drift'
   )
 })
 
 test('lifecycle evaluator preserves lookup publication quarantine and read-back', () => {
-  assert.deepEqual(
-    validateLifecycleCases(fixture.cases, fixture, validators),
-    {
+  assert.deepEqual(validateLifecycleCases(fixture.cases, fixture, validators), {
     caseCount: 24
-    }
-  )
+  })
 
   const requiredIds = idsFor('cases')
   for (const id of [
@@ -1056,15 +1008,10 @@ test('lifecycle evaluator preserves lookup publication quarantine and read-back'
   const success = fixture.cases.find(
     (fixtureCase) => fixtureCase.id === 'normal-success'
   )
-  const successResult = evaluateLifecycleCase(
-    success,
-    fixture,
-    validators
-  )
+  const successResult = evaluateLifecycleCase(success, fixture, validators)
   assert.equal(
-    success.events.find(
-      (event) => event.kind === 'artifact_contract_result'
-    ).artifact_case_id,
+    success.events.find((event) => event.kind === 'artifact_contract_result')
+      .artifact_case_id,
     'artifact-valid-bounded-gzip-stream'
   )
   assert.equal(successResult.authenticated_poll_confirmed, true)
@@ -1188,10 +1135,7 @@ test('lifecycle evaluator preserves lookup publication quarantine and read-back'
     fixture,
     validators
   )
-  assert.equal(
-    sameTerminalMutationResult.safe_code,
-    'PROVIDER_PROTOCOL_ERROR'
-  )
+  assert.equal(sameTerminalMutationResult.safe_code, 'PROVIDER_PROTOCOL_ERROR')
   assert.equal(
     sameTerminalMutationResult.publication_closed_reason,
     'provider_terminal_conflict'
@@ -1201,8 +1145,7 @@ test('lifecycle evaluator preserves lookup publication quarantine and read-back'
 
   const cancelConflict = fixture.cases.find(
     (fixtureCase) =>
-      fixtureCase.id ===
-      'cancel-response-cannot-overwrite-confirmed-terminal'
+      fixtureCase.id === 'cancel-response-cannot-overwrite-confirmed-terminal'
   )
   const cancelConflictResult = evaluateLifecycleCase(
     cancelConflict,
@@ -1214,8 +1157,7 @@ test('lifecycle evaluator preserves lookup publication quarantine and read-back'
 
   const cancelObservedSuccess = fixture.cases.find(
     (fixtureCase) =>
-      fixtureCase.id ===
-      'cancel-observed-success-requires-fresh-poll'
+      fixtureCase.id === 'cancel-observed-success-requires-fresh-poll'
   )
   const cancelObservedResult = evaluateLifecycleCase(
     cancelObservedSuccess,
@@ -1223,21 +1165,13 @@ test('lifecycle evaluator preserves lookup publication quarantine and read-back'
     validators
   )
   assert.equal(cancelObservedResult.node_returns_outputs, false)
-  assert.equal(
-    cancelObservedResult.safe_code,
-    'TERMINAL_NOT_POLL_CONFIRMED'
-  )
+  assert.equal(cancelObservedResult.safe_code, 'TERMINAL_NOT_POLL_CONFIRMED')
   const freshFailed = fixture.cases.find(
     (fixtureCase) =>
-      fixtureCase.id ===
-      'cancel-observed-success-defers-to-fresh-failed-poll'
+      fixtureCase.id === 'cancel-observed-success-defers-to-fresh-failed-poll'
   )
   assert.equal(
-    evaluateLifecycleCase(
-      freshFailed,
-      fixture,
-      validators
-    ).external_terminal,
+    evaluateLifecycleCase(freshFailed, fixture, validators).external_terminal,
     'failed'
   )
 
@@ -1260,11 +1194,8 @@ test('lifecycle evaluator preserves lookup publication quarantine and read-back'
   ]) {
     const fixtureCase = fixture.cases.find((entry) => entry.id === id)
     assert.equal(
-      evaluateLifecycleCase(
-        fixtureCase,
-        fixture,
-        validators
-      ).publication_allowed,
+      evaluateLifecycleCase(fixtureCase, fixture, validators)
+        .publication_allowed,
       false,
       id
     )
@@ -1388,8 +1319,7 @@ test('Odesign status receipts are closed semantic projections', () => {
 
   const unknownOutcome = fixture.odesign_status_receipt_cases.find(
     (fixtureCase) =>
-      fixtureCase.id ===
-      'odesign-shorts-outcome-unknown-closes-publication'
+      fixtureCase.id === 'odesign-shorts-outcome-unknown-closes-publication'
   )
   assert.equal(
     evaluateOdesignStatusReceiptCase(
@@ -1403,8 +1333,7 @@ test('Odesign status receipts are closed semantic projections', () => {
 
   const succeeded = fixture.odesign_status_receipt_cases.find(
     (fixtureCase) =>
-      fixtureCase.id ===
-      'odesign-staticad-succeeded-receipt-requires-readback'
+      fixtureCase.id === 'odesign-staticad-succeeded-receipt-requires-readback'
   )
   assert.equal(
     evaluateOdesignStatusReceiptCase(
@@ -1417,8 +1346,7 @@ test('Odesign status receipts are closed semantic projections', () => {
   )
 
   const accepted = fixture.odesign_status_receipt_cases.find(
-    (fixtureCase) =>
-      fixtureCase.id === 'odesign-staticad-accepted-receipt'
+    (fixtureCase) => fixtureCase.id === 'odesign-staticad-accepted-receipt'
   )
   const acceptedReceipt = {
     schema_version: 'omarketing.odesign-status-receipt.v1',

@@ -133,9 +133,7 @@ function findInstalledPackage(packageName, minimumMajor = 0) {
     }
   }
 
-  candidates.sort((left, right) =>
-    compareVersions(left.version, right.version)
-  )
+  candidates.sort((left, right) => compareVersions(left.version, right.version))
   if (candidates.length === 0) {
     throw new Error(
       `Required existing package ${packageName} is unavailable; no install was attempted.`
@@ -175,7 +173,10 @@ export function loadExternalLifecycleContract() {
 export function collectFixtureIds(fixture) {
   const ids = []
   for (const collection of fixtureCollections) {
-    assert.ok(Array.isArray(fixture[collection]), `${collection} must be an array`)
+    assert.ok(
+      Array.isArray(fixture[collection]),
+      `${collection} must be an array`
+    )
     for (const fixtureCase of fixture[collection]) {
       assert.equal(
         typeof fixtureCase.id,
@@ -224,7 +225,11 @@ function cloneJson(value) {
 }
 
 function applyMutation(document, mutation) {
-  assert.equal(mutation.op, 'set', 'Only deterministic set mutations are allowed')
+  assert.equal(
+    mutation.op,
+    'set',
+    'Only deterministic set mutations are allowed'
+  )
   assert.ok(Array.isArray(mutation.path) && mutation.path.length > 0)
   let target = document
   for (const segment of mutation.path.slice(0, -1)) {
@@ -315,10 +320,7 @@ export function evaluateDocumentInvariantCase(
       fixtureCase.id
     )
     if (
-      parseTimestamp(
-        request.requested_at,
-        `${fixtureCase.id}.requested_at`
-      ) <
+      parseTimestamp(request.requested_at, `${fixtureCase.id}.requested_at`) <
       parseTimestamp(
         request.external_job_locator.submitted_at,
         `${fixtureCase.id}.submitted_at`
@@ -399,10 +401,7 @@ export function evaluateDocumentInvariantCase(
     }
     if (
       acceptedAt >
-      parseTimestamp(
-        envelope.deadline_at,
-        `${fixtureCase.id}.deadline_at`
-      )
+      parseTimestamp(envelope.deadline_at, `${fixtureCase.id}.deadline_at`)
     ) {
       return { valid: false, reason: 'acceptance_after_deadline' }
     }
@@ -493,19 +492,21 @@ export function validateDocumentInvariantCases(cases, fixture, validators) {
       fixture,
       validators
     )
-    assert.deepEqual(actual, {
-      valid: fixtureCase.valid,
-      reason: fixtureCase.reason
-    }, fixtureCase.id)
+    assert.deepEqual(
+      actual,
+      {
+        valid: fixtureCase.valid,
+        reason: fixtureCase.reason
+      },
+      fixtureCase.id
+    )
     if (!actual.valid) rejectedCount += 1
   }
   return { caseCount: cases.length, rejectedCount }
 }
 
 function encodeLengthPrefixed(value) {
-  const bytes = Buffer.isBuffer(value)
-    ? value
-    : Buffer.from(value, 'utf8')
+  const bytes = Buffer.isBuffer(value) ? value : Buffer.from(value, 'utf8')
   return Buffer.concat([Buffer.from(`${bytes.length}:`, 'ascii'), bytes])
 }
 
@@ -514,9 +515,16 @@ export function deriveIdempotencyVector(policy, keyVersion) {
   assert.match(keyVersion, /^[A-Za-z0-9_-]{1,32}$/)
   assert.match(keyHex, /^(?:[a-f0-9]{2}){32,}$/)
 
-  const chunks = [Buffer.from(policy.domain_separator, 'ascii'), Buffer.from([0])]
+  const chunks = [
+    Buffer.from(policy.domain_separator, 'ascii'),
+    Buffer.from([0])
+  ]
   for (const field of policy.scope_order) {
-    assert.equal(typeof policy.scope[field], 'string', `Missing scope field ${field}`)
+    assert.equal(
+      typeof policy.scope[field],
+      'string',
+      `Missing scope field ${field}`
+    )
     chunks.push(encodeLengthPrefixed(field))
     chunks.push(encodeLengthPrefixed(policy.scope[field]))
   }
@@ -533,7 +541,9 @@ export function deriveIdempotencyVector(policy, keyVersion) {
 }
 
 export function validateIdempotencyVectors(policy) {
-  for (const [keyVersion, expected] of Object.entries(policy.expected_vectors)) {
+  for (const [keyVersion, expected] of Object.entries(
+    policy.expected_vectors
+  )) {
     const actual = deriveIdempotencyVector(policy, keyVersion)
     assert.deepEqual(
       actual,
@@ -559,10 +569,7 @@ function constantTimeEqual(left, right) {
 function constantTimeHexDigestEqual(left, right) {
   assert.match(left, /^[0-9a-f]{64}$/)
   assert.match(right, /^[0-9a-f]{64}$/)
-  return timingSafeEqual(
-    Buffer.from(left, 'hex'),
-    Buffer.from(right, 'hex')
-  )
+  return timingSafeEqual(Buffer.from(left, 'hex'), Buffer.from(right, 'hex'))
 }
 
 export function evaluateRecoveryCase(fixtureCase, policy) {
@@ -643,8 +650,7 @@ export function evaluateRecoveryCase(fixtureCase, policy) {
     retry_performed: false,
     provider_job_count: crashState.providerCommitted ? 1 : 0,
     publication_allowed: false,
-    quarantine_required:
-      crashState.journalCommitted && !activeAuthority,
+    quarantine_required: crashState.journalCommitted && !activeAuthority,
     safe_code: null,
     safe_warning: null
   }
@@ -719,16 +725,11 @@ export function evaluateRecoveryCase(fixtureCase, policy) {
   const recordedVersion = fixtureCase.recorded_key_version
   const locator = journalEntry.external_job_locator
   const journalFormatValid =
-    journalEntry.journal_format_version ===
-      'external-dispatch-journal.v1' &&
+    journalEntry.journal_format_version === 'external-dispatch-journal.v1' &&
     /^k[0-9]{4}[a-z]$/.test(recordedVersion) &&
     policy.expected_vectors[recordedVersion] !== undefined &&
-    /^sha256:[0-9a-f]{64}$/.test(
-      journalEntry.canonical_payload_digest
-    ) &&
-    /^sha256:[0-9a-f]{64}$/.test(
-      journalEntry.idempotency_key_hash
-    ) &&
+    /^sha256:[0-9a-f]{64}$/.test(journalEntry.canonical_payload_digest) &&
+    /^sha256:[0-9a-f]{64}$/.test(journalEntry.idempotency_key_hash) &&
     isCanonicalUtcTimestamp(journalEntry.deadline_at) &&
     ['prepared', 'accepted'].includes(journalEntry.phase) &&
     documentsEqual(journalEntry.workflow_locator, {
@@ -746,8 +747,7 @@ export function evaluateRecoveryCase(fixtureCase, policy) {
           'schema_version',
           'submitted_at'
         ]) &&
-        locator.schema_version ===
-          'omarketing.external-job-locator.v1' &&
+        locator.schema_version === 'omarketing.external-job-locator.v1' &&
         locator.adapter_id === policy.scope.adapter_id &&
         locator.environment === policy.scope.environment &&
         locator.operation === policy.scope.operation &&
@@ -874,9 +874,7 @@ function parseIpv6Bytes(address) {
   if (ipv4Tail) {
     const parts = ipv4Tail[1].split('.').map(Number)
     if (
-      parts.some(
-        (part) => !Number.isInteger(part) || part < 0 || part > 255
-      )
+      parts.some((part) => !Number.isInteger(part) || part < 0 || part > 255)
     ) {
       return null
     }
@@ -884,10 +882,8 @@ function parseIpv6Bytes(address) {
       (parts[2] << 8) |
       parts[3]
     ).toString(16)}`
-    normalized = normalized.slice(
-      0,
-      normalized.length - ipv4Tail[1].length
-    ) + replacement
+    normalized =
+      normalized.slice(0, normalized.length - ipv4Tail[1].length) + replacement
   }
 
   const halves = normalized.split('::')
@@ -1064,8 +1060,7 @@ export function validateNetworkCases(cases, profiles) {
       {
         ...actual,
         reason: actual.reason ?? null,
-        failed_connect_attempt:
-          actual.failed_connect_attempt ?? null
+        failed_connect_attempt: actual.failed_connect_attempt ?? null
       },
       expected,
       fixtureCase.id
@@ -1087,18 +1082,13 @@ function materializeArtifactWireChunk(chunk, label) {
       chunk.repeat_byte <= 255,
     label
   )
-  assert.ok(
-    Number.isSafeInteger(chunk.count) && chunk.count >= 0,
-    label
-  )
+  assert.ok(Number.isSafeInteger(chunk.count) && chunk.count >= 0, label)
   return Buffer.alloc(chunk.count, chunk.repeat_byte)
 }
 
 function evaluateArtifactReadback(fixtureCase, fixture) {
   const observation =
-    fixture.artifact_readback_observations[
-      fixtureCase.readback_observation
-    ]
+    fixture.artifact_readback_observations[fixtureCase.readback_observation]
   assert.ok(
     observation,
     `${fixtureCase.id} references an unknown read-back observation`
@@ -1108,16 +1098,13 @@ function evaluateArtifactReadback(fixtureCase, fixture) {
     fixture.network_profiles
   )
   const resolverRecord =
-    fixture.artifact_resolver_records[
-      fixtureCase.resolver.handle_id
-    ]
+    fixture.artifact_resolver_records[fixtureCase.resolver.handle_id]
   assert.ok(resolverRecord, fixtureCase.resolver.handle_id)
   const authenticated =
     network.allowed &&
     network.credentials_forwarded &&
     observation.network_request.profile === 'status' &&
-    observation.network_request.opaque_id ===
-      fixture.artifact_policy.job_id &&
+    observation.network_request.opaque_id === fixture.artifact_policy.job_id &&
     observation.service_principal_id ===
       fixture.artifact_policy.service_principal_id &&
     observation.job_id === fixture.artifact_policy.job_id &&
@@ -1127,8 +1114,7 @@ function evaluateArtifactReadback(fixtureCase, fixture) {
     ) &&
     observation.external_job_locator.job_id ===
       resolverRecord.resolved_job_id &&
-    observation.artifact_handle_id ===
-      fixtureCase.resolver.handle_id
+    observation.artifact_handle_id === fixtureCase.resolver.handle_id
   return {
     authenticated,
     reportedSha256: observation.reported_sha256
@@ -1142,9 +1128,7 @@ export function evaluateArtifactCase(
 ) {
   const policy = fixture.artifact_policy
   const resolverRecord =
-    fixture.artifact_resolver_records[
-      fixtureCase.resolver.handle_id
-    ]
+    fixture.artifact_resolver_records[fixtureCase.resolver.handle_id]
   const actual = {
     accepted: false,
     reason: null,
@@ -1161,25 +1145,18 @@ export function evaluateArtifactCase(
 
   if (
     !resolverRecord ||
-    !/^ah1_[A-Za-z0-9_-]{22,128}$/.test(
-      fixtureCase.resolver.handle_id
-    ) ||
-    resolverRecord.resolved_owner_user_id !==
-      policy.owner_user_id ||
+    !/^ah1_[A-Za-z0-9_-]{22,128}$/.test(fixtureCase.resolver.handle_id) ||
+    resolverRecord.resolved_owner_user_id !== policy.owner_user_id ||
     resolverRecord.resolved_project_key !== policy.project_key ||
     resolverRecord.resolved_job_id !== policy.job_id ||
     resolverRecord.resolved_adapter_id !== policy.adapter_id ||
     resolverRecord.resolved_environment !== policy.environment ||
     resolverRecord.resolved_service_principal_id !==
       policy.service_principal_id ||
-    resolverRecord.resolved_operation_profile !==
-      policy.operation_profile ||
-    resolverRecord.resolved_network_profile !==
-      policy.network_profile ||
-    resolverRecord.resolved_network_profile !==
-      fixtureCase.profile ||
-    resolverRecord.provider_artifact_id !==
-      fixtureCase.opaque_id ||
+    resolverRecord.resolved_operation_profile !== policy.operation_profile ||
+    resolverRecord.resolved_network_profile !== policy.network_profile ||
+    resolverRecord.resolved_network_profile !== fixtureCase.profile ||
+    resolverRecord.provider_artifact_id !== fixtureCase.opaque_id ||
     parseTimestamp(
       resolverRecord.expires_at,
       `${fixtureCase.id}.resolver.expires_at`
@@ -1226,8 +1203,7 @@ export function evaluateArtifactCase(
       `${fixtureCase.id}.chunks[${index}]`
     )
 
-    const nextCompressed =
-      actual.compressed_bytes_accepted + wireBytes.length
+    const nextCompressed = actual.compressed_bytes_accepted + wireBytes.length
     if (nextCompressed > policy.compressed_byte_limit) {
       actual.reason = 'compressed_limit_exceeded'
       return actual
@@ -1289,8 +1265,7 @@ export function evaluateArtifactCase(
   actual.stream_accepted = true
 
   if (
-    actual.uncompressed_bytes_accepted !==
-    resolverRecord.expected_size_bytes
+    actual.uncompressed_bytes_accepted !== resolverRecord.expected_size_bytes
   ) {
     actual.reason = 'artifact_size_mismatch'
     return actual
@@ -1332,8 +1307,7 @@ export function evaluateArtifactCase(
   }
   const publicationAllowed =
     fixtureCase.publication_state_events.length === 0 &&
-    (lifecycleContext === null ||
-      lifecycleContext.publication_allowed === true)
+    (lifecycleContext === null || lifecycleContext.publication_allowed === true)
   if (!publicationAllowed) {
     actual.reason = 'publication_closed'
     return actual
@@ -1374,10 +1348,7 @@ function isCanonicalUtcTimestamp(value) {
 }
 
 function parseTimestamp(value, label) {
-  assert.ok(
-    isCanonicalUtcTimestamp(value),
-    `${label} must be canonical UTC`
-  )
+  assert.ok(isCanonicalUtcTimestamp(value), `${label} must be canonical UTC`)
   const milliseconds = Date.parse(value)
   return milliseconds
 }
@@ -1387,7 +1358,10 @@ function receiptFailure(reason) {
 }
 
 function materializeOdesignStatusReceipt(fixtureCase, shape) {
-  if (!Array.isArray(shape) || !documentsEqual(shape, ODESIGN_STATUS_RECEIPT_SHAPE)) {
+  if (
+    !Array.isArray(shape) ||
+    !documentsEqual(shape, ODESIGN_STATUS_RECEIPT_SHAPE)
+  ) {
     return receiptFailure('receipt_shape_changed')
   }
 
@@ -1410,9 +1384,7 @@ function materializeOdesignStatusReceipt(fixtureCase, shape) {
   if (
     fixtureCase.expected &&
     typeof fixtureCase.expected === 'object' &&
-    Object.keys(fixtureCase.expected).some(
-      (key) => !expectedKeys.has(key)
-    )
+    Object.keys(fixtureCase.expected).some((key) => !expectedKeys.has(key))
   ) {
     return receiptFailure('receipt_unknown_field')
   }
@@ -1555,9 +1527,7 @@ export function evaluateOdesignStatusReceiptCase(
       fixtureCase.category !== undefined ||
       fixtureCase.remediation !== undefined ||
       fixtureCase.remediation_key !== undefined
-    const errorValidator = validators?.get(
-      'external-job-error.v1.schema.json'
-    )
+    const errorValidator = validators?.get('external-job-error.v1.schema.json')
     if (errorValidator && fixture?.schema_documents?.approval_error) {
       const errorDocument = {
         ...fixture.schema_documents.approval_error,
@@ -1662,10 +1632,7 @@ export function validateOdesignStatusReceiptCases(
     ODESIGN_STATUSES.map((status) => [status, 0])
   )
   const covered = new Map(
-    ODESIGN_OPERATIONS.map((operation) => [
-      operation,
-      new Set()
-    ])
+    ODESIGN_OPERATIONS.map((operation) => [operation, new Set()])
   )
 
   for (const fixtureCase of cases) {
@@ -1714,10 +1681,7 @@ function resolveCallbackBody(bodyFixture) {
   }
   assert.equal(typeof bodyFixture.repeat, 'string')
   assert.ok(Number.isSafeInteger(bodyFixture.count) && bodyFixture.count >= 0)
-  return Buffer.from(
-    bodyFixture.repeat.repeat(bodyFixture.count),
-    'utf8'
-  )
+  return Buffer.from(bodyFixture.repeat.repeat(bodyFixture.count), 'utf8')
 }
 
 export function validateCallbackBodyVectors(callbackBodies) {
@@ -1733,12 +1697,7 @@ export function validateCallbackBodyVectors(callbackBodies) {
   return { vectorCount }
 }
 
-export function deriveCallbackSignature(
-  profile,
-  keyId,
-  request,
-  rawBody
-) {
+export function deriveCallbackSignature(profile, keyId, request, rawBody) {
   const key = profile.active_keys[keyId]
   assert.ok(key, `Unknown callback fixture key ${keyId}`)
   const chunks = [
@@ -1755,10 +1714,7 @@ export function deriveCallbackSignature(
     chunks.push(encodeLengthPrefixed(name))
     chunks.push(encodeLengthPrefixed(value))
   }
-  return createHmac(
-    'sha256',
-    Buffer.from(key.fixture_hmac_key_hex, 'hex')
-  )
+  return createHmac('sha256', Buffer.from(key.fixture_hmac_key_hex, 'hex'))
     .update(Buffer.concat(chunks))
     .digest('hex')
 }
@@ -1774,8 +1730,7 @@ export function evaluateCallbackCase(fixtureCase, fixture, validators) {
     event_dedupe_consumed: false,
     sequence_cursor_advanced: false,
     polling_reconciliation_required: false,
-    polling_authority:
-      profile.terminal_authority === 'authenticated_polling'
+    polling_authority: profile.terminal_authority === 'authenticated_polling'
   }
 
   if (!fixtureCase.profile_enabled) {
@@ -1802,10 +1757,7 @@ export function evaluateCallbackCase(fixtureCase, fixture, validators) {
     return actual
   }
   const ingressRoute = profile.ingress_routes[fixtureCase.path]
-  if (
-    !ingressRoute ||
-    fixtureCase.method !== ingressRoute.method
-  ) {
+  if (!ingressRoute || fixtureCase.method !== ingressRoute.method) {
     actual.reason = 'callback_route_rejected'
     return actual
   }
@@ -1827,8 +1779,7 @@ export function evaluateCallbackCase(fixtureCase, fixture, validators) {
     return actual
   }
 
-  const authProfile =
-    profile.auth_profiles[ingressRoute.auth_profile]
+  const authProfile = profile.auth_profiles[ingressRoute.auth_profile]
   if (!authProfile || fixtureCase.auth_method !== authProfile.mode) {
     actual.reason = 'auth_profile_mismatch'
     return actual
@@ -1852,7 +1803,8 @@ export function evaluateCallbackCase(fixtureCase, fixture, validators) {
       return actual
     }
     if (
-      receivedAt < parseTimestamp(key.active_from, `${fixtureCase.id}.active_from`) ||
+      receivedAt <
+        parseTimestamp(key.active_from, `${fixtureCase.id}.active_from`) ||
       receivedAt >= parseTimestamp(key.retire_at, `${fixtureCase.id}.retire_at`)
     ) {
       actual.reason = 'key_not_active'
@@ -1869,19 +1821,14 @@ export function evaluateCallbackCase(fixtureCase, fixture, validators) {
       rawBody
     )
     if (
-      !constantTimeHexDigestEqual(
-        expectedSignature,
-        fixtureCase.signature_hex
-      )
+      !constantTimeHexDigestEqual(expectedSignature, fixtureCase.signature_hex)
     ) {
       actual.reason = 'raw_signature_mismatch'
       return actual
     }
   } else if (fixtureCase.auth_method === 'mtls') {
     const observation =
-      profile.tls_verifier_observations[
-        fixtureCase.tls_observation
-      ]
+      profile.tls_verifier_observations[fixtureCase.tls_observation]
     let mtlsVerified = false
     try {
       assert.ok(observation)
@@ -1889,10 +1836,7 @@ export function evaluateCallbackCase(fixtureCase, fixture, validators) {
         authProfile.trust_anchor_spki_base64,
         'base64'
       )
-      const leafSpki = Buffer.from(
-        observation.leaf_spki_base64,
-        'base64'
-      )
+      const leafSpki = Buffer.from(observation.leaf_spki_base64, 'base64')
       const certificateSignature = Buffer.from(
         observation.certificate_signature_base64,
         'base64'
@@ -1905,10 +1849,7 @@ export function evaluateCallbackCase(fixtureCase, fixture, validators) {
         trustAnchorSpki.toString('base64'),
         authProfile.trust_anchor_spki_base64
       )
-      assert.equal(
-        leafSpki.toString('base64'),
-        observation.leaf_spki_base64
-      )
+      assert.equal(leafSpki.toString('base64'), observation.leaf_spki_base64)
       assert.equal(
         certificateSignature.toString('base64'),
         observation.certificate_signature_base64
@@ -1943,9 +1884,7 @@ export function evaluateCallbackCase(fixtureCase, fixture, validators) {
         encodeLengthPrefixed(fixtureCase.nonce),
         encodeLengthPrefixed(rawBody)
       ])
-      const peerSpkiSha256 = createHash('sha256')
-        .update(leafSpki)
-        .digest('hex')
+      const peerSpkiSha256 = createHash('sha256').update(leafSpki).digest('hex')
       mtlsVerified =
         !authProfile.revoked &&
         receivedAt >=
@@ -1964,18 +1903,11 @@ export function evaluateCallbackCase(fixtureCase, fixture, validators) {
           trustAnchorKey,
           certificateSignature
         ) &&
-        verify(
-          null,
-          handshakeStatement,
-          leafKey,
-          proofSignature
-        ) &&
+        verify(null, handshakeStatement, leafKey, proofSignature) &&
         authProfile.allowed_peer_identities.includes(
           observation.peer_identity
         ) &&
-        authProfile.allowed_peer_spki_sha256.includes(
-          peerSpkiSha256
-        )
+        authProfile.allowed_peer_spki_sha256.includes(peerSpkiSha256)
     } catch {
       mtlsVerified = false
     }
@@ -2023,12 +1955,11 @@ export function evaluateCallbackCase(fixtureCase, fixture, validators) {
   )
   if (
     emittedAt <
-    parseTimestamp(
-      document.external_job_locator.submitted_at,
-      `${fixtureCase.id}.submitted_at`
-    ) ||
-    Math.abs(receivedAt - emittedAt) >
-      profile.max_skew_seconds * 1000
+      parseTimestamp(
+        document.external_job_locator.submitted_at,
+        `${fixtureCase.id}.submitted_at`
+      ) ||
+    Math.abs(receivedAt - emittedAt) > profile.max_skew_seconds * 1000
   ) {
     actual.reason = 'event_time_invalid'
     return actual
@@ -2103,10 +2034,7 @@ function canonicalJson(value) {
   if (value && typeof value === 'object') {
     return `{${Object.keys(value)
       .sort()
-      .map(
-        (key) =>
-          `${JSON.stringify(key)}:${canonicalJson(value[key])}`
-      )
+      .map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`)
       .join(',')}}`
   }
   return JSON.stringify(value)
@@ -2128,11 +2056,7 @@ function terminalStatusDigest(document) {
     .digest('hex')
 }
 
-export function evaluateStatusSequenceCase(
-  fixtureCase,
-  fixture,
-  validators
-) {
+export function evaluateStatusSequenceCase(fixtureCase, fixture, validators) {
   let previousProgress = null
   let previousObservedAt = null
   let canonicalItemIds = null
@@ -2177,10 +2101,7 @@ export function evaluateStatusSequenceCase(
       document.observed_at,
       `${fixtureCase.id}.observed_at`
     )
-    if (
-      previousObservedAt !== null &&
-      observedAt < previousObservedAt
-    ) {
+    if (previousObservedAt !== null && observedAt < previousObservedAt) {
       return {
         accepted: false,
         reason: 'status_observation_time_regression',
@@ -2254,11 +2175,7 @@ export function evaluateStatusSequenceCase(
 export function validateStatusSequenceCases(cases, fixture, validators) {
   let rejectedCount = 0
   for (const fixtureCase of cases) {
-    const actual = evaluateStatusSequenceCase(
-      fixtureCase,
-      fixture,
-      validators
-    )
+    const actual = evaluateStatusSequenceCase(fixtureCase, fixture, validators)
     assert.deepEqual(actual, fixtureCase.expected, fixtureCase.id)
     if (!actual.accepted) rejectedCount += 1
   }
@@ -2289,11 +2206,7 @@ export function validateSafeTextCases(cases) {
   return { caseCount: cases.length, rejectedCount }
 }
 
-export function evaluateLifecycleCase(
-  fixtureCase,
-  fixture,
-  validators
-) {
+export function evaluateLifecycleCase(fixtureCase, fixture, validators) {
   const actual = {
     provider_job_count: 0,
     provider_job_count_delta: 0,
@@ -2453,20 +2366,17 @@ export function evaluateLifecycleCase(
           statusDocument.observed_at,
           `${fixtureCase.id}.observed_at`
         )
-        const itemIds = statusDocument.item_outcomes.map(
-          (item) => item.item_id
-        )
-        const handleBindingsValid =
-          statusDocument.artifact_handles.every((handle) => {
-            const record =
-              fixture.artifact_resolver_records[handle.handle_id]
+        const itemIds = statusDocument.item_outcomes.map((item) => item.item_id)
+        const handleBindingsValid = statusDocument.artifact_handles.every(
+          (handle) => {
+            const record = fixture.artifact_resolver_records[handle.handle_id]
             return (
               record !== undefined &&
               record.expires_at === handle.expires_at &&
-              record.resolved_job_id ===
-                fixture.artifact_policy.job_id
+              record.resolved_job_id === fixture.artifact_policy.job_id
             )
-          })
+          }
+        )
         // Per-document binding integrity is evaluated before anything else:
         // a status whose artifact handles are not bound to this job is never
         // trusted enough to classify a terminal transition from it.
@@ -2477,11 +2387,9 @@ export function evaluateLifecycleCase(
           closePublication('provider_protocol_error')
           break
         }
-        const terminalDocument = [
-          'succeeded',
-          'failed',
-          'canceled'
-        ].includes(statusDocument.status)
+        const terminalDocument = ['succeeded', 'failed', 'canceled'].includes(
+          statusDocument.status
+        )
         // Two authenticated polls that disagree on the terminal outcome are a
         // terminal conflict, and that classification outranks every
         // lower-priority cross-poll protocol check (progress monotonicity,
@@ -2507,10 +2415,8 @@ export function evaluateLifecycleCase(
           (previousLifecycleProgress === null
             ? statusDocument.progress === null
             : statusDocument.progress !== null &&
-              statusDocument.progress.max ===
-                previousLifecycleProgress.max &&
-              statusDocument.progress.value >=
-                previousLifecycleProgress.value)
+              statusDocument.progress.max === previousLifecycleProgress.max &&
+              statusDocument.progress.value >= previousLifecycleProgress.value)
         if (
           !progressHistoryValid ||
           (previousLifecyclePollObservedAt !== null &&
@@ -2555,18 +2461,15 @@ export function evaluateLifecycleCase(
         actual.authenticated_poll_confirmed = true
         observeAuthoritativeStatus(statusDocument.status)
         if (
-          ['succeeded', 'failed', 'canceled'].includes(
-            statusDocument.status
-          ) &&
+          ['succeeded', 'failed', 'canceled'].includes(statusDocument.status) &&
           actual.external_terminal === statusDocument.status
         ) {
           pollConfirmedTerminal = statusDocument.status
           if (pollConfirmedTerminalDigest === null) {
             pollConfirmedTerminalDigest = terminalDigest
-            pollRequiredArtifactHandleIds =
-              statusDocument.artifact_handles.map(
-                (handle) => handle.handle_id
-              )
+            pollRequiredArtifactHandleIds = statusDocument.artifact_handles.map(
+              (handle) => handle.handle_id
+            )
           }
         }
         break
@@ -2578,8 +2481,7 @@ export function evaluateLifecycleCase(
         actual.external_cancel_requested = true
         break
       case 'cancel_response':
-        actual.safe_warning =
-          'cancel_requested_but_external_job_may_continue'
+        actual.safe_warning = 'cancel_requested_but_external_job_may_continue'
         break
       case 'cancel_timeout':
         actual.cancel_attempt_bound_seconds = 10
@@ -2614,27 +2516,22 @@ export function evaluateLifecycleCase(
           (candidate) => candidate.id === event.artifact_case_id
         )
         assert.ok(artifactCase, event.artifact_case_id)
-        const artifactResult = evaluateArtifactCase(
-          artifactCase,
-          fixture,
-          { publication_allowed: actual.publication_allowed }
-        )
+        const artifactResult = evaluateArtifactCase(artifactCase, fixture, {
+          publication_allowed: actual.publication_allowed
+        })
         if (
           artifactResult.artifact_validated &&
           artifactResult.publication_allowed &&
           actual.publication_allowed
         ) {
           actual.checksum_readback_confirmed = true
-          validatedArtifactHandleIds.add(
-            artifactCase.resolver.handle_id
-          )
+          validatedArtifactHandleIds.add(artifactCase.resolver.handle_id)
         } else if (
           coreTerminalCommitted &&
           artifactResult.reason === 'publication_closed'
         ) {
           actual.artifact_destination = 'private_quarantine'
-          actual.late_artifact_destination =
-            'private_quarantine'
+          actual.late_artifact_destination = 'private_quarantine'
         } else {
           closePublication('artifact_validation_failed')
           actual.comfy_terminal = 'failed'
@@ -2717,11 +2614,7 @@ export function validateLifecycleCases(cases, fixture, validators) {
     checksum_readback_confirmed: false
   }
   for (const fixtureCase of cases) {
-    const actual = evaluateLifecycleCase(
-      fixtureCase,
-      fixture,
-      validators
-    )
+    const actual = evaluateLifecycleCase(fixtureCase, fixture, validators)
     const normalizedActual = Object.fromEntries(
       Object.keys(resultDefaults).map((key) => [key, actual[key] ?? null])
     )
@@ -2746,17 +2639,13 @@ export function validateAll() {
     'submit'
   ])
   assert.deepEqual(
-    [
-      ...new Set(fixture.artifact_cases.map((entry) => entry.payload))
-    ].sort(),
+    [...new Set(fixture.artifact_cases.map((entry) => entry.payload))].sort(),
     Object.keys(fixture.artifact_payloads).sort()
   )
   assert.deepEqual(
     [
       ...new Set(
-        fixture.artifact_cases.map(
-          (entry) => entry.resolver.handle_id
-        )
+        fixture.artifact_cases.map((entry) => entry.resolver.handle_id)
       )
     ].sort(),
     Object.keys(fixture.artifact_resolver_records).sort()
@@ -2764,17 +2653,13 @@ export function validateAll() {
   assert.deepEqual(
     [
       ...new Set(
-        fixture.artifact_cases.map(
-          (entry) => entry.readback_observation
-        )
+        fixture.artifact_cases.map((entry) => entry.readback_observation)
       )
     ].sort(),
     Object.keys(fixture.artifact_readback_observations).sort()
   )
   assert.deepEqual(
-    [
-      ...new Set(fixture.callback_cases.map((entry) => entry.body))
-    ].sort(),
+    [...new Set(fixture.callback_cases.map((entry) => entry.body))].sort(),
     Object.keys(fixture.callback_bodies).sort()
   )
 
@@ -2788,11 +2673,7 @@ export function validateAll() {
     validators
   )
   const idempotency = validateIdempotencyVectors(fixture.idempotency_policy)
-  const lifecycle = validateLifecycleCases(
-    fixture.cases,
-    fixture,
-    validators
-  )
+  const lifecycle = validateLifecycleCases(fixture.cases, fixture, validators)
   const recovery = validateRecoveryCases(
     fixture.recovery_cases,
     fixture.idempotency_policy
@@ -2836,15 +2717,11 @@ export function validateAll() {
     negativeSchemaCaseCount: schemaCases.negativeCount,
     networkBlockedCount: network.blockedCount,
     networkCaseCount: network.caseCount,
-    odesignStatusReceiptAcceptedCount:
-      odesignStatusReceipts.acceptedCount,
+    odesignStatusReceiptAcceptedCount: odesignStatusReceipts.acceptedCount,
     odesignStatusReceiptCaseCount: odesignStatusReceipts.caseCount,
-    odesignStatusReceiptOperationCounts:
-      odesignStatusReceipts.operationCounts,
-    odesignStatusReceiptRejectedCount:
-      odesignStatusReceipts.rejectedCount,
-    odesignStatusReceiptStatusCounts:
-      odesignStatusReceipts.statusCounts,
+    odesignStatusReceiptOperationCounts: odesignStatusReceipts.operationCounts,
+    odesignStatusReceiptRejectedCount: odesignStatusReceipts.rejectedCount,
+    odesignStatusReceiptStatusCounts: odesignStatusReceipts.statusCounts,
     positiveSchemaCaseCount: schemaCases.positiveCount,
     recoveryCaseCount: recovery.caseCount,
     safeTextCaseCount: safeText.caseCount,
